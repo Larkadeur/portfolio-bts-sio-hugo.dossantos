@@ -2,9 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Projet GLPI — Mise à jour 10.0.9 vers 11.0.8 — Hugo Dos Santos</title>
+    <title>Projet GLPI — Mise à jour 10.0.9 vers 11.0.8 et déploiement de l'agent — Hugo Dos Santos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Rapport technique : mise à jour du serveur GLPI 10.0.9 vers 11.0.8 sur environnement de test cloné de la production — Compagnie Hobart.">
+    <meta name="description" content="Rapport technique : mise à jour du serveur GLPI 10.0.9 vers 11.0.8, mise en production, puis déploiement de l'agent GLPI par GPO sur le parc — Compagnie Hobart.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -256,6 +256,24 @@
             padding: 0.1rem 0.4rem;
             color: var(--accent-strong);
             word-break: break-word;
+        }
+
+        pre.code-block {
+            background: #0b1220;
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            padding: 1.1rem 1.3rem;
+            margin: 1.6rem 0;
+            overflow-x: auto;
+        }
+        pre.code-block code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            white-space: pre;
         }
 
         /* ==================== FIGURES ==================== */
@@ -516,7 +534,7 @@
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Période</span>
-                    <span class="meta-value">30 – 31 juillet 2026</span>
+                    <span class="meta-value">30 juillet – 16 octobre 2026</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Entreprise</span>
@@ -531,8 +549,8 @@
             <div class="status-banner">
                 <span class="status-dot"></span>
                 <p style="margin:0; color: var(--text-muted);">
-                    <strong>Statut :</strong> environnement de test validé — en attente de validation
-                    par le maître d'apprentissage pour le déploiement en production.
+                    <strong>Statut :</strong> mise à jour validée en test puis appliquée en production —
+                    agent GLPI déployé par GPO sur l'ensemble du parc (octobre 2026).
                 </p>
             </div>
         </header>
@@ -548,6 +566,9 @@
                 <span class="tech-tag">VirtualBox</span>
                 <span class="tech-tag">SSH</span>
                 <span class="tech-tag">OCS Inventory NG</span>
+                <span class="tech-tag">GLPI Agent</span>
+                <span class="tech-tag">Active Directory / GPO</span>
+                <span class="tech-tag">PowerShell</span>
             </div>
         </div>
 
@@ -561,8 +582,13 @@
                 <li><a href="#telechargement">Téléchargement et préparation</a></li>
                 <li><a href="#bascule">Bascule vers la nouvelle version</a></li>
                 <li><a href="#migration">Migration de la base de données</a></li>
+                <li><a href="#production">Mise en production</a></li>
+                <li><a href="#agent-vm">Agent GLPI : test sur la VM Linux</a></li>
+                <li><a href="#agent-windows">Agent GLPI sur poste Windows</a></li>
+                <li><a href="#gpo">Déploiement par GPO</a></li>
                 <li><a href="#incidents">Synthèse des incidents</a></li>
                 <li><a href="#bilan">Bilan et perspectives</a></li>
+                <li><a href="#annexe">Annexe — script PowerShell</a></li>
             </ol>
         </nav>
 
@@ -578,14 +604,19 @@
             </p>
             <ul>
                 <li>Mise à jour de GLPI vers sa dernière version stable (10.0.9 → 11.0.8) ;</li>
-                <li>Remplacement du plugin d'inventaire existant par <strong>GLPI Inventory</strong>, le module officiel maintenu par l'éditeur ;</li>
+                <li>Remplacement de l'ancien système d'inventaire (plugin <strong>OCS Inventory NG</strong>) par
+                    l'<strong>agent GLPI</strong> et l'inventaire natif de GLPI 11 (le plugin GLPI Inventory,
+                    d'abord envisagé, s'est révélé inutile) ;</li>
                 <li>Structuration de la CMDB (inventaire des postes, contrats, licences) ;</li>
                 <li>Mise en place de la création automatique de tickets par e-mail.</li>
             </ul>
             <p>
-                Ce rapport documente le <strong>premier axe</strong> : la mise à jour du cœur de GLPI, entièrement
-                testée et validée sur un environnement de test avant toute intervention sur le serveur de production.
-                Les trois autres axes feront l'objet d'un complément à ce document.
+                Ce rapport documente les <strong>deux premiers axes</strong> : la mise à jour du cœur de GLPI,
+                entièrement testée sur un environnement de test avant toute intervention sur le serveur de
+                production (parties 2 à 7), puis appliquée en production (partie 8) ; et le remplacement de
+                l'inventaire par l'agent GLPI, testé sur une machine virtuelle et sur un poste Windows, puis
+                déployé par GPO (parties 9 à 11). Les axes CMDB et création de tickets par e-mail feront l'objet
+                d'un complément.
             </p>
 
             <!-- ==================== 2 ==================== -->
@@ -602,13 +633,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Paramètres de la VM détectés lors de l'import de l'appareil virtuel (Debian 64-bit, 2 vCPU, 4 Go de RAM).">
-                        <img src="glpi/01-vm-parametres-import.png" alt="Paramètres de la VM lors de l'import dans VirtualBox" loading="lazy">
+                        <img src="glpi/GLPI/01-vm-parametres-import.png" alt="Paramètres de la VM lors de l'import dans VirtualBox" loading="lazy">
                     </button>
                     <figcaption>Paramètres de la VM détectés lors de l'import de l'appareil virtuel (Debian 64-bit, 2 vCPU, 4 Go de RAM).</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Import de la machine virtuelle en cours dans VirtualBox.">
-                        <img src="glpi/02-vm-import-virtualbox.png" alt="Import de la machine virtuelle en cours dans VirtualBox" loading="lazy">
+                        <img src="glpi/GLPI/02-vm-import-virtualbox.png" alt="Import de la machine virtuelle en cours dans VirtualBox" loading="lazy">
                     </button>
                     <figcaption>Import de la machine virtuelle en cours dans VirtualBox.</figcaption>
                 </figure>
@@ -634,13 +665,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Écran de connexion de la VM importée (Debian GNU/Linux 12, hostname glpiv2).">
-                        <img src="glpi/03-vm-ecran-connexion.png" alt="Écran de connexion de la VM Debian 12" loading="lazy">
+                        <img src="glpi/GLPI/03-vm-ecran-connexion.png" alt="Écran de connexion de la VM Debian 12" loading="lazy">
                     </button>
                     <figcaption>Écran de connexion de la VM importée (Debian GNU/Linux 12, hostname <code>glpiv2</code>).</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Activation de l'interface réseau et obtention d'une adresse IP (172.17.10.7 en mode Bridged).">
-                        <img src="glpi/04-vm-activation-reseau.png" alt="Activation de l'interface réseau et obtention d'une adresse IP" loading="lazy">
+                        <img src="glpi/GLPI/04-vm-activation-reseau.png" alt="Activation de l'interface réseau et obtention d'une adresse IP" loading="lazy">
                     </button>
                     <figcaption>Activation de l'interface réseau et obtention d'une adresse IP (172.17.10.7 en mode Bridged).</figcaption>
                 </figure>
@@ -654,7 +685,7 @@
 
             <figure>
                 <button class="figure-frame" data-caption="Première connexion SSH réussie à la VM de test depuis PowerShell.">
-                    <img src="glpi/05-ssh-premiere-connexion.png" alt="Première connexion SSH à la VM de test depuis PowerShell" loading="lazy">
+                    <img src="glpi/GLPI/05-ssh-premiere-connexion.png" alt="Première connexion SSH à la VM de test depuis PowerShell" loading="lazy">
                 </button>
                 <figcaption>Première connexion SSH réussie à la VM de test depuis PowerShell.</figcaption>
             </figure>
@@ -679,7 +710,7 @@
 
             <figure>
                 <button class="figure-frame" data-caption="Fichier /etc/glpi/config_db.php localisé (identifiants de connexion masqués).">
-                    <img src="glpi/06-config-db-localise.png" alt="Fichier config_db.php localisé dans /etc/glpi" loading="lazy">
+                    <img src="glpi/GLPI/06-config-db-localise.png" alt="Fichier config_db.php localisé dans /etc/glpi" loading="lazy">
                 </button>
                 <figcaption>Fichier <code>/etc/glpi/config_db.php</code> localisé (identifiants de connexion masqués).</figcaption>
             </figure>
@@ -693,13 +724,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="inc/downstream.php : redirection de la configuration vers /etc/glpi/.">
-                        <img src="glpi/07-downstream-php.png" alt="Contenu du fichier inc/downstream.php" loading="lazy">
+                        <img src="glpi/GLPI/07-downstream-php.png" alt="Contenu du fichier inc/downstream.php" loading="lazy">
                     </button>
                     <figcaption><code>inc/downstream.php</code> : redirection de la configuration vers <code>/etc/glpi/</code>.</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="local_define.php : redirection des fichiers (GLPI_VAR_DIR) et des journaux (GLPI_LOG_DIR).">
-                        <img src="glpi/08-local-define-php.png" alt="Contenu du fichier local_define.php" loading="lazy">
+                        <img src="glpi/GLPI/08-local-define-php.png" alt="Contenu du fichier local_define.php" loading="lazy">
                     </button>
                     <figcaption><code>local_define.php</code> : redirection des fichiers (<code>GLPI_VAR_DIR</code>) et des journaux (<code>GLPI_LOG_DIR</code>).</figcaption>
                 </figure>
@@ -720,13 +751,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Sauvegarde de la base de données réussie (30 Mo).">
-                        <img src="glpi/09-sauvegarde-base.png" alt="Sauvegarde de la base de données GLPI réussie" loading="lazy">
+                        <img src="glpi/GLPI/09-sauvegarde-base.png" alt="Sauvegarde de la base de données GLPI réussie" loading="lazy">
                     </button>
                     <figcaption>Sauvegarde de la base de données réussie (30 Mo).</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Sauvegarde des fichiers et de la configuration réussie (65 Mo).">
-                        <img src="glpi/10-sauvegarde-fichiers.png" alt="Sauvegarde des fichiers et de la configuration réussie" loading="lazy">
+                        <img src="glpi/GLPI/10-sauvegarde-fichiers.png" alt="Sauvegarde des fichiers et de la configuration réussie" loading="lazy">
                     </button>
                     <figcaption>Sauvegarde des fichiers et de la configuration réussie (65 Mo).</figcaption>
                 </figure>
@@ -746,7 +777,7 @@
 
             <figure>
                 <button class="figure-frame" data-caption="Découverte du plugin ocsinventoryng dans le dossier plugins de GLPI.">
-                    <img src="glpi/11-plugin-ocs-decouverte.png" alt="Découverte du plugin ocsinventoryng dans le dossier plugins" loading="lazy">
+                    <img src="glpi/GLPI/11-plugin-ocs-decouverte.png" alt="Découverte du plugin ocsinventoryng dans le dossier plugins" loading="lazy">
                 </button>
                 <figcaption>Découverte du plugin <code>ocsinventoryng</code> dans le dossier <code>plugins</code> de GLPI.</figcaption>
             </figure>
@@ -760,13 +791,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Version du plugin détectée dans le code source : 1.7.3, obsolète pour GLPI 11.">
-                        <img src="glpi/12-plugin-ocs-version.png" alt="Version 1.7.3 du plugin détectée dans le code source" loading="lazy">
+                        <img src="glpi/GLPI/12-plugin-ocs-version.png" alt="Version 1.7.3 du plugin détectée dans le code source" loading="lazy">
                     </button>
                     <figcaption>Version du plugin détectée dans le code source : 1.7.3, obsolète pour GLPI 11.</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Le plugin apparaît déjà désactivé dans l'interface GLPI.">
-                        <img src="glpi/13-plugin-ocs-desactive.png" alt="Plugin OCS Inventory NG désactivé dans l'interface GLPI" loading="lazy">
+                        <img src="glpi/GLPI/13-plugin-ocs-desactive.png" alt="Plugin OCS Inventory NG désactivé dans l'interface GLPI" loading="lazy">
                     </button>
                     <figcaption>Le plugin apparaît déjà désactivé dans l'interface GLPI.</figcaption>
                 </figure>
@@ -794,15 +825,16 @@
                     <dt>Décision</dt>
                     <dd>
                         Ce point n'étant pas bloquant pour l'objectif principal (la mise à jour du cœur de GLPI),
-                        sa résolution a été reportée à la phase de migration vers GLPI Inventory, prévue dans un
-                        axe ultérieur du projet.
+                        sa résolution a été reportée à l'axe «&nbsp;inventaire&nbsp;» du projet (remplacement de
+                        l'ancien plugin par l'agent GLPI), l'inventaire natif de GLPI 11 ne dépendant plus de ce
+                        plugin.
                     </dd>
                 </dl>
             </div>
 
             <figure>
                 <button class="figure-frame" data-caption="Extrait des journaux Apache confirmant la cause du blocage : base « ocsweb » introuvable.">
-                    <img src="glpi/14-logs-apache-ocsweb.png" alt="Journaux Apache montrant l'erreur Unknown database ocsweb" loading="lazy">
+                    <img src="glpi/GLPI/14-logs-apache-ocsweb.png" alt="Journaux Apache montrant l'erreur Unknown database ocsweb" loading="lazy">
                 </button>
                 <figcaption>Extrait des journaux Apache confirmant la cause du blocage : base «&nbsp;ocsweb&nbsp;» introuvable.</figcaption>
             </figure>
@@ -813,7 +845,7 @@
             <h3>5.1 Vérification de l'accès réseau de la VM</h3>
             <figure>
                 <button class="figure-frame" data-caption="Test de connectivité internet depuis la VM avant téléchargement.">
-                    <img src="glpi/15-test-connectivite.png" alt="Test de connectivité internet depuis la VM" loading="lazy">
+                    <img src="glpi/GLPI/15-test-connectivite.png" alt="Test de connectivité internet depuis la VM" loading="lazy">
                 </button>
                 <figcaption>Test de connectivité internet depuis la VM avant téléchargement.</figcaption>
             </figure>
@@ -827,7 +859,7 @@
 
             <figure>
                 <button class="figure-frame" data-caption="Diagnostic du débit réseau anormalement faible depuis la VM (6,74 Ko/s).">
-                    <img src="glpi/16-debit-reseau-faible.png" alt="Débit réseau anormalement faible mesuré depuis la VM" loading="lazy">
+                    <img src="glpi/GLPI/16-debit-reseau-faible.png" alt="Débit réseau anormalement faible mesuré depuis la VM" loading="lazy">
                 </button>
                 <figcaption>Diagnostic du débit réseau anormalement faible depuis la VM (6,74 Ko/s).</figcaption>
             </figure>
@@ -855,13 +887,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Règle de redirection de port SSH configurée dans VirtualBox (mode NAT).">
-                        <img src="glpi/17-nat-redirection-ssh.png" alt="Règle de redirection de port SSH dans VirtualBox" loading="lazy">
+                        <img src="glpi/GLPI/17-nat-redirection-ssh.png" alt="Règle de redirection de port SSH dans VirtualBox" loading="lazy">
                     </button>
                     <figcaption>Règle de redirection de port SSH configurée dans VirtualBox (mode NAT).</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Connexion SSH fonctionnelle via la redirection de port en mode NAT.">
-                        <img src="glpi/18-ssh-via-nat.png" alt="Connexion SSH fonctionnelle via la redirection de port NAT" loading="lazy">
+                        <img src="glpi/GLPI/18-ssh-via-nat.png" alt="Connexion SSH fonctionnelle via la redirection de port NAT" loading="lazy">
                     </button>
                     <figcaption>Connexion SSH fonctionnelle via la redirection de port en mode NAT.</figcaption>
                 </figure>
@@ -876,13 +908,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Téléchargement de glpi-11.0.8.tgz à 18,2 Mo/s.">
-                        <img src="glpi/19-telechargement-glpi.png" alt="Téléchargement de l'archive glpi-11.0.8.tgz" loading="lazy">
+                        <img src="glpi/GLPI/19-telechargement-glpi.png" alt="Téléchargement de l'archive glpi-11.0.8.tgz" loading="lazy">
                     </button>
                     <figcaption>Téléchargement de <code>glpi-11.0.8.tgz</code> à 18,2 Mo/s.</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Extraction de l'archive : structure standard de GLPI 11 obtenue.">
-                        <img src="glpi/20-extraction-archive.png" alt="Extraction de l'archive GLPI 11" loading="lazy">
+                        <img src="glpi/GLPI/20-extraction-archive.png" alt="Extraction de l'archive GLPI 11" loading="lazy">
                     </button>
                     <figcaption>Extraction de l'archive : structure standard de GLPI 11 obtenue.</figcaption>
                 </figure>
@@ -901,7 +933,7 @@
 
             <figure>
                 <button class="figure-frame" data-caption="Vérification du fichier downstream.php recopié dans la nouvelle version.">
-                    <img src="glpi/21-downstream-recopie.png" alt="Vérification du fichier downstream.php recopié" loading="lazy">
+                    <img src="glpi/GLPI/21-downstream-recopie.png" alt="Vérification du fichier downstream.php recopié" loading="lazy">
                 </button>
                 <figcaption>Vérification du fichier <code>downstream.php</code> recopié dans la nouvelle version.</figcaption>
             </figure>
@@ -917,13 +949,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Arrêt du service Apache avant remplacement des fichiers.">
-                        <img src="glpi/22-apache-arret.png" alt="Arrêt du service Apache" loading="lazy">
+                        <img src="glpi/GLPI/22-apache-arret.png" alt="Arrêt du service Apache" loading="lazy">
                     </button>
                     <figcaption>Arrêt du service Apache avant remplacement des fichiers.</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Ancienne version renommée, nouvelle version mise en place, permissions corrigées.">
-                        <img src="glpi/23-remplacement-fichiers.png" alt="Remplacement des fichiers et correction des permissions" loading="lazy">
+                        <img src="glpi/GLPI/23-remplacement-fichiers.png" alt="Remplacement des fichiers et correction des permissions" loading="lazy">
                     </button>
                     <figcaption>Ancienne version renommée, nouvelle version mise en place, permissions corrigées.</figcaption>
                 </figure>
@@ -931,7 +963,7 @@
 
             <figure>
                 <button class="figure-frame" data-caption="Redémarrage d'Apache : service actif sans erreur.">
-                    <img src="glpi/24-apache-redemarrage.png" alt="Redémarrage d'Apache, service actif" loading="lazy">
+                    <img src="glpi/GLPI/24-apache-redemarrage.png" alt="Redémarrage d'Apache, service actif" loading="lazy">
                 </button>
                 <figcaption>Redémarrage d'Apache : service actif sans erreur.</figcaption>
             </figure>
@@ -968,7 +1000,7 @@
 
             <figure>
                 <button class="figure-frame" data-caption="Erreur affichée avant correction de la configuration Apache.">
-                    <img src="glpi/25-erreur-webroot.png" alt="Erreur The web server seems to be misconfigured" loading="lazy">
+                    <img src="glpi/GLPI/25-erreur-webroot.png" alt="Erreur The web server seems to be misconfigured" loading="lazy">
                 </button>
                 <figcaption>Erreur affichée avant correction de la configuration Apache.</figcaption>
             </figure>
@@ -1003,13 +1035,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Fin de la liste des prérequis validés, bouton de relance de la vérification.">
-                        <img src="glpi/26-prerequis-liste.png" alt="Liste des prérequis GLPI validés" loading="lazy">
+                        <img src="glpi/GLPI/26-prerequis-liste.png" alt="Liste des prérequis GLPI validés" loading="lazy">
                     </button>
                     <figcaption>Fin de la liste des prérequis validés, bouton de relance de la vérification.</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Ensemble des prérequis PHP/MariaDB validés après installation de l'extension bcmath.">
-                        <img src="glpi/27-prerequis-valides.jpg" alt="Prérequis PHP et MariaDB validés" loading="lazy">
+                        <img src="glpi/GLPI/27-prerequis-valides.jpg" alt="Prérequis PHP et MariaDB validés" loading="lazy">
                     </button>
                     <figcaption>Ensemble des prérequis PHP/MariaDB validés après installation de l'extension <code>bcmath</code>.</figcaption>
                 </figure>
@@ -1025,13 +1057,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Migration de la base de données en cours : exécution séquentielle des mises à jour intermédiaires.">
-                        <img src="glpi/28-migration-en-cours.png" alt="Migration de la base de données en cours" loading="lazy">
+                        <img src="glpi/GLPI/28-migration-en-cours.png" alt="Migration de la base de données en cours" loading="lazy">
                     </button>
                     <figcaption>Migration de la base de données en cours : exécution séquentielle des mises à jour intermédiaires.</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Écran final de l'assistant d'installation, confirmant la fin de la migration.">
-                        <img src="glpi/29-migration-terminee.png" alt="Écran final de l'assistant d'installation GLPI" loading="lazy">
+                        <img src="glpi/GLPI/29-migration-terminee.png" alt="Écran final de l'assistant d'installation GLPI" loading="lazy">
                     </button>
                     <figcaption>Écran final de l'assistant d'installation, confirmant la fin de la migration.</figcaption>
                 </figure>
@@ -1047,13 +1079,13 @@
             <div class="figure-pair">
                 <figure>
                     <button class="figure-frame" data-caption="Page de connexion GLPI 11 fonctionnelle.">
-                        <img src="glpi/30-glpi11-connexion.png" alt="Page de connexion GLPI 11" loading="lazy">
+                        <img src="glpi/GLPI/30-glpi11-connexion.png" alt="Page de connexion GLPI 11" loading="lazy">
                     </button>
                     <figcaption>Page de connexion GLPI 11 fonctionnelle.</figcaption>
                 </figure>
                 <figure>
                     <button class="figure-frame" data-caption="Confirmation finale de la version active : GLPI 11.0.8.">
-                        <img src="glpi/32-glpi11-version.png" alt="Confirmation de la version GLPI 11.0.8" loading="lazy">
+                        <img src="glpi/GLPI/32-glpi11-version.png" alt="Confirmation de la version GLPI 11.0.8" loading="lazy">
                     </button>
                     <figcaption>Confirmation finale de la version active : GLPI 11.0.8.</figcaption>
                 </figure>
@@ -1061,7 +1093,7 @@
 
             <figure>
                 <button class="figure-frame" data-caption="Tableau de bord GLPI 11.0.8 opérationnel, données historiques conservées (5,0 K tickets).">
-                    <img src="glpi/31-glpi11-tableau-bord.png" alt="Tableau de bord GLPI 11.0.8 opérationnel" loading="lazy">
+                    <img src="glpi/GLPI/31-glpi11-tableau-bord.png" alt="Tableau de bord GLPI 11.0.8 opérationnel" loading="lazy">
                 </button>
                 <figcaption>Tableau de bord GLPI 11.0.8 opérationnel, données historiques conservées (5,0 K tickets).</figcaption>
             </figure>
@@ -1074,11 +1106,504 @@
             </p>
 
             <!-- ==================== 8 ==================== -->
-            <h2 id="incidents">8. Synthèse des incidents rencontrés et résolus</h2>
+            <h2 id="production">8. Mise en production</h2>
             <p>
-                La démarche de test a permis d'identifier et de résoudre <strong>quatre incidents avant toute
-                intervention sur la production</strong>, ce qui constitue l'un des principaux apports de cette
-                phase de test.
+                Après validation de la procédure par le maître d'apprentissage, la mise à jour a été appliquée sur
+                le serveur de production (<code>172.17.8.60</code>), en suivant à l'identique les étapes validées
+                sur l'environnement de test : sauvegarde de la base et des fichiers, recopie de
+                <code>inc/downstream.php</code> et de la configuration personnalisée, remplacement du dossier en
+                conservant l'ancienne version (<code>glpi-old-10.0.9</code>), <code>DocumentRoot</code> Apache
+                pointant vers <code>glpi/public</code>, installation de l'extension <code>php8.2-bcmath</code>,
+                puis migration de la base de données. Une procédure détaillée, rédigée à partir des résultats du
+                test, a servi de guide (document séparé «&nbsp;Procédure de mise à jour en production&nbsp;»).
+            </p>
+            <p>
+                Grâce à la phase de test, les deux principaux blocages (webroot <code>/public</code> et extension
+                <code>bcmath</code>) étaient connus à l'avance et ont été traités en quelques minutes. Deux
+                difficultés propres à la production ont en revanche été rencontrées :
+            </p>
+            <ul>
+                <li>l'installation de <code>php8.2-bcmath</code> a d'abord échoué (liste de paquets apt obsolète,
+                    commande mal collée dans le terminal) ; la solution a été de lancer <code>apt update</code>
+                    seul, puis de relancer l'installation ;</li>
+                <li>une erreur <code>TooManyResultsException</code> à la connexion, causée par deux lignes pour un
+                    même utilisateur dans la table <code>glpi_users</code> (même anomalie que celle déjà rencontrée
+                    sur la machine virtuelle) : voir la partie 12.</li>
+            </ul>
+            <p>
+                La version 11.0.8 est ensuite devenue la version active en production, avec conservation de
+                l'historique des tickets et des données de parc.
+            </p>
+
+            <!-- ==================== 9 ==================== -->
+            <h2 id="agent-vm">9. Agent GLPI : premier test sur la machine virtuelle (Linux)</h2>
+
+            <h3>9.1 Choix de l'inventaire natif plutôt que du plugin GLPI Inventory</h3>
+            <p>
+                Le projet prévoyait au départ le plugin <strong>GLPI Inventory</strong> pour remplacer l'ancien
+                plugin OCS Inventory NG. L'analyse de GLPI 11 a montré que cette étape était inutile : GLPI
+                intègre désormais un <strong>inventaire natif</strong> (point d'entrée
+                <code>/front/inventory.php</code>) capable de recevoir directement les inventaires envoyés par
+                l'agent GLPI. Le plugin GLPI Inventory n'apporte que des fonctions avancées (découverte réseau
+                SNMP, déploiement de logiciels, Wake-on-LAN) dont l'entreprise n'a pas besoin ici. Le parc sera
+                donc inventorié par l'agent GLPI seul, ce qui réduit le nombre de composants à maintenir.
+            </p>
+            <p>
+                Avant d'installer l'agent, il faut vérifier que l'inventaire est bien activé dans GLPI
+                (Administration &gt; Inventaire) : la case «&nbsp;Activer l'inventaire&nbsp;» est cochée,
+                l'authentification des agents est sur «&nbsp;Aucun&nbsp;» et la fréquence d'inventaire est de
+                24 heures.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Configuration de l'inventaire natif de GLPI : inventaire activé, fréquence de 24 heures.">
+                    <img src="glpi/Agent GLPI/agent-05_activation-inventaire.png" alt="Configuration de l'inventaire natif de GLPI" loading="lazy">
+                </button>
+                <figcaption>Configuration de l'inventaire natif de GLPI : inventaire activé, fréquence de 24 heures.</figcaption>
+            </figure>
+
+            <h3>9.2 Téléchargement et installation de l'agent</h3>
+            <p>
+                L'agent GLPI 1.19 a été téléchargé depuis le dépôt officiel GitHub du projet (paquet <code>.deb</code>
+                pour Debian) directement sur la machine virtuelle, puis installé avec <code>apt</code>.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Téléchargement du paquet glpi-agent_1.19-1_all.deb (4,1 Mo) sur la machine virtuelle.">
+                    <img src="glpi/Agent GLPI/agent-01_telechargement.png" alt="Téléchargement du paquet glpi-agent sur la VM" loading="lazy">
+                </button>
+                <figcaption>Téléchargement du paquet <code>glpi-agent_1.19-1_all.deb</code> (4,1 Mo) sur la machine virtuelle.</figcaption>
+            </figure>
+
+            <p>Lors de l'installation, <code>apt</code> affiche un avertissement sans gravité :</p>
+            <pre class="code-block"><code>N: Le téléchargement est effectué en dehors du bac à sable en tant que « root » car le fichier
+« /home/glpiv2/glpi-agent_1.19-1_all.deb » n'est pas accessible par l'utilisateur « _apt ».</code></pre>
+            <p>
+                Il signifie simplement que le fichier se trouve dans le dossier personnel d'un utilisateur, auquel
+                le compte système <code>_apt</code> n'a pas accès. L'installation se déroule normalement ; pour
+                éviter ce message, il suffit de placer le paquet dans <code>/tmp</code> avant de l'installer.
+            </p>
+
+            <h3>9.3 Configuration et démarrage du service</h3>
+            <p>
+                L'adresse du serveur est définie dans le fichier de configuration de l'agent
+                (<code>/etc/glpi-agent/agent.cfg</code>), via la directive <code>server</code>. Dans ce test, GLPI
+                se trouvant sur la même machine, elle pointe vers <code>http://localhost/front/inventory.php</code>.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Fichier de configuration de l'agent : directive server pointant vers l'inventaire natif de GLPI.">
+                    <img src="glpi/Agent GLPI/agent-03_config-agent.png" alt="Fichier de configuration de l'agent GLPI" loading="lazy">
+                </button>
+                <figcaption>Fichier de configuration de l'agent : directive <code>server</code> pointant vers l'inventaire natif de GLPI.</figcaption>
+            </figure>
+
+            <p>
+                Après un redémarrage, le service <code>glpi-agent</code> est actif. Les journaux indiquent que son
+                mini serveur web écoute sur le port 62354 et que la prochaine exécution est planifiée vers
+                l'adresse configurée.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Service glpi-agent actif (systemctl status) : serveur HTTP de l'agent sur le port 62354 et prochaine exécution planifiée.">
+                    <img src="glpi/Agent GLPI/agent-04_service-actif.png" alt="Service glpi-agent actif" loading="lazy">
+                </button>
+                <figcaption>Service <code>glpi-agent</code> actif (<code>systemctl status</code>) : serveur HTTP de l'agent sur le port 62354 et prochaine exécution planifiée.</figcaption>
+            </figure>
+
+            <h3>9.4 Premier inventaire</h3>
+            <p>
+                Un inventaire a été forcé immédiatement avec la commande <code>glpi-agent --server … --force</code>.
+                Les messages montrent le dialogue complet avec le serveur : requête «&nbsp;prolog&nbsp;», réponse
+                du serveur confirmant qu'il supporte le protocole de l'agent GLPI, puis exécution de la tâche
+                Inventory et création d'un nouvel inventaire.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Inventaire forcé : le serveur répond et enregistre « New inventory from glpiv2… ».">
+                    <img src="glpi/Agent GLPI/agent-06_inventaire-force.png" alt="Inventaire forcé depuis la VM" loading="lazy">
+                </button>
+                <figcaption>Inventaire forcé : le serveur répond et enregistre «&nbsp;New inventory from glpiv2…&nbsp;».</figcaption>
+            </figure>
+
+            <p>
+                Côté GLPI, l'agent apparaît dans Administration &gt; Inventaire &gt; Agents (version 1.19-1), et la
+                machine est créée dans Parc &gt; Ordinateurs avec son système d'exploitation, son processeur et ses
+                logiciels.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Liste des agents dans GLPI : l'agent de la VM (GLPI-Agent_v1.19-1) a contacté le serveur.">
+                    <img src="glpi/Agent GLPI/agent-10_agent-enregistre.png" alt="Liste des agents dans GLPI" loading="lazy">
+                </button>
+                <figcaption>Liste des agents dans GLPI : l'agent de la VM (<code>GLPI-Agent_v1.19-1</code>) a contacté le serveur.</figcaption>
+            </figure>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Ordinateur glpiv2 créé automatiquement dans Parc > Ordinateurs (Debian GNU/Linux 12).">
+                        <img src="glpi/Agent GLPI/agent-07_ordinateur-remonte.png" alt="Ordinateur glpiv2 créé automatiquement dans GLPI" loading="lazy">
+                    </button>
+                    <figcaption>Ordinateur <code>glpiv2</code> créé automatiquement dans Parc &gt; Ordinateurs (Debian GNU/Linux 12).</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Fiche de l'ordinateur : 567 logiciels remontés automatiquement par l'inventaire.">
+                        <img src="glpi/Agent GLPI/agent-08_logiciels.png" alt="567 logiciels remontés automatiquement" loading="lazy">
+                    </button>
+                    <figcaption>Fiche de l'ordinateur : 567 logiciels remontés automatiquement par l'inventaire.</figcaption>
+                </figure>
+            </div>
+
+            <!-- ==================== 10 ==================== -->
+            <h2 id="agent-windows">10. Agent GLPI sur poste Windows</h2>
+
+            <h3>10.1 Téléchargement et première installation</h3>
+            <p>
+                L'agent Windows se distribue sous forme de paquet MSI (<code>GLPI-Agent-1.19-x64.msi</code>),
+                téléchargé depuis la page officielle des versions du projet.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Page officielle de la version 1.19 de l'agent : installateur Windows 64 bits (MSI).">
+                    <img src="glpi/Agent GLPI/agent-11_msi-telecharge.png" alt="Page officielle de la version 1.19 de l'agent GLPI" loading="lazy">
+                </button>
+                <figcaption>Page officielle de la version 1.19 de l'agent : installateur Windows 64 bits (MSI).</figcaption>
+            </figure>
+
+            <p>
+                Une première installation manuelle a été faite sur le poste de travail de l'auteur du rapport, avec
+                l'assistant graphique, en pointant vers le GLPI de la machine virtuelle (redirection de port
+                <code>127.0.0.1:8080</code>). Le service <code>glpi-agent</code> démarre, un inventaire est forcé
+                avec <code>glpi-agent.bat --force</code>, et le poste apparaît dans le GLPI de test.
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Assistant d'installation : adresse du serveur GLPI de test saisie dans « Remote Targets ».">
+                        <img src="glpi/Agent GLPI/agent-12_config-serveur.png" alt="Assistant d'installation de l'agent GLPI Windows" loading="lazy">
+                    </button>
+                    <figcaption>Assistant d'installation : adresse du serveur GLPI de test saisie dans «&nbsp;Remote Targets&nbsp;».</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Service glpi-agent en cours d'exécution sur le poste (Get-Service).">
+                        <img src="glpi/Agent GLPI/agent-14_service-windows.png" alt="Service glpi-agent en cours d'exécution sur le poste Windows" loading="lazy">
+                    </button>
+                    <figcaption>Service <code>glpi-agent</code> en cours d'exécution sur le poste (<code>Get-Service</code>).</figcaption>
+                </figure>
+            </div>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Inventaire forcé en ligne de commande avec glpi-agent.bat --force.">
+                        <img src="glpi/Agent GLPI/agent-15_inventaire-force.png" alt="Inventaire forcé en ligne de commande sur le poste Windows" loading="lazy">
+                    </button>
+                    <figcaption>Inventaire forcé en ligne de commande avec <code>glpi-agent.bat --force</code>.</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Le poste Windows (HUGODOSSANTOS-B) apparaît dans le GLPI de test, à côté de la machine virtuelle Linux.">
+                        <img src="glpi/Agent GLPI/agent-16_pc-dell-remonte.png" alt="Le poste Windows apparaît dans le GLPI de test" loading="lazy">
+                    </button>
+                    <figcaption>Le poste Windows (HUGODOSSANTOS-B) apparaît dans le GLPI de test, à côté de la machine virtuelle Linux.</figcaption>
+                </figure>
+            </div>
+
+            <figure>
+                <button class="figure-frame" data-caption="Fiche du poste : constructeur, modèle, numéro de série, utilisateur et « Source de mise à jour : GLPI Native Inventory ».">
+                    <img src="glpi/Agent GLPI/agent-17_fiche-pc-dell.png" alt="Fiche du poste Windows dans GLPI" loading="lazy">
+                </button>
+                <figcaption>Fiche du poste : constructeur, modèle, numéro de série, utilisateur et «&nbsp;Source de mise à jour : GLPI Native Inventory&nbsp;».</figcaption>
+            </figure>
+
+            <h3>10.2 Vérification de l'adresse d'inventaire du vrai GLPI</h3>
+            <p>
+                Avant d'envoyer des inventaires vers le serveur de production, son adresse d'inventaire a été
+                vérifiée depuis un navigateur : <code>http://172.17.8.60/glpi/front/inventory.php</code>. La page
+                répond par une erreur HTTP 405 (méthode non autorisée). C'est le résultat attendu : ce point
+                d'entrée n'accepte que les envois (méthode POST) faits par les agents, et refuse une simple
+                consultation. Une erreur 404 aurait au contraire indiqué une mauvaise adresse.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="L'adresse d'inventaire répond par une erreur 405 : le point d'entrée existe et attend un envoi d'agent.">
+                    <img src="glpi/Deploy GLPI/deploy-02_verif-url.png" alt="Erreur 405 sur l'adresse d'inventaire du GLPI de production" loading="lazy">
+                </button>
+                <figcaption>L'adresse d'inventaire répond par une erreur 405 : le point d'entrée existe et attend un envoi d'agent.</figcaption>
+            </figure>
+
+            <h3>10.3 Script PowerShell d'installation</h3>
+            <p>
+                Pour industrialiser l'installation sur plusieurs postes, un script PowerShell
+                (<code>Install-GLPIAgent.ps1</code>, fourni en annexe) a été écrit. Il reprend la commande
+                <code>msiexec</code> et y ajoute des vérifications et un journal. Ses étapes sont les suivantes :
+            </p>
+            <ul>
+                <li>vérification que le script est lancé en administrateur ;</li>
+                <li>détection d'un agent déjà installé (lecture de la version dans le registre) ;</li>
+                <li>contrôle de la présence du fichier MSI et test de joignabilité du serveur GLPI ;</li>
+                <li>installation silencieuse avec les paramètres du serveur, et journal d'installation ;</li>
+                <li>imposition de l'adresse du serveur dans le registre, redémarrage du service
+                    <code>glpi-agent</code>, envoi d'un inventaire immédiat ;</li>
+                <li>affichage de la fin du journal de l'agent et écriture d'un journal du script
+                    (<code>C:\Windows\Temp\GLPI-Agent-install.log</code>).</li>
+            </ul>
+            <p>Les paramètres de l'installation silencieuse sont les suivants :</p>
+
+            <div class="table-wrap">
+                <table class="recap">
+                    <thead>
+                        <tr><th>Paramètre</th><th>Rôle</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>/quiet</code></td><td>installation sans fenêtre ni question à l'utilisateur</td></tr>
+                        <tr><td><code>SERVER=</code></td><td>adresse du serveur GLPI qui reçoit les inventaires</td></tr>
+                        <tr><td><code>TAG=</code></td><td>étiquette affichée sur la fiche de l'ordinateur (utilisée pour le test, abandonnée ensuite)</td></tr>
+                        <tr><td><code>EXECMODE=1</code></td><td>installe l'agent comme service Windows (c'est le mode par défaut)</td></tr>
+                        <tr><td><code>RUNNOW=1</code></td><td>envoie un premier inventaire dès la fin de l'installation</td></tr>
+                        <tr><td><code>ADD_FIREWALL_EXCEPTION=1</code></td><td>ajoute une exception dans le pare-feu Windows pour l'agent (le pare-feu n'est pas désactivé)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                Exécuté sur le poste de test, le script détecte l'agent déjà installé, vérifie le serveur,
+                installe, démarre le service et envoie l'inventaire, en affichant chaque étape en couleur.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Exécution du script : agent détecté, serveur joignable, installation, service démarré, inventaire envoyé.">
+                    <img src="glpi/Deploy GLPI/deploy-03_script-pc-hugo.png" alt="Exécution du script PowerShell d'installation" loading="lazy">
+                </button>
+                <figcaption>Exécution du script : agent détecté, serveur joignable, installation, service démarré, inventaire envoyé.</figcaption>
+            </figure>
+
+            <p>
+                En amont, la tentative de passer la stratégie d'exécution en «&nbsp;Bypass&nbsp;»
+                (<code>Set-ExecutionPolicy</code>) a produit un message d'erreur sans gravité : sur les postes de
+                l'entreprise, la stratégie est déjà définie à «&nbsp;Unrestricted&nbsp;» par GPO, et ce paramètre
+                prime sur celui de la session. Le script peut donc être lancé directement.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Message de Set-ExecutionPolicy : la stratégie « Unrestricted » imposée par GPO prévaut, sans conséquence.">
+                    <img src="glpi/Deploy GLPI/erreur non bloquante.png" alt="Message Set-ExecutionPolicy sans conséquence" loading="lazy">
+                </button>
+                <figcaption>Message de <code>Set-ExecutionPolicy</code> : la stratégie «&nbsp;Unrestricted&nbsp;» imposée par GPO prévaut, sans conséquence.</figcaption>
+            </figure>
+
+            <h3>10.4 Incident : le poste n'apparaît pas dans le vrai GLPI</h3>
+
+            <div class="incident" id="incident-5">
+                <div class="incident-head">
+                    <span class="incident-badge">Incident 5</span>
+                    <span class="incident-title">L'inventaire est «&nbsp;envoyé&nbsp;» mais le poste reste absent du GLPI de production</span>
+                </div>
+                <dl>
+                    <dt>Symptôme</dt>
+                    <dd>
+                        Le script indiquait «&nbsp;Inventaire envoyé&nbsp;» et le service tournait, mais le poste
+                        n'apparaissait pas dans Parc &gt; Ordinateurs du serveur de production.
+                    </dd>
+                    <dt>Diagnostic</dt>
+                    <dd>
+                        La clé de registre <code>HKLM:\SOFTWARE\GLPI-Agent</code> contenait encore
+                        <code>server = http://127.0.0.1:8080/front/inventory.php</code>, l'adresse de la machine
+                        virtuelle utilisée lors de la première installation. Le journal de l'agent confirmait
+                        l'erreur : «&nbsp;Can't connect to 127.0.0.1:8080 (connexion refusée)&nbsp;». Une
+                        réinstallation du MSI conserve en effet la configuration existante dans le registre :
+                        l'adresse passée en paramètre n'était donc pas appliquée.
+                    </dd>
+                    <dt>Solution</dt>
+                    <dd>
+                        Écrire explicitement l'adresse du vrai serveur dans le registre
+                        (<code>Set-ItemProperty</code>), redémarrer le service puis forcer un inventaire. Le script
+                        a été complété pour réaliser lui-même ces trois actions, et afficher la fin du journal de
+                        l'agent pour vérification.
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Avant correction : la liste des ordinateurs du vrai GLPI ne contient pas le poste (noms et numéros de série masqués).">
+                        <img src="glpi/Deploy GLPI/deploy-01.png" alt="Liste des ordinateurs avant correction, poste absent" loading="lazy">
+                    </button>
+                    <figcaption>Avant correction : la liste des ordinateurs du vrai GLPI ne contient pas le poste (noms et numéros de série masqués).</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Clé « server » du registre pointant encore vers 127.0.0.1:8080, et journal d'installation du script.">
+                        <img src="glpi/Deploy GLPI/deploy-04_bug-ancienne-config.png" alt="Clé de registre pointant vers l'ancienne adresse" loading="lazy">
+                    </button>
+                    <figcaption>Clé «&nbsp;server&nbsp;» du registre pointant encore vers <code>127.0.0.1:8080</code>, et journal d'installation du script.</figcaption>
+                </figure>
+            </div>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Correction : adresse du vrai serveur écrite dans le registre, service redémarré, puis « New inventory » accepté par le serveur.">
+                        <img src="glpi/Deploy GLPI/deploy-05_log-apres-correction.png" alt="Journal après correction de la clé de registre" loading="lazy">
+                    </button>
+                    <figcaption>Correction : adresse du vrai serveur écrite dans le registre, service redémarré, puis «&nbsp;New inventory&nbsp;» accepté par le serveur.</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Après correction : le poste HUGODOSSANTOS-B apparaît dans le GLPI de production (autres noms et numéros de série masqués).">
+                        <img src="glpi/Deploy GLPI/deploy-06_pc-hugo-remonte.png" alt="Poste HUGODOSSANTOS-B apparaît dans le GLPI de production" loading="lazy">
+                    </button>
+                    <figcaption>Après correction : le poste HUGODOSSANTOS-B apparaît dans le GLPI de production (autres noms et numéros de série masqués).</figcaption>
+                </figure>
+            </div>
+
+            <p>
+                Ce problème ne concernait que le poste de test, où un agent avait déjà été installé avec l'adresse
+                de la machine virtuelle. Pour les autres postes, l'agent est installé pour la première fois avec la
+                bonne adresse : la protection n'est donc pas nécessaire dans la commande de déploiement.
+            </p>
+
+            <h3>10.5 Version simplifiée en une seule ligne</h3>
+            <p>
+                Le maître d'apprentissage a proposé une version réduite à une seule commande <code>msiexec</code>,
+                qui reprend l'essentiel (serveur, service, exception pare-feu). Une commande équivalente, pour un
+                poste sans agent, est la suivante :
+            </p>
+            <pre class="code-block"><code>msiexec /i "GLPI-Agent-1.19-x64.msi" /quiet SERVER=http://172.17.8.60/glpi/front/inventory.php EXECMODE=1 RUNNOW=1 ADD_FIREWALL_EXCEPTION=1</code></pre>
+            <p>
+                Cette ligne remplace le script lorsque le poste n'a pas déjà un agent. Le script reste utile pour
+                ce que la ligne ne fait pas : contrôle du serveur, journal, correction d'une ancienne
+                configuration. C'est la commande <code>msiexec</code> (sans le script) qui a été retenue pour le
+                déploiement par GPO.
+            </p>
+
+            <!-- ==================== 11 ==================== -->
+            <h2 id="gpo">11. Déploiement par GPO</h2>
+
+            <h3>11.1 Contrainte et principe</h3>
+            <p>
+                L'agent doit être installé automatiquement sur tous les postes, mais les techniciens lancent le
+                VPN après avoir déverrouillé leur session : une installation déclenchée à l'ouverture de session
+                ou au démarrage pourrait échouer, faute d'accès au partage réseau. Le déploiement repose donc sur
+                une <strong>tâche planifiée immédiate</strong> définie dans la configuration de l'ordinateur
+                (préférences de stratégie de groupe), exécutée par le compte système dès que la stratégie est
+                appliquée, avec des relances en cas d'échec.
+            </p>
+
+            <h3>11.2 Partage réseau du paquet</h3>
+            <p>
+                Le paquet MSI de l'agent (version 1.21, la plus récente au moment du déploiement) est placé dans un
+                dossier <code>GLPIAgent</code> sur un partage du serveur de fichiers. Ce partage doit être lisible
+                par les comptes ordinateurs du domaine, puisque la tâche s'exécute avec le compte système de chaque
+                poste. Un chemin réseau (UNC) est indispensable : un poste ne peut pas installer un MSI situé sur
+                le disque d'un autre.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Dossier GLPIAgent créé sur le partage de déploiement (le nom d'un dossier est masqué).">
+                    <img src="glpi/Deploy GLPI/deploy-07-glpiagent-dans -serveur-fichier.png" alt="Dossier GLPIAgent sur le partage de déploiement" loading="lazy">
+                </button>
+                <figcaption>Dossier <code>GLPIAgent</code> créé sur le partage de déploiement (le nom d'un dossier est masqué).</figcaption>
+            </figure>
+
+            <h3>11.3 La tâche planifiée « GLPI AGENT install »</h3>
+            <p>
+                La GPO «&nbsp;GLPI Agent Install Scheduled Task&nbsp;» est rattachée aux ordinateurs. Elle crée une
+                tâche immédiate qui lance <code>msiexec.exe</code> avec les arguments ci-dessous ; la tâche
+                s'exécute en <code>NT AUTHORITY\System</code> avec les autorisations maximales, donc sans dépendre
+                d'un utilisateur connecté.
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Console de gestion des stratégies de groupe : tâche immédiate « GLPI AGENT install » exécutée par le compte système, et programme lancé (msiexec.exe).">
+                        <img src="glpi/Deploy GLPI/deploy-GPO.png" alt="Console de gestion des stratégies de groupe, tâche GLPI AGENT install" loading="lazy">
+                    </button>
+                    <figcaption>Console de gestion des stratégies de groupe : tâche immédiate «&nbsp;GLPI AGENT install&nbsp;» exécutée par le compte système, et programme lancé (<code>msiexec.exe</code>).</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Paramètres de la tâche : relances toutes les heures (3 fois), exécution dès que possible, indépendante de l'alimentation secteur, règle IgnoreNew.">
+                        <img src="glpi/Deploy GLPI/deploy GPO zoom.png" alt="Paramètres de la tâche planifiée GPO" loading="lazy">
+                    </button>
+                    <figcaption>Paramètres de la tâche : relances toutes les heures (3 fois), exécution dès que possible, indépendante de l'alimentation secteur, règle <code>IgnoreNew</code>.</figcaption>
+                </figure>
+            </div>
+
+            <p>La ligne de commande exécutée est :</p>
+            <pre class="code-block"><code>msiexec.exe /quiet /i \\172.17.8.22\ocs$\GLPIAgent\GLPI-Agent-1.21-x64.msi ADD_FIREWALL_EXCEPTION=1 DEBUG=2 NO_HTTPD=1 SERVER=http://172.17.8.60/glpi RUNNOW=1</code></pre>
+
+            <div class="table-wrap">
+                <table class="recap">
+                    <thead>
+                        <tr><th>Élément</th><th>Rôle</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>/quiet /i &lt;chemin UNC&gt;</code></td><td>installation silencieuse du MSI situé sur le partage réseau</td></tr>
+                        <tr><td><code>ADD_FIREWALL_EXCEPTION=1</code></td><td>ajoute l'exception pare-feu de l'agent</td></tr>
+                        <tr><td><code>DEBUG=2</code></td><td>journal très détaillé : utile pendant le déploiement pour diagnostiquer un poste, à retirer ensuite (le journal est limité à 4 Mo)</td></tr>
+                        <tr><td><code>NO_HTTPD=1</code></td><td>désactive le mini serveur web de l'agent (port 62354) : aucun port n'est ouvert sur les postes ; en contrepartie, GLPI ne peut pas demander un inventaire à la demande, l'agent envoie ses inventaires de lui-même</td></tr>
+                        <tr><td><code>SERVER=http://172.17.8.60/glpi</code></td><td>adresse du serveur GLPI de production</td></tr>
+                        <tr><td><code>RUNNOW=1</code></td><td>premier inventaire dès la fin de l'installation</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                Les options de la tâche répondent à la contrainte du VPN : si l'installation échoue (partage
+                injoignable, par exemple), elle est relancée toutes les heures, jusqu'à 3 fois ; si un démarrage
+                planifié est manqué, elle s'exécute dès que possible ; elle ne dépend pas du fait que l'ordinateur
+                soit branché sur le secteur (utile pour les portables) ; et si elle est déjà en cours, la nouvelle
+                exécution est ignorée (règle «&nbsp;IgnoreNew&nbsp;»).
+            </p>
+
+            <h3>11.4 Condition d'application : ne pas réinstaller à chaque actualisation</h3>
+            <p>
+                Une tâche immédiate peut être réappliquée à chaque actualisation de la stratégie. Pour éviter de
+                réinstaller l'agent sur les postes qui l'ont déjà, l'élément est soumis à un ciblage au niveau de
+                l'élément : une correspondance de registre de type «&nbsp;clé existante&nbsp;» sur
+                <code>HKEY_LOCAL_MACHINE\SOFTWARE\GLPI-Agent</code>, avec l'option «&nbsp;non&nbsp;» (opérateur
+                NOT). La tâche ne s'exécute donc que si la clé <code>GLPI-Agent</code> n'existe pas encore,
+                c'est-à-dire sur un poste sans agent. L'option «&nbsp;Appliquer une fois et ne pas
+                réappliquer&nbsp;» est sur «&nbsp;Non&nbsp;» : la condition de registre suffit.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Onglet « Commun » de la tâche : ciblage « KEYEXISTS » sur HKLM\SOFTWARE\GLPI-Agent avec l'opérateur NOT.">
+                    <img src="glpi/Deploy GLPI/deploy-08_ciblage-registre.png" alt="Ciblage au niveau de l'élément : clé de registre GLPI-Agent" loading="lazy">
+                </button>
+                <figcaption>Onglet «&nbsp;Commun&nbsp;» de la tâche : ciblage «&nbsp;KEYEXISTS&nbsp;» sur <code>HKLM\SOFTWARE\GLPI-Agent</code> avec l'opérateur NOT.</figcaption>
+            </figure>
+
+            <p>
+                Conséquence à connaître : un poste qui possède déjà une clé <code>GLPI-Agent</code> (par exemple le
+                poste de test, installé avec l'adresse de la machine virtuelle) n'est jamais reconfiguré par cette
+                GPO. Il faudrait le corriger manuellement, comme décrit en partie 10.4.
+            </p>
+
+            <h3>11.5 Déploiement et résultat</h3>
+            <p>
+                Le déploiement a d'abord été validé sur une agence. Le test s'étant bien déroulé, la GPO a ensuite
+                été étendue à l'ensemble du parc. Dès le lendemain matin (16 octobre 2026), la liste Parc &gt;
+                Ordinateurs de GLPI affichait <strong>223 ordinateurs</strong> (avec le filtre par modèle actif sur
+                cette vue), dont les dernières modifications datent du 15 au 16 octobre : les postes envoient leur
+                inventaire automatiquement après installation de l'agent.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Liste Parc > Ordinateurs de GLPI après le déploiement : 223 ordinateurs, inventoriés les 15 et 16 octobre (noms et numéros de série masqués).">
+                    <img src="glpi/Deploy GLPI/deploy, GPO fonctionne !.png" alt="223 ordinateurs inventoriés après le déploiement GPO" loading="lazy">
+                </button>
+                <figcaption>Liste Parc &gt; Ordinateurs de GLPI après le déploiement : 223 ordinateurs, inventoriés les 15 et 16 octobre (noms et numéros de série masqués).</figcaption>
+            </figure>
+
+            <p>
+                Quelques points restent à surveiller : un poste dont la première remontée est incomplète (par
+                exemple sans système d'exploitation affiché) sera complété par l'inventaire suivant ; les postes
+                éteints ou hors réseau recevront l'agent à leur prochaine connexion ; et le paramètre
+                <code>DEBUG=2</code> pourra être retiré une fois le déploiement stabilisé.
+            </p>
+
+            <!-- ==================== 12 ==================== -->
+            <h2 id="incidents">12. Synthèse des incidents rencontrés et résolus</h2>
+            <p>
+                Les tests et le déploiement ont permis d'identifier et de résoudre <strong>neuf incidents ou
+                points d'attention</strong>. Les quatre premiers ont été traités sur l'environnement de test, avant
+                toute intervention sur la production, ce qui constitue l'un des principaux apports de cette phase :
             </p>
 
             <div class="table-wrap">
@@ -1111,50 +1636,124 @@
                             <td>Debian 12 n'installe pas cette extension PHP par défaut ; elle est devenue obligatoire en GLPI 11</td>
                             <td>Installation via <code>apt install php8.2-bcmath</code>, puis nouvelle vérification</td>
                         </tr>
+                        <tr>
+                            <td><a href="#production">Production : l'installation de <code>php8.2-bcmath</code> échoue</a></td>
+                            <td>Liste de paquets apt obsolète et commande mal collée dans le terminal</td>
+                            <td><code>apt update</code> lancé seul, puis nouvelle installation</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#production">Erreur <code>TooManyResultsException</code> à la connexion (VM, puis production)</a></td>
+                            <td>Deux lignes pour le même utilisateur dans la table <code>glpi_users</code></td>
+                            <td>Vérification qu'aucun profil, ticket, suivi ni document n'est lié à la ligne en trop, puis suppression de cette ligne ; même méthode en production</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#agent-vm">Agent Linux : avertissement apt sur l'accès au fichier .deb par «&nbsp;_apt&nbsp;»</a></td>
+                            <td>Le paquet était dans un dossier personnel inaccessible au compte système <code>_apt</code></td>
+                            <td>Sans conséquence ; placer le paquet dans <code>/tmp</code> pour éviter le message</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#incident-5">Poste Windows «&nbsp;envoyé&nbsp;» mais absent du vrai GLPI</a></td>
+                            <td>La clé de registre <code>server</code> pointait encore vers la VM (<code>127.0.0.1:8080</code>) : une réinstallation du MSI conserve la configuration existante</td>
+                            <td>Écriture de l'adresse du vrai serveur dans le registre, redémarrage du service, inventaire forcé ; script complété pour le faire automatiquement</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#agent-windows"><code>Set-ExecutionPolicy</code> refuse le mode Bypass</a></td>
+                            <td>La stratégie «&nbsp;Unrestricted&nbsp;» imposée par GPO prévaut sur celle de la session</td>
+                            <td>Sans conséquence : le script se lance directement</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- ==================== 9 ==================== -->
-            <h2 id="bilan">9. Bilan et perspectives</h2>
+            <!-- ==================== 13 ==================== -->
+            <h2 id="bilan">13. Bilan et perspectives</h2>
 
             <div class="callout">
                 <p>
-                    L'axe «&nbsp;mise à jour&nbsp;» du projet est <strong>validé sur l'environnement de test</strong> :
-                    GLPI 11.0.8 fonctionne correctement, avec l'intégralité des données de production conservées.
-                </p>
-                <p>
-                    Un document complémentaire («&nbsp;Journal des changements GLPI 10.0.9 → 11.0.8&nbsp;») a été
-                    produit pour synthétiser les nouveautés fonctionnelles, les changements techniques et les
-                    correctifs de sécurité apportés par cette montée de version, à destination du maître
-                    d'apprentissage.
+                    Les deux premiers axes du projet sont réalisés. GLPI 11.0.8 fonctionne <strong>en
+                    production</strong> avec l'intégralité des données conservées, et l'inventaire du parc est
+                    désormais assuré par l'agent GLPI, déployé automatiquement par GPO et remonté dans
+                    l'inventaire natif de GLPI, sans plugin supplémentaire. Un document complémentaire
+                    («&nbsp;Journal des changements GLPI 10.0.9 → 11.0.8&nbsp;») synthétise les nouveautés
+                    fonctionnelles, les changements techniques et les correctifs de sécurité apportés par la
+                    montée de version.
                 </p>
             </div>
 
+            <h3>Ce que le projet a apporté</h3>
+            <ul>
+                <li>une démarche reproductible : test sur une copie de la production, puis procédure écrite, puis application réelle ;</li>
+                <li>neuf problèmes identifiés et documentés, dont les quatre principaux avant d'atteindre la production ;</li>
+                <li>une architecture d'inventaire simplifiée (agent unique, inventaire natif, plus de dépendance au plugin OCS).</li>
+            </ul>
+
             <h3>Prochaines étapes du projet</h3>
             <ol class="next-steps">
-                <li class="done">
-                    <strong>Axe 1 — Mise à jour du cœur de GLPI</strong> : testée et validée sur l'environnement
-                    de test (objet de ce rapport).
-                </li>
-                <li>
-                    Validation de cette procédure par le maître d'apprentissage avant application sur le serveur
-                    de production.
-                </li>
-                <li>
-                    <strong>Axe 2</strong> — Remplacement du plugin OCS Inventory NG par GLPI Inventory.
-                </li>
-                <li>
-                    <strong>Axe 3</strong> — Structuration de la CMDB : inventaire des postes, contrats et licences.
-                </li>
-                <li>
-                    <strong>Axe 4</strong> — Mise en place de la création automatique de tickets par e-mail.
-                </li>
+                <li>Finaliser le déploiement : vérifier les postes qui n'ont pas encore remonté, puis retirer <code>DEBUG=2</code> de la commande.</li>
+                <li>Retirer l'ancien système OCS Inventory NG (plugin dans GLPI et agents sur les postes) une fois la remontée complète validée.</li>
+                <li>Migrer les formulaires Formcreator vers le système intégré de GLPI 11 (<code>php bin/console migration:formcreator_plugin_to_core</code>).</li>
+                <li><strong>Axe 3</strong> — Structurer la CMDB : inventaire des postes, contrats et licences.</li>
+                <li><strong>Axe 4</strong> — Mettre en place la création automatique de tickets par e-mail.</li>
+                <li>En complément, évaluer le suivi des fins de garantie Dell via le plugin «&nbsp;Manufacturers Imports&nbsp;» (clés d'API Dell à obtenir).</li>
             </ol>
 
             <p>
-                Ce rapport sera complété au fur et à mesure de l'avancement de ces trois axes restants.
+                Ce rapport sera complété au fur et à mesure de l'avancement des axes restants.
             </p>
+
+            <!-- ==================== ANNEXE ==================== -->
+            <h2 id="annexe">Annexe — Script PowerShell d'installation de l'agent</h2>
+            <p>
+                Script utilisé pour le test sur poste Windows (partie 10.3). Les accents ont été retirés des
+                messages pour éviter tout problème d'encodage dans la console.
+            </p>
+            <pre class="code-block"><code>$GlpiServer = "http://172.17.8.60/glpi/front/inventory.php"
+$MsiName    = "GLPI-Agent-1.19-x64.msi"
+$Tag        = "TEST-AGENT"
+$Reg = "HKLM:\SOFTWARE\GLPI-Agent"
+$Dir = "C:\Program Files\GLPI-Agent"
+
+function Log($m, $c = "White") {
+    $l = "$(Get-Date -f 'yyyy-MM-dd HH:mm:ss')  $m"
+    Write-Host $l -ForegroundColor $c
+    Add-Content "C:\Windows\Temp\GLPI-Agent-install.log" $l
+}
+
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Host "Lancer ce script dans un PowerShell administrateur." -ForegroundColor Red
+    exit 1
+}
+
+Log "===== Debut installation agent GLPI sur $env:COMPUTERNAME =====" Cyan
+
+$v = (Get-ItemProperty "$Reg\Installer" -ErrorAction SilentlyContinue).Version
+if ($v) { Log "Agent deja installe (version $v), il sera reconfigure." Yellow }
+
+$Msi = Join-Path $PSScriptRoot $MsiName
+if (-not (Test-Path $Msi)) { Log "MSI introuvable : $Msi" Red; exit 1 }
+
+if (Test-Connection ([Uri]$GlpiServer).Host -Count 1 -Quiet) {
+    Log "Serveur GLPI joignable." Green
+} else {
+    Log "Serveur GLPI injoignable, inventaire envoye plus tard." Yellow
+}
+
+$p = Start-Process msiexec.exe -Wait -PassThru -ArgumentList "/i `"$Msi`" /quiet SERVER=`"$GlpiServer`" TAG=`"$Tag`" EXECMODE=1 RUNNOW=1 ADD_FIREWALL_EXCEPTION=1 /l*v C:\Windows\Temp\GLPI-Agent-msi.log"
+if ($p.ExitCode -notin 0, 3010) { Log "Echec de l'installation (code $($p.ExitCode))." Red; exit $p.ExitCode }
+Log "Installation terminee (code $($p.ExitCode))." Green
+
+Set-ItemProperty $Reg -Name server -Value $GlpiServer
+Set-ItemProperty $Reg -Name tag -Value $Tag
+Log "Serveur configure : $((Get-ItemProperty $Reg).server)" Green
+
+Restart-Service glpi-agent; Start-Sleep 5
+if ((Get-Service glpi-agent).Status -eq "Running") { Log "Service glpi-agent demarre." Green } else { Log "Service glpi-agent arrete." Red }
+
+Log "Envoi d'un inventaire immediat..."
+& "$Dir\glpi-agent.bat" --force | Out-Null
+Get-Content "$Dir\logs\glpi-agent.log" -Tail 10 | ForEach-Object { Log "   $_" }
+
+Log "===== Fin. Verifier le PC dans GLPI : Parc > Ordinateurs =====" Cyan</code></pre>
 
         </article>
 
