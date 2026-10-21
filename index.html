@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio BTS SIO SISR - Hugo Dos Santos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio BTS SIO SISR - Présentation des compétences, projets et expériences.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== RESET SIMPLE ==================== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: radial-gradient(circle at top left, #111827, #020617);
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+        /* ==================== VARIABLES (SIMPLIFIÉES) ==================== */
+        :root {
+            --font-display: 'DM Serif Display', serif;
+            --font-body: 'Outfit', system-ui, -apple-system, sans-serif;
+            --font-mono: 'DM Mono', monospace;
+            --bg-dark: #020617;
+            --bg-card: rgba(15, 23, 42, 0.9);
+            --bg-card-soft: rgba(15, 23, 42, 0.65);
+            --border-soft: rgba(148, 163, 184, 0.25);
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --accent: #22c55e;
+            --accent-soft: rgba(34, 197, 94, 0.2);
+            --accent-strong: #00f5a0;
+            --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
+            --radius-lg: 20px;
+            --radius-full: 999px;
+            --transition-fast: 0.2s ease-out;
+            --transition-med: 0.35s ease-out;
+            --container-width: 1100px;
+        }
+
+        /* ==================== BACKGROUND ANIMÉ ==================== */
+        .background-animated {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #020617 100%);
+        }
+
+        .background-animated .circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            animation: float 18s infinite alternate ease-in-out;
+        }
+
+        .background-animated .c1 {
+            width: 420px;
+            height: 420px;
+            background: rgba(34, 197, 94, 0.3);
+            top: -100px;
+            left: -80px;
+        }
+
+        .background-animated .c2 {
+            width: 380px;
+            height: 380px;
+            background: rgba(56, 189, 248, 0.25);
+            bottom: -120px;
+            right: -60px;
+            animation-delay: 3s;
+        }
+
+        .background-animated .c3 {
+            width: 320px;
+            height: 320px;
+            background: rgba(244, 63, 94, 0.22);
+            bottom: 10%;
+            left: 5%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            100% {
+                transform: translateY(-40px) translateX(40px);
+            }
+        }
+
+        /* ==================== LAYOUT GLOBAL ==================== */
+        .container {
+            width: 100%;
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Variante large : utilisee par le tableau de synthese E5, qui a besoin
+           de plus de place horizontale que le reste du site. */
+        .container-wide {
+            max-width: min(1600px, 96vw);
+        }
+
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        /* ==================== HEADER & NAV ==================== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(18px);
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.7), transparent);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+        }
+
+        .logo-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            background: radial-gradient(circle at 30% 0%, #22c55e, #0ea5e9);
+            color: #020617;
+            font-size: 0.9rem;
+        }
+
+        .logo-text {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: #f9fafb;
+        }
+
+        /* NAVIGATION */
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .nav-link {
+            font-family: var(--font-mono);
+            position: relative;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.25rem 0.8rem;
+            border-radius: 999px;
+            transition: color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            height: 2px;
+            width: 0;
+            left: 50%;
+            bottom: 4px;
+            transform: translateX(-50%);
+            border-radius: 999px;
+            background: linear-gradient(to right, #22c55e, #0ea5e9);
+            transition: width var(--transition-med);
+        }
+
+        .nav-link:hover {
+            color: #f9fafb;
+            background: rgba(15, 23, 42, 0.7);
+            transform: translateY(-1px);
+        }
+
+        .nav-link:hover::after {
+            width: 60%;
+        }
+
+        /* ==================== HERO ==================== */
+        .hero {
+            padding: 7rem 0 5rem;
+        }
+
+        /* Hero sur une seule colonne, centre */
+        .hero-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-text {
+            max-width: 46rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: var(--accent-strong);
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(2.2rem, 3.4vw, 3.1rem);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: #f9fafb;
+        }
+
+        .hero-title span {
+            background: linear-gradient(to right, #22c55e, #0ea5e9);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.02rem;
+            color: var(--text-muted);
+            max-width: 36rem;
+            margin: 0 auto 1.8rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2.2rem;
+        }
+
+        /* BOUTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.4rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+        }
+
+        .btn.primary {
+            background: radial-gradient(circle at top left, #22c55e, #0ea5e9);
+            color: #020617;
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.9);
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 1);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border-color: rgba(148, 163, 184, 0.5);
+            color: #e5e7eb;
+        }
+
+        .btn.ghost:hover {
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        /* INFOS HERO */
+        .hero-infos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .hero-info-item {
+            padding: 0.6rem 0.9rem;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(15, 23, 42, 0.8);
+            font-size: 0.8rem;
+        }
+
+        .hero-info-label {
+            display: block;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .hero-info-value {
+            color: #f9fafb;
+            font-weight: 500;
+        }
+
+        /* PHOTO HERO */
+
+
+
+        /* BADGE HERO */
+
+
+
+        /* ==================== TITRES DE SECTION ==================== */
+        .section-header {
+            margin-bottom: 3.2rem;
+        }
+
+        .section-header.center {
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 1.6rem;
+            margin-bottom: 0.6rem;
+            color: #f9fafb;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* ==================== GRIDS ==================== */
+        .grid {
+            display: grid;
+            gap: 2.2rem;
+        }
+
+        /* Espace entre deux grilles qui se suivent dans une meme section */
+        .grid + .grid {
+            margin-top: 2.2rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        /* ==================== CARTES ==================== */
+        .card {
+            border-radius: var(--radius-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            padding: 2rem 1.9rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.12), transparent 55%);
+            opacity: 0;
+            transition: opacity var(--transition-med);
+            pointer-events: none;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-glass {
+            background: var(--bg-card-soft);
+            backdrop-filter: blur(18px);
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 1.05rem;
+            margin-bottom: 0.7rem;
+            color: #f9fafb;
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.7rem;
+        }
+
+        /* Petites cartes */
+        .small-card {
+            padding: 1.3rem 1.2rem;
+        }
+
+        .small-card-title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 0.95rem;
+            margin-bottom: 0.6rem;
+            color: #f9fafb;
+        }
+
+        /* ==================== LISTES & PILL ==================== */
+        .list {
+            list-style: none;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .list li {
+            margin-bottom: 0.55rem;
+            position: relative;
+            padding-left: 1.1rem;
+        }
+
+        .list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--accent);
+        }
+
+        .pill-list,
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0;
+            list-style: none;   /* supprime les puces parasites */
+        }
+
+        .pill-list li,
+        .pill-row li {
+            list-style: none;
+        }
+
+        .pill {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--text-muted);
+        }
+
+        /* ==================== COMPÉTENCES ==================== */
+        .competence-card .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.6rem 0 1rem;
+        }
+
+        .tag-list li {
+            list-style: none;
+            font-size: 0.78rem;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+        }
+
+        .progress-group {
+            margin-top: 0.7rem;
+        }
+
+        .progress-item {
+            margin-bottom: 0.6rem;
+        }
+
+        .progress-item span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.9);
+            overflow: hidden;
+        }
+
+        .progress-bar span {
+            display: block;
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(to right, #22c55e, #0ea5e9);
+        }
+
+        .competence-extra {
+            margin-top: 2rem;
+        }
+
+        .competence-extra h3 {
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+        }
+
+        /* ==================== ACCORDEON / MENU DÉFILANT ==================== */
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .accordion-item {
+            border-radius: 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            background: rgba(15, 23, 42, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: none;
+            color: inherit;
+            text-align: left;
+        }
+
+        .accordion-header:hover {
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        .accordion-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #f9fafb;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .accordion-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 0.2rem;
+        }
+
+        .accordion-icon {
+            font-size: 1.2rem;
+            color: var(--accent);
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .accordion-body {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-soft);
+        }
+
+        /* Layout interne de l'accordéon (ex: Texte + Image) */
+        .accordion-layout {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .accordion-img-container {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            background: #000;
+            margin-bottom: 1.5rem; /* Espace si on empile plusieurs images */
+        }
+
+        .accordion-img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .accordion-text h4 {
+            color: #f9fafb;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            margin-top: 1.5rem; /* Espacement entre paragraphes */
+        }
+        
+        .accordion-text h4:first-child {
+            margin-top: 0;
+        }
+
+        .accordion-text p {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* ==================== TIMELINE EXPÉRIENCES ==================== */
+        .timeline {
+            --tl-gap: 1.75rem;   /* distance ligne -> contenu */
+            --tl-dot: 12px;      /* diametre du point */
+            border-left: 1px dashed rgba(148, 163, 184, 0.5);
+            margin-left: 0.75rem;
+            padding-left: var(--tl-gap);
+            display: flex;
+            flex-direction: column;
+            gap: 1.7rem;
+        }
+
+        .timeline-item {
+            position: relative;
+        }
+
+        /* Le point est centre sur la ligne :
+           on recule de l'ecart (--tl-gap) + la moitie du point,
+           en tenant compte du 1px de bordure. */
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: calc(-1 * var(--tl-gap) - var(--tl-dot) / 2 - 0.5px);
+            top: 0.45rem;
+            width: var(--tl-dot);
+            height: var(--tl-dot);
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 0%, #22c55e, #0ea5e9);
+            box-shadow: 0 0 0 4px rgba(2, 6, 23, 1), 0 0 0 7px rgba(34, 197, 94, 0.22);
+        }
+
+        .timeline-date {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--accent-strong);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 1rem;
+            color: #f9fafb;
+            margin-bottom: 0.15rem;
+        }
+
+        .timeline-role {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .timeline-text {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .timeline-tags {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+        }
+
+        .timeline-tags li {
+            font-family: var(--font-mono);
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        /* ==================== CONTACT ==================== */
+        .contact-grid {
+            align-items: flex-start;
+        }
+
+        /* ==================== CERTIFICATS + LIGHTBOX ==================== */
+        .project-tag {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            margin-bottom: 0.9rem;
+        }
+
+        .certif-thumb {
+            position: relative;
+            display: block;
+            width: 100%;
+            margin-top: 1.2rem;
+            padding: 0;
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+            cursor: pointer;
+            font: inherit;
+            transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .certif-thumb img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .certif-thumb:hover,
+        .certif-thumb:focus-visible {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 30px rgba(34, 197, 94, 0.18);
+            outline: none;
+        }
+        .certif-thumb-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(2, 6, 23, 0.72);
+            color: #f9fafb;
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+        .certif-thumb:hover .certif-thumb-overlay,
+        .certif-thumb:focus-visible .certif-thumb-overlay {
+            opacity: 1;
+        }
+        .certif-count {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            min-width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: var(--accent);
+            color: #020617;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(2, 6, 23, 0.92);
+            backdrop-filter: blur(6px);
+            padding: 2rem 1rem;
+        }
+        .lightbox.open {
+            display: flex;
+        }
+        .lightbox-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 72vh;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            background: #fff;
+            object-fit: contain;
+        }
+        .lightbox-caption {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        .lightbox-counter {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft);
+            background: rgba(15, 23, 42, 0.9);
+            color: #f9fafb;
+            font-size: 1.3rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: background var(--transition-fast), color var(--transition-fast);
+        }
+        .lightbox-close:hover {
+            background: var(--accent);
+            color: #020617;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 46px;
+            height: 46px;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft);
+            background: rgba(15, 23, 42, 0.9);
+            color: #f9fafb;
+            font-size: 1.4rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: background var(--transition-fast), color var(--transition-fast);
+        }
+        .lightbox-nav:hover {
+            background: var(--accent);
+            color: #020617;
+        }
+        .lightbox-prev { left: 1.5rem; }
+        .lightbox-next { right: 1.5rem; }
+        .lightbox-nav[hidden] { display: none; }
+
+        @media (max-width: 720px) {
+            .lightbox-prev { left: 0.5rem; }
+            .lightbox-next { right: 0.5rem; }
+            .lightbox-img { max-height: 62vh; }
+        }
+
+        /* ==================== NOUVEAUX ELEMENTS ==================== */
+        .timeline-list {
+            margin: 0.9rem 0 1rem;
+            padding-left: 1.1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .timeline-list li {
+            margin-bottom: 0.35rem;
+        }
+
+        .card-meta {
+            font-family: var(--font-mono);
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .contact-list a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        .contact-list a:hover {
+            color: var(--accent-strong);
+            text-decoration: underline;
+        }
+
+        .contact-list {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .contact-list li {
+            margin-bottom: 0.4rem;
+        }
+
+        .contact-list span {
+            font-weight: 500;
+            color: #f9fafb;
+        }
+
+        /* ==================== FOOTER ==================== */
+        .footer {
+            border-top: 1px solid rgba(148, 163, 184, 0.35);
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .footer-container {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .back-to-top {
+            font-size: 0.8rem;
+            text-decoration: none;
+            color: var(--accent-strong);
+        }
+
+        /* ==================== ANIMATIONS FADE-IN ==================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.15s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.45s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== TABLEAU DE SYNTHÈSE E5 (Annexe VI) ==================== */
+        .e5-doc-header {
+            background: var(--bg-card-soft);
+            border: 1px solid var(--border-soft);
+            border-radius: 12px 12px 0 0;
+            border-bottom: none;
+            padding: 1.2rem 1.4rem;
+            backdrop-filter: blur(18px);
+        }
+        .e5-doc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .e5-doc-session {
+            color: var(--accent-strong);
+            font-weight: 600;
+        }
+        .e5-doc-title {
+            margin: 0.7rem 0 1rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #f9fafb;
+            text-align: center;
+        }
+        .e5-doc-fields {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.45rem 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-soft);
+            padding-top: 0.9rem;
+        }
+        .e5-doc-fields strong { color: #f9fafb; font-weight: 500; }
+        .e5-checked { color: var(--accent); font-weight: 600; }
+
+        .e5-table-container {
+            overflow-x: auto;
+            border: 1px solid var(--border-soft);
+            border-radius: 0 0 12px 12px;
+            background: var(--bg-card-soft);
+            backdrop-filter: blur(18px);
+            box-shadow: var(--shadow-soft);
+        }
+        .e5-table {
+            width: 100%;
+            min-width: 1250px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .e5-table th,
+        .e5-table td {
+            border: 1px solid var(--border-soft);
+            padding: 0.6rem 0.7rem;
+            vertical-align: top;
+        }
+        /* Colonne d'angle */
+        .e5-corner {
+            width: 340px;
+            min-width: 340px;
+            background: rgba(15, 23, 42, 0.95);
+            position: relative;
+            background-image: linear-gradient(to top right,
+                transparent 0%, transparent 49.6%,
+                var(--border-soft) 49.6%, var(--border-soft) 50.4%,
+                transparent 50.4%, transparent 100%);
+        }
+        .e5-corner-top {
+            display: block;
+            text-align: right;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .e5-corner-bot {
+            display: block;
+            text-align: left;
+            margin-top: 2.5rem;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .e5-period {
+            width: 90px;
+            min-width: 90px;
+            background: rgba(15, 23, 42, 0.95);
+            color: #f9fafb;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            vertical-align: middle;
+        }
+        /* En-têtes de compétences */
+        .e5-comp {
+            background: rgba(15, 23, 42, 0.95);
+            color: #f9fafb;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            width: 140px;
+            min-width: 140px;
+            line-height: 1.35;
+        }
+        /* Sous-compétences */
+        .e5-subrow td {
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            line-height: 1.5;
+        }
+        /* Lignes de bloc */
+        .e5-block-row td {
+            background: rgba(34, 197, 94, 0.12);
+            color: var(--accent-strong);
+            font-weight: 600;
+            font-size: 0.82rem;
+            letter-spacing: 0.02em;
+            text-align: left;
+        }
+        /* Cellules réalisations */
+        .e5-realisation {
+            color: #f9fafb;
+            font-weight: 500;
+            font-size: 0.82rem;
+            vertical-align: middle;
+        }
+        /* Documents et productions associes a une realisation */
+        .e5-realisation .e5-sub {
+            display: block;
+            margin-top: 0.3rem;
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 0.72rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+        .e5-realisation a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent);
+        }
+        .e5-realisation a:hover { color: var(--accent-strong); }
+        .e5-period-cell {
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 0.78rem;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        /* Croix de validation */
+        .e5-x {
+            text-align: center;
+            vertical-align: middle;
+            color: var(--accent-strong);
+            font-weight: 700;
+            font-size: 0.95rem;
+            background: rgba(34, 197, 94, 0.08);
+        }
+        .e5-empty-row td { opacity: 0.55; }
+        .e5-table tbody tr:not(.e5-block-row):hover td {
+            background: rgba(148, 163, 184, 0.07);
+        }
+        .e5-table tbody tr:not(.e5-block-row):hover .e5-x {
+            background: rgba(34, 197, 94, 0.18);
+        }
+
+        .e5-actions {
+            margin-top: 1.8rem;
+            text-align: center;
+        }
+        .e5-note {
+            margin-top: 0.9rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 720px) {
+            .e5-doc-fields { grid-template-columns: minmax(0, 1fr); }
+        }
+        /* Fin tableau E5 */
+
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 960px) {
+            .hero {
+                padding: 5rem 0 4rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            /* Pour l'accordéon en mobile, on empile texte et image */
+            .accordion-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .nav {
+                gap: 0.5rem;
+            }
+
+            .nav-link {
+                font-size: 0.8rem;
+                padding-inline: 0.6rem;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .header-container {
+                flex-direction: column;
+                gap: 0.6rem;
+                align-items: flex-start;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+
+            .grid-2,
+            .grid-3,
+            .projects-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 0.4rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ancre de retour en haut (hors du header sticky, sinon le lien ne defile pas) -->
+    <span id="top"></span>
+
+    <div class="background-animated">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+        <div class="circle c3"></div>
+    </div>
+
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <span class="logo-mark">&lt;/&gt;</span>
+                <span class="logo-text">Hugo Dos Santos</span>
+            </div>
+
+            <nav class="nav">
+                <a href="#hero" class="nav-link">Accueil</a>
+                <a href="#profil" class="nav-link">Profil</a>
+                <a href="#competences" class="nav-link">Compétences</a>
+                <a href="#e5" class="nav-link">Tableau E5</a>
+                <a href="#projets" class="nav-link">Projets</a>
+                <a href="#experiences" class="nav-link">Parcours</a>
+                <a href="#veille" class="nav-link">Veille</a>
+                <a href="#certifications" class="nav-link">Certifications</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="hero">
+        <div class="container hero-container">
+            <div class="hero-text fade-in">
+                <p class="hero-tag">BTS SIO option SISR</p>
+                <h1 class="hero-title">
+                    Bonjour, je suis <span>Hugo Dos Santos</span><br>
+                    futur administrateur syst&egrave;mes &amp; r&eacute;seaux.
+                </h1>
+                <p class="hero-subtitle">
+                    &Eacute;tudiant en BTS SIO option SISR au CFA UTEC d'&Eacute;merainville,
+                    en alternance au sein du service informatique de la Compagnie Hobart.
+                    Ce portfolio pr&eacute;sente mes r&eacute;alisations, mes comp&eacute;tences et ma veille technologique.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#projets" class="btn primary">Voir mes projets</a>
+                    <a href="#profil" class="btn ghost">D&eacute;couvrir mon profil</a>
+                </div>
+
+                <div class="hero-infos">
+                    <div class="hero-info-item">
+                        <span class="hero-info-label">Formation</span>
+                        <span class="hero-info-value">BTS SIO SISR</span>
+                    </div>
+                    <div class="hero-info-item">
+                        <span class="hero-info-label">Sp&eacute;cialit&eacute;</span>
+                        <span class="hero-info-value">Syst&egrave;mes &amp; R&eacute;seaux</span>
+                    </div>
+                    <div class="hero-info-item">
+                        <span class="hero-info-label">Objectif</span>
+                        <span class="hero-info-value">Cybers&eacute;curit&eacute;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="profil">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Profil</h2>
+                <p class="section-subtitle">
+                    Présentation générale, projet professionnel, qualités et soft skills.
+                </p>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card card-glass fade-in">
+                    <h3 class="card-title">À propos de moi</h3>
+                    <p class="card-text">
+                        J'ai commencé mon parcours informatique en première quand j'ai intégré une classe de STI2D a MLK, Bussy Saint-Georges. Depuis cette annnée j'ai su que je voulais travailler dans le domaine de la technologie 
+
+         
+                    </p>
+                    <p class="card-text">
+                       
+                    </p>
+                </div>
+
+                <div class="card card-glass fade-in delay-1">
+                    <h3 class="card-title">Projet professionnel</h3>
+                    <p class="card-text">
+                        Après le BTS je souhaite me rediriger vers la cyber sécurité avec une licence d'un an puis un master en cyber
+                        
+                    </p>
+                    <ul class="pill-list">
+                        <li class="pill">Cybersécurité</li>
+                        <li class="pill">Systèmes & Réseaux</li>
+                        <li class="pill">Administrateur</li>
+                        <li class="pill">Support utilisateur</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid grid-3 profil-grid-bottom">
+                <div class="card small-card fade-in delay-2">
+                    <h4 class="small-card-title">Soft skills</h4>
+                    <ul class="list">
+                        <li>Esprit d'équipe</li>
+                        <li>Rigueur et organisation</li>
+                        <li>Curiosité technique</li>
+                        <li>Autonomie</li>
+                    </ul>
+                </div>
+
+                <div class="card small-card fade-in delay-3">
+                    <h4 class="small-card-title">Qualités BTS</h4>
+                    <ul class="list">
+                        <li>Capacité d'analyse</li>
+                        <li>Sens du service</li>
+                        <li>Communication</li>
+                        <li>Gestion du stress</li>
+                    </ul>
+                </div>
+
+                <div class="card small-card fade-in delay-4">
+                    <h4 class="small-card-title">Langues</h4>
+                    <ul class="list">
+                        <li>Français — langue maternelle</li>
+                        <li>Anglais — C1</li>
+                        <li>Espagnol — B2</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="competences">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="section-title">Compétences SISR</h2>
+                <p class="section-subtitle">
+                    Administration systèmes & réseaux • Sécurité • Support • Scripts
+                </p>
+            </div>
+
+            <div class="grid grid-3">
+                <article class="card competence-card fade-in">
+                    <h3 class="card-title">Systèmes</h3>
+                    <p class="card-text">
+                        Liste ici les systèmes que tu maîtrises : installation, configuration de comptes création d'utilisateurs
+                       sauvegardes...
+                    </p>
+                    <ul class="tag-list">
+                        <li>Windows Server</li>
+                        <li>Active Directory</li>
+                        <li>Linux (Debian / Ubuntu)</li>
+                        <li>VirtualBox</li>
+                    </ul>
+                    <div class="progress-group">
+                        <div class="progress-item">
+                            <span>Windows Server</span>
+                            <div class="progress-bar">
+                                <span style="width: 80%;"></span>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <span>Linux</span>
+                            <div class="progress-bar">
+                                <span style="width: 45%;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card competence-card fade-in delay-1">
+                    <h3 class="card-title">Réseaux</h3>
+                    <p class="card-text">
+                        Adressage IP, VLAN, routage statique, configuration de switchs et routeurs, services réseau...
+                    </p>
+                    <ul class="tag-list">
+                        <li>Adressage IPv4 / IPv6</li>
+                        <li>VLAN / Trunk</li>
+                        <li>DHCP / DNS</li>
+                        <li>Routeurs & Switchs</li>
+                    </ul>
+                    <div class="progress-group">
+                        <div class="progress-item">
+                            <span>Réseaux & VLAN</span>
+                            <div class="progress-bar">
+                                <span style="width: 75%;"></span>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <span>Services réseau</span>
+                            <div class="progress-bar">
+                                <span style="width: 70%;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card competence-card fade-in delay-2">
+                    <h3 class="card-title">Sécurité</h3>
+                    <p class="card-text">
+                        Sécurisation des systèmes, des réseaux, sauvegardes, surveillance et bonnes pratiques.
+                    </p>
+                    <ul class="tag-list">
+                        <li>Pare-feu / filtrage</li>
+                        <li>Sauvegardes</li>
+                        <li>Supervision</li>
+                        <li>Gestion des droits</li>
+                    </ul>
+                    <div class="progress-group">
+                        <div class="progress-item">
+                            <span>Sécurité systèmes</span>
+                            <div class="progress-bar">
+                                <span style="width: 65%;"></span>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <span>Sécurité réseau</span>
+                            <div class="progress-bar">
+                                <span style="width: 60%;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="competence-extra fade-in delay-3">
+                <h3>Compétences transverses</h3>
+                <div class="pill-row">
+                    <span class="pill">Support utilisateur</span>
+                    <span class="pill">Gestion de tickets</span>
+                    <span class="pill">Documentation technique</span>
+                    <span class="pill">Scripting (PowerShell / Bash)</span>
+                    <span class="pill">Utilisation GIT</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="e5">
+        <div class="container container-wide">
+            <div class="section-header center">
+                <h2 class="section-title">Tableau de synthèse E5</h2>
+                <p class="section-subtitle">
+                    Tableau de synthèse des réalisations professionnelles — Annexe VI, épreuve E5, session 2026.
+                </p>
+            </div>
+
+            <!-- En-tête officiel du document -->
+            <div class="e5-doc-header fade-in">
+                <div class="e5-doc-row">
+                    <span class="e5-doc-official">BTS SERVICES INFORMATIQUES AUX ORGANISATIONS</span>
+                    <span class="e5-doc-session">SESSION 2026</span>
+                </div>
+                <div class="e5-doc-title">Tableau de synthèse des réalisations professionnelles</div>
+                <div class="e5-doc-fields">
+                    <div><strong>NOM et prénom :</strong> Dos Santos Hugo</div>
+                    <div><strong>N° candidat :</strong> —</div>
+                    <div><strong>Centre de formation :</strong> UTEC Émerainville</div>
+                    <div><strong>Option :</strong> <span class="e5-checked">☒ SISR</span> &nbsp; ☐ SLAM</div>
+                </div>
+            </div>
+
+            <div class="e5-table-container fade-in">
+                <table class="e5-table">
+                    <thead>
+                        <tr>
+                            <th class="e5-corner" rowspan="2">
+                                <span class="e5-corner-top">Compétences mises en œuvre</span>
+                                <span class="e5-corner-bot">Réalisations professionnelles</span>
+                            </th>
+                            <th class="e5-period" rowspan="2">Période</th>
+                            <th class="e5-comp">Gérer le patrimoine informatique</th>
+                            <th class="e5-comp">Répondre aux incidents et aux demandes d'assistance et d'évolution</th>
+                            <th class="e5-comp">Développer la présence en ligne de l'organisation</th>
+                            <th class="e5-comp">Travailler en mode projet</th>
+                            <th class="e5-comp">Mettre à disposition des utilisateurs un service informatique</th>
+                            <th class="e5-comp">Organiser son développement professionnel</th>
+                        </tr>
+                        <tr class="e5-subrow">
+                            <td>
+                                ▸Recenser et identifier les ressources numériques<br>
+                                ▸Exploiter des référentiels, normes et standards<br>
+                                ▸Mettre en place et vérifier les niveaux d'habilitation<br>
+                                ▸Vérifier les conditions de la continuité d'un service<br>
+                                ▸Gérer des sauvegardes<br>
+                                ▸Vérifier le respect des règles d'utilisation
+                            </td>
+                            <td>
+                                ▸Collecter, suivre et orienter des demandes<br>
+                                ▸Traiter des demandes concernant les services réseau et système<br>
+                                ▸Traiter des demandes concernant les applications
+                            </td>
+                            <td>
+                                ▸Participer à la valorisation de l'image de l'organisation<br>
+                                ▸Référencer les services en ligne et mesurer leur visibilité<br>
+                                ▸Participer à l'évolution d'un site Web
+                            </td>
+                            <td>
+                                ▸Analyser les objectifs et modalités d'organisation d'un projet<br>
+                                ▸Planifier les activités<br>
+                                ▸Évaluer les indicateurs de suivi et analyser les écarts
+                            </td>
+                            <td>
+                                ▸Réaliser les tests d'intégration et d'acceptation<br>
+                                ▸Déployer un service<br>
+                                ▸Accompagner les utilisateurs dans la mise en place
+                            </td>
+                            <td>
+                                ▸Mettre en place son environnement d'apprentissage<br>
+                                ▸Mettre en œuvre des outils et stratégies de veille<br>
+                                ▸Gérer son identité professionnelle<br>
+                                ▸Développer son projet professionnel
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Bloc 1 -->
+                        <tr class="e5-block-row">
+                            <td colspan="8">Réalisation en cours de formation</td>
+                        </tr>
+                        <tr>
+                            <td class="e5-realisation">
+                                Certifications et formations complémentaires
+                                <span class="e5-sub">
+                                    Cisco, EBIOS Risk Manager (ANSSI) et Atelier RGPD de la CNIL —
+                                    <a href="#certifications">attestations consultables</a>
+                                </span>
+                            </td>
+                            <td class="e5-period-cell">2025 – 2027</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="e5-x">X</td>
+                        </tr>
+                        <tr>
+                            <td class="e5-realisation">
+                                Veille informatique sur la cryptographie
+                                <span class="e5-sub">
+                                    Un article analysé par mois, sources identifiées (ANSSI, CERT-FR, LeMagIT) —
+                                    <a href="veille-cryptographie.html">dossier de veille</a>
+                                </span>
+                            </td>
+                            <td class="e5-period-cell">2025 – 2027</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="e5-x">X</td>
+                        </tr>
+                        <tr>
+                            <td class="e5-realisation">
+                                CV et profil professionnel LinkedIn
+                                <span class="e5-sub">
+                                    Rédaction du CV et animation du profil LinkedIn&nbsp;: gestion de l'identité
+                                    professionnelle numérique.
+                                </span>
+                            </td>
+                            <td class="e5-period-cell">2025 – 2027</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="e5-x">X</td>
+                        </tr>
+                        <tr>
+                            <td class="e5-realisation">
+                                Conception et mise en ligne du portfolio professionnel
+                                <span class="e5-sub">
+                                    Site développé en HTML, CSS et JavaScript&nbsp;; mise en ligne à venir.
+                                </span>
+                            </td>
+                            <td class="e5-period-cell">2025 – 2027</td>
+                            <td></td>
+                            <td></td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                            <td></td>
+                            <td class="e5-x">X</td>
+                        </tr>
+
+                        <!-- Bloc 2 -->
+                        <tr class="e5-block-row">
+                            <td colspan="8">Réalisations en milieu professionnel en cours de première année</td>
+                        </tr>
+                        <tr>
+                            <td class="e5-realisation">
+                                Gestion des comptes, des licences et des habilitations
+                                <span class="e5-sub">
+                                    Portail Microsoft 365&nbsp;: comptes, droits d'accès et licences des utilisateurs et
+                                    techniciens. Forfaits mobiles et internet via l'espace client Orange.
+                                </span>
+                            </td>
+                            <td class="e5-period-cell">2025 – 2027</td>
+                            <td class="e5-x">X</td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="e5-realisation">
+                                Migration du parc de Windows&nbsp;10 vers Windows&nbsp;11
+                                <span class="e5-sub">
+                                    Recensement via l'inventaire du parc et un ticket par poste, puis migration d'environ
+                                    80 postes par clé USB d'installation.
+                                </span>
+                            </td>
+                            <td class="e5-period-cell">2026</td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                            <td></td>
+                            <td class="e5-x">X</td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="e5-realisation">Mise en place de nouveaux switchs au sein de l'entreprise</td>
+                            <td class="e5-period-cell">06/2025</td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="e5-realisation">
+                                Mise à jour du serveur GLPI 10.0.9 vers 11.0.8
+                                <span class="e5-sub">
+                                    Montée de version testée sur un clone de la production&nbsp;: sauvegardes, migration de la
+                                    base, quatre incidents résolus — <a href="projet-glpi.html">rapport technique</a>
+                                </span>
+                            </td>
+                            <td class="e5-period-cell">Fin juillet 2026</td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                            <td></td>
+                            <td class="e5-x">X</td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="e5-realisation">
+                                Préparation et déploiement des postes de travail
+                                <span class="e5-sub">
+                                    Sur demande de remplacement de postes anciens&nbsp;: déploiement d'une image par le
+                                    réseau (RJ45), applications et restrictions appliquées par GPO.
+                                </span>
+                            </td>
+                            <td class="e5-period-cell">2025 – 2027</td>
+                            <td class="e5-x">X</td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                            <td></td>
+                            <td class="e5-x">X</td>
+                            <td></td>
+                        </tr>
+
+                        <!-- Bloc 3 -->
+                        <tr class="e5-block-row">
+                            <td colspan="8">Réalisations en milieu professionnel en cours de seconde année</td>
+                        </tr>
+                        <!-- RAPPEL : projet prevu en seconde annee - renouvellement d'environ 150 postes techniciens.
+                             Completer l'intitule, la periode et les competences une fois le projet demarre,
+                             puis reporter la ligne dans tableau-synthese-E5.xlsx (ligne L28). -->
+                        <tr class="e5-empty-row">
+                            <td class="e5-realisation">
+                                À venir — renouvellement des postes techniciens
+                                <span class="e5-sub">
+                                    Refonte d'environ 150 postes techniciens.
+                                </span>
+                            </td>
+                            <td class="e5-period-cell">À compléter</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="e5-empty-row">
+                            <td class="e5-realisation">—</td>
+                            <td class="e5-period-cell">—</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="e5-actions">
+                <a href="tableau-synthese-E5.xlsx" class="btn primary" download>⬇ Télécharger le tableau de synthèse (.xlsx)</a>
+                <p class="e5-note">
+                    Reproduction fidèle du modèle officiel (Annexe VI-1, BTS SIO session 2026). Tableau complété au fil de la formation.
+                </p>
+            </div>
+        </div>
+    </section>
+
+<section class="section" id="projets">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="section-title">Projets Détaillés</h2>
+                <p class="section-subtitle">
+                    Découvrez mes projets majeurs, avec documentations, architectures et captures d'écran.
+                </p>
+            </div>
+
+            <div class="grid grid-3">
+                <article class="card card-glass fade-in">
+                    <div style="margin-bottom: 1rem; border-radius: 12px; height: 180px; background: #000; overflow: hidden;">
+                        <img src="glpi/31-glpi11-tableau-bord.png" alt="Tableau de bord GLPI 11.0.8 après migration"
+                             loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
+                    </div>
+                    <div class="project-tag">Alternance &middot; 1<sup>re</sup> année</div>
+                    <h3 class="card-title">Mise à jour du serveur GLPI</h3>
+                    <p class="card-text" style="margin-bottom: 1.5rem;">
+                        Montée de version 10.0.9 vers 11.0.8 de l'outil de gestion de parc et de tickets de la Compagnie Hobart,
+                        entièrement testée sur un clone de la production avant intervention. Quatre incidents diagnostiqués et résolus.
+                    </p>
+                    <a href="projet-glpi.html" class="btn primary" style="width: 100%; padding: 0.5rem;">Lire le rapport technique &rarr;</a>
+                </article>
+
+                <article class="card card-glass fade-in delay-1">
+                    <div style="margin-bottom: 1rem; border-radius: 12px; height: 180px; background: #000; overflow: hidden;">
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #555; background: #111827;">Miniature Projet</div>
+                    </div>
+                    <div class="project-tag">Lab Virtuel</div>
+                    <h3 class="card-title">Infrastructure Active Directory</h3>
+                    <p class="card-text" style="margin-bottom: 1.5rem;">
+                        Création d'un domaine Windows Server complet avec gestion des utilisateurs, GPO de sécurité et services réseau (DHCP/DNS).
+                    </p>
+                    <a href="projet-ad.html" class="btn ghost" style="width: 100%; padding: 0.5rem; text-align: center; border: 1px solid var(--border-soft); border-radius: 999px; text-decoration: none; color: var(--text-main); display: block;">Lire le dossier complet &rarr;</a>
+                </article>
+
+                <article class="card card-glass fade-in delay-2">
+                    <div style="margin-bottom: 1rem; border-radius: 12px; height: 180px; background: #000; overflow: hidden;">
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #555; background: #111827;">Miniature Projet</div>
+                    </div>
+                    <div class="project-tag">Cybersécurité</div>
+                    <h3 class="card-title">Pare-feu pfSense & VPN</h3>
+                    <p class="card-text" style="margin-bottom: 1.5rem;">
+                        Sécurisation du périmètre réseau, segmentation en VLANs et configuration d'un accès distant sécurisé via OpenVPN.
+                    </p>
+                    <a href="#" class="btn ghost" style="width: 100%; padding: 0.5rem; text-align: center; border: 1px solid var(--border-soft); border-radius: 999px; text-decoration: none; color: var(--text-main); display: block;">Lire le dossier complet &rarr;</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="experiences">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="section-title">Parcours</h2>
+                <p class="section-subtitle">
+                    Mon parcours de formation et mon expérience professionnelle en alternance.
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-date">Sept. 2025 &ndash; Ao&ucirc;t 2027</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Apprentissage &mdash; Compagnie Hobart</h3>
+                        <p class="timeline-role">Apprenti technicien informatique &middot; Croissy-Beaubourg (77)</p>
+                        <p class="timeline-text">
+                            Alternance de 2 ans au sein du service informatique d'une entreprise de
+                            290 salari&eacute;s, sp&eacute;cialis&eacute;e dans les &eacute;quipements de restauration professionnelle.
+                            J'interviens au quotidien sur le support aux utilisateurs et l'administration
+                            du parc informatique, sous la responsabilit&eacute; du responsable d'exploitation.
+                        </p>
+                        <ul class="timeline-list">
+                            <li>Support et assistance aux utilisateurs (incidents mat&eacute;riels, logiciels et r&eacute;seau)</li>
+                            <li>Gestion des habilitations et des comptes utilisateurs (Active Directory / Entra ID)</li>
+                            <li>D&eacute;ploiement et migration de postes de travail (Windows 10 &rarr; Windows 11)</li>
+                            <li>Mise en place et configuration de nouveaux switchs r&eacute;seau</li>
+                            <li>Administration de la t&eacute;l&eacute;phonie d'entreprise (Microsoft Teams)</li>
+                        </ul>
+                        <ul class="timeline-tags">
+                            <li>Support N1/N2</li>
+                            <li>Active Directory</li>
+                            <li>Microsoft 365</li>
+                            <li>R&eacute;seaux</li>
+                            <li>Windows Server</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item fade-in delay-1">
+                    <div class="timeline-date">2025 &ndash; 2027</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">BTS SIO &mdash; option SISR</h3>
+                        <p class="timeline-role">CFA UTEC &middot; &Eacute;merainville (77)</p>
+                        <p class="timeline-text">
+                            Brevet de Technicien Sup&eacute;rieur Services Informatiques aux Organisations,
+                            option Solutions d'Infrastructure, Syst&egrave;mes et R&eacute;seaux. Formation en
+                            alternance ax&eacute;e sur l'administration syst&egrave;me et r&eacute;seau, la cybers&eacute;curit&eacute;
+                            et le support informatique.
+                        </p>
+                        <ul class="timeline-tags">
+                            <li>Syst&egrave;mes</li>
+                            <li>R&eacute;seaux</li>
+                            <li>Cybers&eacute;curit&eacute;</li>
+                            <li>Virtualisation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item fade-in delay-2">
+                    <div class="timeline-date">2025</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Baccalaur&eacute;at STI2D</h3>
+                        <p class="timeline-role">Lyc&eacute;e Martin Luther King &middot; Bussy-Saint-Georges (77)</p>
+                        <p class="timeline-text">
+                            Baccalaur&eacute;at Sciences et Technologies de l'Industrie et du D&eacute;veloppement
+                            Durable, obtenu avec <strong>mention Bien</strong>. Premi&egrave;re approche des syst&egrave;mes
+                            num&eacute;riques et de la programmation.
+                        </p>
+                        <ul class="timeline-tags">
+                            <li>Mention Bien</li>
+                            <li>Syst&egrave;mes num&eacute;riques</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="veille">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="section-title">Veille technologique</h2>
+                <p class="section-subtitle">
+                    Ma veille informatique mensuelle, men&eacute;e tout au long de la formation.
+                </p>
+            </div>
+
+            <div class="grid grid-2 fade-in" style="align-items: stretch;">
+                <div class="card card-glass">
+                    <div class="project-tag">Sujet principal</div>
+                    <h3 class="card-title">La cryptographie</h3>
+                    <p class="card-text">
+                        J'ai choisi la cryptographie comme sujet de veille car elle constitue le socle
+                        de la s&eacute;curit&eacute; des syst&egrave;mes d'information : chiffrement des &eacute;changes, authentification,
+                        int&eacute;grit&eacute; des donn&eacute;es. C'est un domaine en pleine mutation, notamment avec l'arriv&eacute;e
+                        des algorithmes post-quantiques, ce qui en fait un sujet particuli&egrave;rement pertinent
+                        pour un futur administrateur syst&egrave;mes et r&eacute;seaux.
+                    </p>
+                    <p class="card-text">
+                        Ma veille couvre les <strong>outils</strong> et usages concrets de la cryptographie
+                        en environnement SISR&nbsp;: gestion des certificats, VPN, protocoles s&eacute;curis&eacute;s,
+                        chiffrement des postes et des sauvegardes.
+                    </p>
+                    <a href="veille-cryptographie.html" class="btn primary" style="width: 100%; padding: 0.6rem; margin-top: 1rem;">Consulter ma veille compl&egrave;te &rarr;</a>
+                </div>
+
+                <div class="card card-glass">
+                    <h3 class="card-title">M&eacute;thode &amp; sources</h3>
+                    <p class="card-text">
+                        Je collecte et archive un article par mois, que j'analyse et classe dans mon
+                        portfolio. Cette d&eacute;marche r&eacute;guli&egrave;re me permet de suivre l'&eacute;volution des menaces
+                        et des solutions sur toute la dur&eacute;e du BTS.
+                    </p>
+                    <h4 class="small-card-title" style="margin-top: 1.5rem;">Mes sources</h4>
+                    <ul class="contact-list">
+                        <li><span>ANSSI</span> &mdash; publications et recommandations officielles</li>
+                        <li><span>LeMagIT</span> &mdash; actualit&eacute; technique fran&ccedil;aise</li>
+                        <li><span>Zataz</span> &mdash; veille cybers&eacute;curit&eacute; et incidents</li>
+                        <li><span>The Hacker News</span> &mdash; actualit&eacute; internationale</li>
+                        <li><span>Bleeping Computer</span> &mdash; vuln&eacute;rabilit&eacute;s et correctifs</li>
+                    </ul>
+                    <h4 class="small-card-title" style="margin-top: 1.5rem;">Outils de veille</h4>
+                    <ul class="timeline-tags" style="margin-top: 0.5rem;">
+                        <li>Flux RSS</li>
+                        <li>Newsletters</li>
+                        <li>Alertes CERT-FR</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="certifications">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="section-title">Formations &amp; Certifications</h2>
+                <p class="section-subtitle">
+                    Certifications obtenues en compl&eacute;ment de ma formation. Cliquez sur un certificat pour l'agrandir.
+                </p>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="card card-glass fade-in">
+                    <div class="project-tag">Cisco Networking Academy</div>
+                    <h4 class="card-title">Introduction to Cybersecurity</h4>
+                    <p class="card-text">
+                        Fondamentaux de la cybers&eacute;curit&eacute;&nbsp;: types de menaces, vecteurs d'attaque,
+                        protection des donn&eacute;es et bonnes pratiques de d&eacute;fense.
+                    </p>
+
+                    <button class="certif-thumb" data-gallery='["certifs/cisco-cybersecurity.png"]' data-titles='["Cisco &mdash; Introduction to Cybersecurity"]'>
+                        <img src="certifs/cisco-cybersecurity.png" alt="Certificat Cisco Introduction to Cybersecurity" loading="lazy">
+                        <span class="certif-thumb-overlay">Voir le certificat</span>
+                    </button>
+
+                    <p class="card-meta">Obtenu le 08/01/2026</p>
+                </div>
+
+                <div class="card card-glass fade-in delay-1">
+                    <div class="project-tag">ANSSI &middot; Club EBIOS</div>
+                    <h4 class="card-title">EBIOS Risk Manager</h4>
+                    <p class="card-text">
+                        MOOC d'introduction &agrave; la m&eacute;thode d'analyse et de gestion des risques
+                        cyber de r&eacute;f&eacute;rence en France (3 heures).
+                    </p>
+
+                    <button class="certif-thumb" data-gallery='["certifs/ebios.png"]' data-titles='["Club EBIOS &mdash; Introduction &agrave; la m&eacute;thode EBIOS Risk Manager"]'>
+                        <img src="certifs/ebios.png" alt="Certificat EBIOS Risk Manager" loading="lazy">
+                        <span class="certif-thumb-overlay">Voir le certificat</span>
+                    </button>
+
+                    <p class="card-meta">Obtenu le 24/06/2026</p>
+                </div>
+
+                <div class="card card-glass fade-in delay-2">
+                    <div class="project-tag">CNIL &middot; Atelier RGPD</div>
+                    <h4 class="card-title">RGPD &mdash; 6 modules</h4>
+                    <p class="card-text">
+                        Parcours complet sur la protection des donn&eacute;es personnelles&nbsp;:
+                        notions cl&eacute;s, principes, responsabilit&eacute;s des acteurs, r&ocirc;le du DPO,
+                        collectivit&eacute;s et donn&eacute;es en milieu professionnel.
+                    </p>
+
+                    <button class="certif-thumb"
+                        data-gallery='["certifs/rgpd-1.png","certifs/rgpd-2.png","certifs/rgpd-3.png","certifs/rgpd-4.png","certifs/rgpd-5.png","certifs/rgpd-6.png"]'
+                        data-titles='["Module 1 &mdash; Le RGPD et ses notions cl&eacute;s (96 %)","Module 2 &mdash; Les principes de la protection des donn&eacute;es (98 %)","Module 3 &mdash; Les responsabilit&eacute;s des acteurs (100 %)","Module 4 &mdash; Le DPO et les outils de la conformit&eacute; (100 %)","Module 5 &mdash; Les collectivit&eacute;s territoriales (100 %)","Module 6 &mdash; Travail et donn&eacute;es personnelles (91 %)"]'>
+                        <img src="certifs/rgpd-1.png" alt="Certificats CNIL Atelier RGPD" loading="lazy">
+                        <span class="certif-thumb-overlay">Voir les 6 modules</span>
+                        <span class="certif-count">6</span>
+                    </button>
+
+                    <ul class="timeline-tags" style="margin-top: 0.8rem;">
+                        <li>M1 &mdash; 96&nbsp;%</li>
+                        <li>M2 &mdash; 98&nbsp;%</li>
+                        <li>M3 &mdash; 100&nbsp;%</li>
+                        <li>M4 &mdash; 100&nbsp;%</li>
+                        <li>M5 &mdash; 100&nbsp;%</li>
+                        <li>M6 &mdash; 91&nbsp;%</li>
+                    </ul>
+                    <p class="card-meta">Obtenus en oct. &ndash; nov. 2025</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="section-title">Contact</h2>
+                <p class="section-subtitle">
+                    N'h&eacute;sitez pas &agrave; me contacter pour toute question ou opportunit&eacute;.
+                </p>
+            </div>
+
+            <div class="grid grid-2 contact-grid">
+                <div class="card card-glass fade-in">
+                    <h3 class="card-title">Mes informations</h3>
+                    <ul class="contact-list">
+                        <li><span>Email :</span> <a href="mailto:hugorobot77@gmail.com">hugorobot77@gmail.com</a></li>
+                        <li><span>T&eacute;l&eacute;phone :</span> <a href="tel:+33781305169">07 81 30 51 69</a></li>
+                        <li><span>Ville :</span> Chessy (77)</li>
+                        <li><span>Permis :</span> Permis B</li>
+                        <li><span>Mobilit&eacute; :</span> &Icirc;le-de-France</li>
+                    </ul>
+                </div>
+
+                <div class="card card-glass fade-in delay-1">
+                    <h3 class="card-title">&Agrave; propos de ce portfolio</h3>
+                    <p class="card-text">
+                        Ce portfolio pr&eacute;sente les r&eacute;alisations professionnelles et les comp&eacute;tences
+                        que je d&eacute;veloppe dans le cadre de mon BTS SIO option SISR, men&eacute; en alternance
+                        au sein de la Compagnie Hobart.
+                    </p>
+                    <p class="card-text">
+                        Il est mis &agrave; jour r&eacute;guli&egrave;rement au fil de ma formation et de mes missions
+                        en entreprise. Merci de votre visite&nbsp;&mdash; je reste disponible pour toute
+                        question ou pr&eacute;cision.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX CERTIFICATS -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Certificat">
+        <button class="lightbox-close" id="lb-close" aria-label="Fermer">&times;</button>
+        <button class="lightbox-nav lightbox-prev" id="lb-prev" aria-label="Pr&eacute;c&eacute;dent">&#8249;</button>
+        <button class="lightbox-nav lightbox-next" id="lb-next" aria-label="Suivant">&#8250;</button>
+        <div class="lightbox-inner">
+            <img class="lightbox-img" id="lb-img" src="" alt="">
+            <p class="lightbox-caption" id="lb-caption"></p>
+            <p class="lightbox-counter" id="lb-counter"></p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <p class="footer-text">
+                Portfolio BTS SIO SISR — Hugo Dos Santos — © <span id="year"></span>
+            </p>
+            <a href="#top" class="back-to-top">Remonter ↑</a>
+        </div>
+    </footer>
+
+    <script>
+        // Année dynamique
+        const yearSpan = document.getElementById('year');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+
+        // Script Accordéon
+        const accordions = document.querySelectorAll('.accordion-header');
+
+        accordions.forEach(acc => {
+            acc.addEventListener('click', () => {
+                // Toggle la classe active sur le header
+                acc.classList.toggle('active');
+
+                // Récupère le contenu associé (le div juste après le bouton)
+                const content = acc.nextElementSibling;
+
+                // Si c'est actif, on définit une hauteur max grande
+                if (acc.classList.contains('active')) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                } else {
+                    // Sinon on remet à 0
+                    content.style.maxHeight = "0";
+                }
+            });
+        });
+        /* ===== LIGHTBOX CERTIFICATS ===== */
+        (function () {
+            const lb        = document.getElementById('lightbox');
+            const lbImg     = document.getElementById('lb-img');
+            const lbCaption = document.getElementById('lb-caption');
+            const lbCounter = document.getElementById('lb-counter');
+            const btnClose  = document.getElementById('lb-close');
+            const btnPrev   = document.getElementById('lb-prev');
+            const btnNext   = document.getElementById('lb-next');
+
+            let images = [];
+            let titles = [];
+            let index  = 0;
+            let lastFocused = null;
+
+            function decode(str) {
+                const el = document.createElement('textarea');
+                el.innerHTML = str;
+                return el.value;
+            }
+
+            function render() {
+                lbImg.src = images[index];
+                lbImg.alt = decode(titles[index] || 'Certificat');
+                lbCaption.innerHTML = titles[index] || '';
+
+                const multiple = images.length > 1;
+                lbCounter.textContent = multiple ? (index + 1) + ' / ' + images.length : '';
+                btnPrev.hidden = !multiple;
+                btnNext.hidden = !multiple;
+            }
+
+            function open(gallery, captions, start) {
+                images = gallery;
+                titles = captions;
+                index  = start || 0;
+                lastFocused = document.activeElement;
+                render();
+                lb.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                btnClose.focus();
+            }
+
+            function close() {
+                lb.classList.remove('open');
+                lbImg.src = '';
+                document.body.style.overflow = '';
+                if (lastFocused) lastFocused.focus();
+            }
+
+            function step(dir) {
+                if (images.length < 2) return;
+                index = (index + dir + images.length) % images.length;
+                render();
+            }
+
+            document.querySelectorAll('.certif-thumb').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    let gallery = [];
+                    let captions = [];
+                    try {
+                        gallery  = JSON.parse(btn.dataset.gallery || '[]');
+                        captions = JSON.parse(btn.dataset.titles  || '[]');
+                    } catch (e) {
+                        console.error('Galerie invalide', e);
+                        return;
+                    }
+                    if (gallery.length) open(gallery, captions, 0);
+                });
+            });
+
+            btnClose.addEventListener('click', close);
+            btnPrev.addEventListener('click', () => step(-1));
+            btnNext.addEventListener('click', () => step(1));
+
+            // Clic en dehors de l'image = fermeture
+            lb.addEventListener('click', (e) => {
+                if (e.target === lb) close();
+            });
+
+            // Navigation clavier
+            document.addEventListener('keydown', (e) => {
+                if (!lb.classList.contains('open')) return;
+                if (e.key === 'Escape')     close();
+                if (e.key === 'ArrowLeft')  step(-1);
+                if (e.key === 'ArrowRight') step(1);
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Projet GLPI — Mise à jour 10.0.9 vers 11.0.8 — Hugo Dos Santos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rapport technique : mise à jour du serveur GLPI 10.0.9 vers 11.0.8 sur environnement de test cloné de la production — Compagnie Hobart.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== VARIABLES (charte du portfolio) ==================== */
+        :root {
+            --font-display: 'DM Serif Display', serif;
+            --font-body: 'Outfit', system-ui, -apple-system, sans-serif;
+            --font-mono: 'DM Mono', monospace;
+            --bg-dark: #020617;
+            --bg-card: rgba(15, 23, 42, 0.9);
+            --bg-card-soft: rgba(15, 23, 42, 0.6);
+            --border-soft: rgba(148, 163, 184, 0.25);
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --accent: #22c55e;
+            --accent-2: #0ea5e9;
+            --accent-strong: #00f5a0;
+            --warn: #f59e0b;
+            --warn-soft: rgba(245, 158, 11, 0.12);
+            --radius-lg: 16px;
+            --transition-fast: 0.2s ease-out;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #020617 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.7;
+        }
+
+        /* ==================== BARRE DE NAVIGATION ==================== */
+        .project-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(14px);
+            padding: 0.9rem 2rem;
+            border-bottom: 1px solid var(--border-soft);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .back-btn {
+            color: var(--text-main);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: color var(--transition-fast);
+        }
+        .back-btn:hover { color: var(--accent); }
+        .nav-version {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* ==================== CONTENEUR ==================== */
+        .article-container {
+            max-width: 880px;
+            margin: 3.5rem auto 5rem;
+            padding: 0 1.5rem;
+        }
+
+        /* ==================== EN-TÊTE DU PROJET ==================== */
+        .project-header { margin-bottom: 2.5rem; }
+
+        .project-tag {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            margin-bottom: 1.1rem;
+        }
+        .project-title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(1.9rem, 4vw, 2.6rem);
+            line-height: 1.2;
+            background: linear-gradient(to right, #22c55e, #0ea5e9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.8rem;
+        }
+        .project-lead {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.8rem;
+        }
+
+        .project-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        .meta-item {
+            border: 1px solid var(--border-soft);
+            background: var(--bg-card-soft);
+            border-radius: 12px;
+            padding: 0.7rem 0.9rem;
+        }
+        .meta-label {
+            display: block;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.15rem;
+        }
+        .meta-value {
+            font-size: 0.88rem;
+            color: #f9fafb;
+            font-weight: 500;
+        }
+
+        .status-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            background: rgba(34, 197, 94, 0.08);
+            border-radius: 12px;
+            padding: 0.9rem 1.1rem;
+            font-size: 0.88rem;
+        }
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            background: var(--accent);
+            flex-shrink: 0;
+            margin-top: 0.55rem;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
+        }
+        .status-banner strong { color: var(--accent-strong); font-weight: 600; }
+
+        /* ==================== BOÎTE TECHNIQUE ==================== */
+        .tech-box {
+            background: var(--bg-card-soft);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 1.4rem 1.5rem;
+            margin: 2rem 0;
+        }
+        .tech-box h3 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #f9fafb;
+        }
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .tech-tag {
+            font-family: var(--font-mono);
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--accent);
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        /* ==================== SOMMAIRE ==================== */
+        .toc {
+            background: var(--bg-card-soft);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 1.4rem 1.5rem;
+            margin: 2rem 0 3rem;
+        }
+        .toc h3 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 1rem;
+            margin-bottom: 0.9rem;
+            color: #f9fafb;
+        }
+        .toc ol {
+            list-style: none;
+            counter-reset: toc;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 0.35rem 1.5rem;
+        }
+        .toc li { counter-increment: toc; }
+        .toc a {
+            display: block;
+            font-size: 0.87rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.15rem 0;
+            transition: color var(--transition-fast);
+        }
+        .toc a::before {
+            content: counter(toc) ". ";
+            font-family: var(--font-mono);
+            color: var(--accent);
+        }
+        .toc a:hover { color: #f9fafb; }
+
+        /* ==================== CONTENU ==================== */
+        .content h2 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 1.6rem;
+            color: #f9fafb;
+            margin: 3.5rem 0 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border-soft);
+            scroll-margin-top: 5rem;
+        }
+        .content h3 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1.02rem;
+            color: var(--accent-strong);
+            margin: 2.2rem 0 0.8rem;
+        }
+        .content p { margin-bottom: 1.2rem; color: var(--text-muted); }
+        .content ul { margin: 0 0 1.4rem 0; padding-left: 1.3rem; color: var(--text-muted); }
+        .content li { margin-bottom: 0.45rem; }
+        .content strong { color: #f9fafb; font-weight: 600; }
+
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--border-soft);
+            border-radius: 6px;
+            padding: 0.1rem 0.4rem;
+            color: var(--accent-strong);
+            word-break: break-word;
+        }
+
+        /* ==================== FIGURES ==================== */
+        figure { margin: 1.8rem 0; }
+        .figure-frame {
+            display: block;
+            width: 100%;
+            padding: 0;
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #0b1220;
+            cursor: zoom-in;
+            font: inherit;
+            transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .figure-frame:hover,
+        .figure-frame:focus-visible {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(34, 197, 94, 0.15);
+            outline: none;
+        }
+        .figure-frame img { display: block; width: 100%; height: auto; }
+        figcaption {
+            margin-top: 0.6rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }
+        .figure-pair {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.2rem;
+        }
+        .figure-pair figure { margin: 1.8rem 0 0; }
+
+        /* ==================== ENCADRÉS D'INCIDENT ==================== */
+        .incident {
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            background: var(--warn-soft);
+            border-radius: var(--radius-lg);
+            padding: 1.3rem 1.5rem;
+            margin: 2rem 0;
+            scroll-margin-top: 5rem;
+        }
+        .incident-head {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            margin-bottom: 0.9rem;
+            flex-wrap: wrap;
+        }
+        .incident-badge {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #020617;
+            background: var(--warn);
+            padding: 0.15rem 0.6rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+        .incident-title {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.98rem;
+            color: #fbbf24;
+        }
+        .incident dl { margin: 0; font-size: 0.9rem; }
+        .incident dt {
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--warn);
+            margin-top: 0.8rem;
+        }
+        .incident dt:first-child { margin-top: 0; }
+        .incident dd { margin: 0.2rem 0 0; color: var(--text-muted); }
+        .incident code { border-color: rgba(245, 158, 11, 0.3); color: #fbbf24; }
+
+        /* ==================== TABLEAU DE SYNTHÈSE ==================== */
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            margin: 1.6rem 0 2rem;
+        }
+        table.recap {
+            width: 100%;
+            min-width: 640px;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        table.recap th,
+        table.recap td {
+            border-bottom: 1px solid var(--border-soft);
+            padding: 0.8rem 0.9rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        table.recap thead th {
+            background: rgba(15, 23, 42, 0.95);
+            color: #f9fafb;
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        table.recap tbody td { color: var(--text-muted); }
+        table.recap tbody tr:last-child td { border-bottom: none; }
+        table.recap tbody tr:hover td { background: rgba(148, 163, 184, 0.06); }
+        table.recap td:first-child { color: #f9fafb; font-weight: 500; }
+        table.recap a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+        table.recap a:hover { color: var(--accent-strong); }
+
+        /* ==================== BILAN / SUITE ==================== */
+        .callout {
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.07);
+            border-radius: var(--radius-lg);
+            padding: 1.3rem 1.5rem;
+            margin: 2rem 0;
+        }
+        .callout p:last-child { margin-bottom: 0; }
+
+        .next-steps { list-style: none; padding: 0; counter-reset: step; }
+        .next-steps li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 2.4rem;
+            margin-bottom: 0.9rem;
+            color: var(--text-muted);
+        }
+        .next-steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0.15rem;
+            width: 1.6rem;
+            height: 1.6rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 0%, #22c55e, #0ea5e9);
+            color: #020617;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .next-steps li.done::before {
+            content: "✓";
+            font-size: 0.85rem;
+        }
+
+        /* ==================== PIED DE PAGE ==================== */
+        .project-footer {
+            border-top: 1px solid var(--border-soft);
+            margin-top: 4rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .project-footer a { color: var(--accent-strong); text-decoration: none; }
+        .project-footer a:hover { text-decoration: underline; }
+
+        /* ==================== LIGHTBOX ==================== */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(2, 6, 23, 0.94);
+            backdrop-filter: blur(6px);
+            padding: 3rem 1rem 2rem;
+        }
+        .lightbox.open { display: flex; }
+        .lightbox-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 78vh;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            object-fit: contain;
+        }
+        .lightbox-caption {
+            color: var(--text-main);
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 60ch;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft);
+            background: rgba(15, 23, 42, 0.9);
+            color: #f9fafb;
+            font-size: 1.3rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: background var(--transition-fast), color var(--transition-fast);
+        }
+        .lightbox-close:hover { background: var(--accent); color: #020617; }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 720px) {
+            .project-nav { padding: 0.8rem 1.2rem; }
+            .article-container { margin-top: 2.5rem; }
+            .figure-pair { grid-template-columns: minmax(0, 1fr); }
+            .figure-pair figure:first-child { margin-top: 1.8rem; }
+            .content h2 { font-size: 1.35rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="project-nav">
+        <a href="index.html#projets" class="back-btn">&larr; Retour au portfolio</a>
+        <span class="nav-version">GLPI 10.0.9 &rarr; 11.0.8</span>
+    </nav>
+
+    <main class="article-container">
+
+        <header class="project-header">
+            <span class="project-tag">Réalisation professionnelle · 1<sup>re</sup> année</span>
+            <h1 class="project-title">Mise à jour du serveur GLPI 10.0.9 vers 11.0.8</h1>
+            <p class="project-lead">
+                Rapport technique — travaux réalisés sur un environnement de test cloné de la production,
+                au sein du service informatique de la Compagnie Hobart.
+            </p>
+
+            <div class="project-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Auteur</span>
+                    <span class="meta-value">Hugo Dos Santos — Apprenti BTS SIO SISR</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Période</span>
+                    <span class="meta-value">30 – 31 juillet 2026</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Entreprise</span>
+                    <span class="meta-value">Compagnie Hobart — Croissy-Beaubourg (77)</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Périmètre</span>
+                    <span class="meta-value">Environ 290 collaborateurs</span>
+                </div>
+            </div>
+
+            <div class="status-banner">
+                <span class="status-dot"></span>
+                <p style="margin:0; color: var(--text-muted);">
+                    <strong>Statut :</strong> environnement de test validé — en attente de validation
+                    par le maître d'apprentissage pour le déploiement en production.
+                </p>
+            </div>
+        </header>
+
+        <div class="tech-box">
+            <h3>Environnement technique</h3>
+            <div class="tech-tags">
+                <span class="tech-tag">Debian 12</span>
+                <span class="tech-tag">GLPI 10.0.9 → 11.0.8</span>
+                <span class="tech-tag">Apache 2</span>
+                <span class="tech-tag">MariaDB</span>
+                <span class="tech-tag">PHP 8.2</span>
+                <span class="tech-tag">VirtualBox</span>
+                <span class="tech-tag">SSH</span>
+                <span class="tech-tag">OCS Inventory NG</span>
+            </div>
+        </div>
+
+        <nav class="toc" aria-label="Sommaire">
+            <h3>Sommaire</h3>
+            <ol>
+                <li><a href="#contexte">Contexte et objectifs</a></li>
+                <li><a href="#methodologie">Méthodologie : un environnement de test</a></li>
+                <li><a href="#prise-en-main">Prise en main de l'environnement</a></li>
+                <li><a href="#diagnostic">Diagnostic préalable</a></li>
+                <li><a href="#telechargement">Téléchargement et préparation</a></li>
+                <li><a href="#bascule">Bascule vers la nouvelle version</a></li>
+                <li><a href="#migration">Migration de la base de données</a></li>
+                <li><a href="#incidents">Synthèse des incidents</a></li>
+                <li><a href="#bilan">Bilan et perspectives</a></li>
+            </ol>
+        </nav>
+
+        <article class="content">
+
+            <!-- ==================== 1 ==================== -->
+            <h2 id="contexte">1. Contexte et objectifs</h2>
+            <p>
+                Hobart (environ 290 collaborateurs) utilise <strong>GLPI</strong> comme outil de gestion de parc
+                informatique et de support (tickets). La version installée en production, <strong>GLPI 10.0.9</strong>,
+                n'a jamais été mise à jour depuis sa mise en service. Le projet qui m'a été confié consiste à
+                moderniser cet outil autour de quatre axes :
+            </p>
+            <ul>
+                <li>Mise à jour de GLPI vers sa dernière version stable (10.0.9 → 11.0.8) ;</li>
+                <li>Remplacement du plugin d'inventaire existant par <strong>GLPI Inventory</strong>, le module officiel maintenu par l'éditeur ;</li>
+                <li>Structuration de la CMDB (inventaire des postes, contrats, licences) ;</li>
+                <li>Mise en place de la création automatique de tickets par e-mail.</li>
+            </ul>
+            <p>
+                Ce rapport documente le <strong>premier axe</strong> : la mise à jour du cœur de GLPI, entièrement
+                testée et validée sur un environnement de test avant toute intervention sur le serveur de production.
+                Les trois autres axes feront l'objet d'un complément à ce document.
+            </p>
+
+            <!-- ==================== 2 ==================== -->
+            <h2 id="methodologie">2. Méthodologie : un environnement de test avant toute intervention</h2>
+            <p>
+                Par principe de précaution — le serveur de production étant utilisé quotidiennement par l'ensemble
+                des équipes — <strong>aucune manipulation n'a été effectuée directement sur le serveur réel</strong>.
+                Un collègue a fourni une copie complète de la machine virtuelle de production, exportée au format
+                OVA/OVF (fichiers <code>.ovf</code>, <code>.mf</code> et disques <code>.vmdk</code>), permettant de
+                reconstituer un GLPI strictement identique à la production sur un poste de travail personnel,
+                via VirtualBox.
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Paramètres de la VM détectés lors de l'import de l'appareil virtuel (Debian 64-bit, 2 vCPU, 4 Go de RAM).">
+                        <img src="glpi/01-vm-parametres-import.png" alt="Paramètres de la VM lors de l'import dans VirtualBox" loading="lazy">
+                    </button>
+                    <figcaption>Paramètres de la VM détectés lors de l'import de l'appareil virtuel (Debian 64-bit, 2 vCPU, 4 Go de RAM).</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Import de la machine virtuelle en cours dans VirtualBox.">
+                        <img src="glpi/02-vm-import-virtualbox.png" alt="Import de la machine virtuelle en cours dans VirtualBox" loading="lazy">
+                    </button>
+                    <figcaption>Import de la machine virtuelle en cours dans VirtualBox.</figcaption>
+                </figure>
+            </div>
+
+            <p>
+                Lors de l'import, l'option «&nbsp;Générer de nouvelles adresses MAC pour toutes les interfaces
+                réseau&nbsp;» a été activée, afin d'éviter tout conflit avec la véritable VM de production restée
+                active sur le réseau de l'entreprise.
+            </p>
+
+            <!-- ==================== 3 ==================== -->
+            <h2 id="prise-en-main">3. Prise en main de l'environnement de test</h2>
+
+            <h3>3.1 Connexion et activation du réseau</h3>
+            <p>
+                Après le premier démarrage, la VM importée s'est présentée avec un hostname <code>glpiv2</code>
+                sous Debian 12. La carte réseau n'étant pas active par défaut, elle a été activée manuellement
+                (<code>ip link set</code> + <code>dhclient</code>), permettant d'obtenir une adresse IP et un accès
+                réseau fonctionnel.
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Écran de connexion de la VM importée (Debian GNU/Linux 12, hostname glpiv2).">
+                        <img src="glpi/03-vm-ecran-connexion.png" alt="Écran de connexion de la VM Debian 12" loading="lazy">
+                    </button>
+                    <figcaption>Écran de connexion de la VM importée (Debian GNU/Linux 12, hostname <code>glpiv2</code>).</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Activation de l'interface réseau et obtention d'une adresse IP (172.17.10.7 en mode Bridged).">
+                        <img src="glpi/04-vm-activation-reseau.png" alt="Activation de l'interface réseau et obtention d'une adresse IP" loading="lazy">
+                    </button>
+                    <figcaption>Activation de l'interface réseau et obtention d'une adresse IP (172.17.10.7 en mode Bridged).</figcaption>
+                </figure>
+            </div>
+
+            <h3>3.2 Connexion en SSH</h3>
+            <p>
+                Une connexion SSH a ensuite été établie depuis PowerShell afin de travailler plus confortablement
+                qu'en console VirtualBox (copier-coller, redimensionnement de la fenêtre, historique des commandes).
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Première connexion SSH réussie à la VM de test depuis PowerShell.">
+                    <img src="glpi/05-ssh-premiere-connexion.png" alt="Première connexion SSH à la VM de test depuis PowerShell" loading="lazy">
+                </button>
+                <figcaption>Première connexion SSH réussie à la VM de test depuis PowerShell.</figcaption>
+            </figure>
+
+            <!-- ==================== 4 ==================== -->
+            <h2 id="diagnostic">4. Diagnostic préalable à la mise à jour</h2>
+
+            <h3>4.1 Version de départ et configuration personnalisée</h3>
+            <p>
+                La version installée a été confirmée via l'écran «&nbsp;À propos&nbsp;» de GLPI : version
+                <strong>10.0.9</strong>, avec une mise à jour vers la 11.0.5 alors proposée par l'éditeur. Après
+                recherche des correctifs de sécurité publiés depuis, la cible a finalement été portée à la
+                <strong>11.0.8</strong>, dernière version stable disponible, corrigeant plusieurs failles
+                supplémentaires (détail dans le document séparé «&nbsp;Journal des changements 10.0.9 → 11.0.8&nbsp;»).
+            </p>
+            <p>
+                L'inspection du serveur a révélé une <strong>configuration non standard</strong> : le fichier de
+                connexion à la base de données ne se trouve pas dans le dossier d'installation de GLPI mais dans
+                <code>/etc/glpi/config_db.php</code>, une pratique fréquente consistant à séparer la configuration
+                sensible du code de l'application.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Fichier /etc/glpi/config_db.php localisé (identifiants de connexion masqués).">
+                    <img src="glpi/06-config-db-localise.png" alt="Fichier config_db.php localisé dans /etc/glpi" loading="lazy">
+                </button>
+                <figcaption>Fichier <code>/etc/glpi/config_db.php</code> localisé (identifiants de connexion masqués).</figcaption>
+            </figure>
+
+            <p>
+                L'analyse du fichier <code>inc/downstream.php</code> (mécanisme propre à GLPI permettant de déplacer
+                ses dossiers de configuration) a confirmé cette architecture personnalisée, avec trois emplacements
+                redéfinis :
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="inc/downstream.php : redirection de la configuration vers /etc/glpi/.">
+                        <img src="glpi/07-downstream-php.png" alt="Contenu du fichier inc/downstream.php" loading="lazy">
+                    </button>
+                    <figcaption><code>inc/downstream.php</code> : redirection de la configuration vers <code>/etc/glpi/</code>.</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="local_define.php : redirection des fichiers (GLPI_VAR_DIR) et des journaux (GLPI_LOG_DIR).">
+                        <img src="glpi/08-local-define-php.png" alt="Contenu du fichier local_define.php" loading="lazy">
+                    </button>
+                    <figcaption><code>local_define.php</code> : redirection des fichiers (<code>GLPI_VAR_DIR</code>) et des journaux (<code>GLPI_LOG_DIR</code>).</figcaption>
+                </figure>
+            </div>
+
+            <p>
+                Ce point s'est révélé <strong>critique pour la suite</strong> : ces fichiers ne faisant pas partie
+                de l'archive officielle de GLPI, ils devaient impérativement être conservés et recopiés dans la
+                nouvelle version avant la mise à jour, sous peine de perte d'accès à la configuration existante.
+            </p>
+
+            <h3>4.2 Sauvegardes avant toute manipulation</h3>
+            <p>
+                Avant toute opération, une sauvegarde complète a été réalisée : export de la base de données
+                (<code>mysqldump</code>) et archivage des dossiers de fichiers et de configuration (<code>tar</code>).
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Sauvegarde de la base de données réussie (30 Mo).">
+                        <img src="glpi/09-sauvegarde-base.png" alt="Sauvegarde de la base de données GLPI réussie" loading="lazy">
+                    </button>
+                    <figcaption>Sauvegarde de la base de données réussie (30 Mo).</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Sauvegarde des fichiers et de la configuration réussie (65 Mo).">
+                        <img src="glpi/10-sauvegarde-fichiers.png" alt="Sauvegarde des fichiers et de la configuration réussie" loading="lazy">
+                    </button>
+                    <figcaption>Sauvegarde des fichiers et de la configuration réussie (65 Mo).</figcaption>
+                </figure>
+            </div>
+
+            <p>
+                Une sauvegarde complémentaire des dossiers <code>/var/lib/glpi</code> (fichiers) et
+                <code>/var/log/glpi</code> (journaux) a également été réalisée selon le même principe, une fois
+                leur emplacement personnalisé identifié.
+            </p>
+
+            <h3>4.3 Découverte et analyse du plugin d'inventaire existant</h3>
+            <p>
+                Contrairement à l'hypothèse de départ (plugin FusionInventory), l'inspection du dossier
+                <code>plugins</code> a révélé la présence du plugin <strong>OCS Inventory NG</strong>.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Découverte du plugin ocsinventoryng dans le dossier plugins de GLPI.">
+                    <img src="glpi/11-plugin-ocs-decouverte.png" alt="Découverte du plugin ocsinventoryng dans le dossier plugins" loading="lazy">
+                </button>
+                <figcaption>Découverte du plugin <code>ocsinventoryng</code> dans le dossier <code>plugins</code> de GLPI.</figcaption>
+            </figure>
+
+            <p>
+                La vérification de sa version dans le code source (<code>setup.php</code>) a montré une version
+                <strong>1.7.3</strong>, prévue pour GLPI 9.5/9.6 — largement obsolète et incompatible avec GLPI 11
+                (dont les versions compatibles du plugin démarrent à la 2.1.8).
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Version du plugin détectée dans le code source : 1.7.3, obsolète pour GLPI 11.">
+                        <img src="glpi/12-plugin-ocs-version.png" alt="Version 1.7.3 du plugin détectée dans le code source" loading="lazy">
+                    </button>
+                    <figcaption>Version du plugin détectée dans le code source : 1.7.3, obsolète pour GLPI 11.</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Le plugin apparaît déjà désactivé dans l'interface GLPI.">
+                        <img src="glpi/13-plugin-ocs-desactive.png" alt="Plugin OCS Inventory NG désactivé dans l'interface GLPI" loading="lazy">
+                    </button>
+                    <figcaption>Le plugin apparaît déjà désactivé dans l'interface GLPI.</figcaption>
+                </figure>
+            </div>
+
+            <div class="incident" id="incident-1">
+                <div class="incident-head">
+                    <span class="incident-badge">Incident 1</span>
+                    <span class="incident-title">Désinstallation du plugin OCS Inventory NG impossible</span>
+                </div>
+                <dl>
+                    <dt>Symptôme</dt>
+                    <dd>
+                        En tentant de désinstaller proprement le plugin depuis l'interface GLPI, aucune erreur
+                        n'apparaît mais l'action reste sans effet : le plugin réapparaît à l'identique après
+                        rechargement de la page.
+                    </dd>
+                    <dt>Diagnostic</dt>
+                    <dd>
+                        Surveillance des journaux Apache en temps réel
+                        (<code>tail -f /var/log/apache2/error.log</code>) pendant une nouvelle tentative, révélant
+                        l'erreur «&nbsp;<code>Unknown database 'ocsweb'</code>&nbsp;» — le plugin tente de nettoyer
+                        ses propres tables dans une base de données qui n'a pas été incluse dans l'export de la VM.
+                    </dd>
+                    <dt>Décision</dt>
+                    <dd>
+                        Ce point n'étant pas bloquant pour l'objectif principal (la mise à jour du cœur de GLPI),
+                        sa résolution a été reportée à la phase de migration vers GLPI Inventory, prévue dans un
+                        axe ultérieur du projet.
+                    </dd>
+                </dl>
+            </div>
+
+            <figure>
+                <button class="figure-frame" data-caption="Extrait des journaux Apache confirmant la cause du blocage : base « ocsweb » introuvable.">
+                    <img src="glpi/14-logs-apache-ocsweb.png" alt="Journaux Apache montrant l'erreur Unknown database ocsweb" loading="lazy">
+                </button>
+                <figcaption>Extrait des journaux Apache confirmant la cause du blocage : base «&nbsp;ocsweb&nbsp;» introuvable.</figcaption>
+            </figure>
+
+            <!-- ==================== 5 ==================== -->
+            <h2 id="telechargement">5. Téléchargement et préparation de GLPI 11.0.8</h2>
+
+            <h3>5.1 Vérification de l'accès réseau de la VM</h3>
+            <figure>
+                <button class="figure-frame" data-caption="Test de connectivité internet depuis la VM avant téléchargement.">
+                    <img src="glpi/15-test-connectivite.png" alt="Test de connectivité internet depuis la VM" loading="lazy">
+                </button>
+                <figcaption>Test de connectivité internet depuis la VM avant téléchargement.</figcaption>
+            </figure>
+
+            <h3>5.2 Incident réseau : bascule du mode Bridged vers NAT</h3>
+            <p>
+                La première tentative de téléchargement de l'archive GLPI 11.0.8 (92 Mo) a affiché un temps estimé
+                de <strong>plus de 3 heures</strong>, pour un débit mesuré à environ 6-7 Ko/s alors que le PC hôte
+                téléchargeait le même fichier de test instantanément.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Diagnostic du débit réseau anormalement faible depuis la VM (6,74 Ko/s).">
+                    <img src="glpi/16-debit-reseau-faible.png" alt="Débit réseau anormalement faible mesuré depuis la VM" loading="lazy">
+                </button>
+                <figcaption>Diagnostic du débit réseau anormalement faible depuis la VM (6,74 Ko/s).</figcaption>
+            </figure>
+
+            <div class="incident" id="incident-2">
+                <div class="incident-head">
+                    <span class="incident-badge">Incident 2</span>
+                    <span class="incident-title">Débit réseau très faible en carte réseau «&nbsp;Accès par pont&nbsp;» (Bridged)</span>
+                </div>
+                <dl>
+                    <dt>Cause probable</dt>
+                    <dd>
+                        Le réseau de l'entreprise applique une limitation ou un filtrage sur le trafic d'une machine
+                        virtuelle disposant de sa propre adresse MAC, non reconnue par les équipements réseau.
+                    </dd>
+                    <dt>Solution</dt>
+                    <dd>
+                        Bascule de la configuration réseau de la VM en <strong>mode NAT</strong>, avec mise en place
+                        de règles de redirection de ports (SSH sur le port 2222, puis HTTP sur le port 8080) pour
+                        conserver un accès confortable depuis le PC hôte.
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Règle de redirection de port SSH configurée dans VirtualBox (mode NAT).">
+                        <img src="glpi/17-nat-redirection-ssh.png" alt="Règle de redirection de port SSH dans VirtualBox" loading="lazy">
+                    </button>
+                    <figcaption>Règle de redirection de port SSH configurée dans VirtualBox (mode NAT).</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Connexion SSH fonctionnelle via la redirection de port en mode NAT.">
+                        <img src="glpi/18-ssh-via-nat.png" alt="Connexion SSH fonctionnelle via la redirection de port NAT" loading="lazy">
+                    </button>
+                    <figcaption>Connexion SSH fonctionnelle via la redirection de port en mode NAT.</figcaption>
+                </figure>
+            </div>
+
+            <h3>5.3 Téléchargement et extraction de l'archive</h3>
+            <p>
+                Une fois le mode NAT en place, le téléchargement s'est effectué à une vitesse normale (environ
+                18-19 Mo/s), confirmant que le mode réseau était bien à l'origine du ralentissement.
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Téléchargement de glpi-11.0.8.tgz à 18,2 Mo/s.">
+                        <img src="glpi/19-telechargement-glpi.png" alt="Téléchargement de l'archive glpi-11.0.8.tgz" loading="lazy">
+                    </button>
+                    <figcaption>Téléchargement de <code>glpi-11.0.8.tgz</code> à 18,2 Mo/s.</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Extraction de l'archive : structure standard de GLPI 11 obtenue.">
+                        <img src="glpi/20-extraction-archive.png" alt="Extraction de l'archive GLPI 11" loading="lazy">
+                    </button>
+                    <figcaption>Extraction de l'archive : structure standard de GLPI 11 obtenue.</figcaption>
+                </figure>
+            </div>
+
+            <!-- ==================== 6 ==================== -->
+            <h2 id="bascule">6. Bascule vers la nouvelle version</h2>
+
+            <h3>6.1 Préservation de la configuration personnalisée</h3>
+            <p>
+                Le fichier <code>inc/downstream.php</code> identifié en phase de diagnostic a été recopié dans
+                l'archive nouvellement extraite, afin que GLPI 11 continue de pointer vers les dossiers de
+                configuration personnalisés (<code>/etc/glpi</code>, <code>/var/lib/glpi</code>,
+                <code>/var/log/glpi</code>) sans perte de données.
+            </p>
+
+            <figure>
+                <button class="figure-frame" data-caption="Vérification du fichier downstream.php recopié dans la nouvelle version.">
+                    <img src="glpi/21-downstream-recopie.png" alt="Vérification du fichier downstream.php recopié" loading="lazy">
+                </button>
+                <figcaption>Vérification du fichier <code>downstream.php</code> recopié dans la nouvelle version.</figcaption>
+            </figure>
+
+            <h3>6.2 Remplacement des fichiers</h3>
+            <p>
+                Le remplacement a été effectué en conservant un <strong>filet de sécurité</strong> : plutôt que de
+                supprimer l'ancienne installation, celle-ci a été renommée (<code>glpi-old-10.0.9</code>),
+                permettant un retour arrière immédiat en cas de problème. Les droits du nouveau dossier ont ensuite
+                été attribués à l'utilisateur du serveur web (<code>www-data</code>).
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Arrêt du service Apache avant remplacement des fichiers.">
+                        <img src="glpi/22-apache-arret.png" alt="Arrêt du service Apache" loading="lazy">
+                    </button>
+                    <figcaption>Arrêt du service Apache avant remplacement des fichiers.</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Ancienne version renommée, nouvelle version mise en place, permissions corrigées.">
+                        <img src="glpi/23-remplacement-fichiers.png" alt="Remplacement des fichiers et correction des permissions" loading="lazy">
+                    </button>
+                    <figcaption>Ancienne version renommée, nouvelle version mise en place, permissions corrigées.</figcaption>
+                </figure>
+            </div>
+
+            <figure>
+                <button class="figure-frame" data-caption="Redémarrage d'Apache : service actif sans erreur.">
+                    <img src="glpi/24-apache-redemarrage.png" alt="Redémarrage d'Apache, service actif" loading="lazy">
+                </button>
+                <figcaption>Redémarrage d'Apache : service actif sans erreur.</figcaption>
+            </figure>
+
+            <h3>6.3 Incident : changement de structure du webroot en GLPI 11</h3>
+
+            <div class="incident" id="incident-3">
+                <div class="incident-head">
+                    <span class="incident-badge">Incident 3</span>
+                    <span class="incident-title">«&nbsp;The web server seems to be misconfigured&nbsp;»</span>
+                </div>
+                <dl>
+                    <dt>Symptôme</dt>
+                    <dd>
+                        Au premier accès à l'interface après remplacement des fichiers, GLPI affiche une erreur
+                        indiquant que la racine web doit correspondre au sous-dossier <code>/public</code> de
+                        l'installation.
+                    </dd>
+                    <dt>Cause</dt>
+                    <dd>
+                        Contrairement à GLPI 10 où la racine du serveur web pointait directement sur le dossier
+                        d'installation, GLPI 11 impose que le <code>DocumentRoot</code> Apache pointe vers le
+                        sous-dossier <code>glpi/public</code>, avec une règle de réécriture d'URL vers
+                        <code>public/index.php</code>.
+                    </dd>
+                    <dt>Solution</dt>
+                    <dd>
+                        Modification du fichier de VirtualHost Apache concerné (<code>DocumentRoot</code> + bloc
+                        <code>&lt;Directory&gt;</code> avec <code>RewriteEngine</code>), suivie d'un test de
+                        configuration (<code>apache2ctl configtest</code>) et d'un redémarrage du service.
+                    </dd>
+                </dl>
+            </div>
+
+            <figure>
+                <button class="figure-frame" data-caption="Erreur affichée avant correction de la configuration Apache.">
+                    <img src="glpi/25-erreur-webroot.png" alt="Erreur The web server seems to be misconfigured" loading="lazy">
+                </button>
+                <figcaption>Erreur affichée avant correction de la configuration Apache.</figcaption>
+            </figure>
+
+            <!-- ==================== 7 ==================== -->
+            <h2 id="migration">7. Migration de la base de données</h2>
+
+            <h3>7.1 Vérification des prérequis</h3>
+            <p>
+                L'assistant de mise à jour de GLPI a ensuite vérifié l'ensemble des prérequis serveur.
+            </p>
+
+            <div class="incident" id="incident-4">
+                <div class="incident-head">
+                    <span class="incident-badge">Incident 4</span>
+                    <span class="incident-title">Blocage sur les prérequis : extension PHP <code>bcmath</code> absente</span>
+                </div>
+                <dl>
+                    <dt>Cause</dt>
+                    <dd>
+                        L'extension PHP <code>bcmath</code> (requise pour la gestion des QR codes en GLPI 11)
+                        n'est pas installée par défaut sur Debian 12, alors qu'elle est devenue obligatoire.
+                    </dd>
+                    <dt>Solution</dt>
+                    <dd>
+                        Installation via le gestionnaire de paquets (<code>apt install php8.2-bcmath</code>), après
+                        quoi l'ensemble des prérequis obligatoires est passé au vert.
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Fin de la liste des prérequis validés, bouton de relance de la vérification.">
+                        <img src="glpi/26-prerequis-liste.png" alt="Liste des prérequis GLPI validés" loading="lazy">
+                    </button>
+                    <figcaption>Fin de la liste des prérequis validés, bouton de relance de la vérification.</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Ensemble des prérequis PHP/MariaDB validés après installation de l'extension bcmath.">
+                        <img src="glpi/27-prerequis-valides.jpg" alt="Prérequis PHP et MariaDB validés" loading="lazy">
+                    </button>
+                    <figcaption>Ensemble des prérequis PHP/MariaDB validés après installation de l'extension <code>bcmath</code>.</figcaption>
+                </figure>
+            </div>
+
+            <h3>7.2 Exécution de la migration</h3>
+            <p>
+                La migration de la base de données a ensuite été lancée. GLPI a exécuté automatiquement l'ensemble
+                des migrations intermédiaires nécessaires (versions 10.0.10 à 10.0.25 puis 11.0.x), sans qu'aucune
+                intervention manuelle ne soit requise.
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Migration de la base de données en cours : exécution séquentielle des mises à jour intermédiaires.">
+                        <img src="glpi/28-migration-en-cours.png" alt="Migration de la base de données en cours" loading="lazy">
+                    </button>
+                    <figcaption>Migration de la base de données en cours : exécution séquentielle des mises à jour intermédiaires.</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Écran final de l'assistant d'installation, confirmant la fin de la migration.">
+                        <img src="glpi/29-migration-terminee.png" alt="Écran final de l'assistant d'installation GLPI" loading="lazy">
+                    </button>
+                    <figcaption>Écran final de l'assistant d'installation, confirmant la fin de la migration.</figcaption>
+                </figure>
+            </div>
+
+            <h3>7.3 Résultat et vérifications finales</h3>
+            <p>
+                Une fois la migration terminée, la connexion à l'interface a été testée avec succès : le tableau de
+                bord affiche l'ensemble des données historiques (tickets, statistiques) <strong>sans perte</strong>,
+                confirmant l'intégrité des données après la migration.
+            </p>
+
+            <div class="figure-pair">
+                <figure>
+                    <button class="figure-frame" data-caption="Page de connexion GLPI 11 fonctionnelle.">
+                        <img src="glpi/30-glpi11-connexion.png" alt="Page de connexion GLPI 11" loading="lazy">
+                    </button>
+                    <figcaption>Page de connexion GLPI 11 fonctionnelle.</figcaption>
+                </figure>
+                <figure>
+                    <button class="figure-frame" data-caption="Confirmation finale de la version active : GLPI 11.0.8.">
+                        <img src="glpi/32-glpi11-version.png" alt="Confirmation de la version GLPI 11.0.8" loading="lazy">
+                    </button>
+                    <figcaption>Confirmation finale de la version active : GLPI 11.0.8.</figcaption>
+                </figure>
+            </div>
+
+            <figure>
+                <button class="figure-frame" data-caption="Tableau de bord GLPI 11.0.8 opérationnel, données historiques conservées (5,0 K tickets).">
+                    <img src="glpi/31-glpi11-tableau-bord.png" alt="Tableau de bord GLPI 11.0.8 opérationnel" loading="lazy">
+                </button>
+                <figcaption>Tableau de bord GLPI 11.0.8 opérationnel, données historiques conservées (5,0 K tickets).</figcaption>
+            </figure>
+
+            <p>
+                Un message d'information signale que certains formulaires proviennent du plugin
+                <strong>Formcreator</strong>, désormais intégré au cœur de GLPI 11 : leur migration vers le nouveau
+                système intégré (commande <code>php bin/console migration:formcreator_plugin_to_core</code>) sera
+                traitée dans un axe ultérieur du projet, cette opération n'étant pas bloquante.
+            </p>
+
+            <!-- ==================== 8 ==================== -->
+            <h2 id="incidents">8. Synthèse des incidents rencontrés et résolus</h2>
+            <p>
+                La démarche de test a permis d'identifier et de résoudre <strong>quatre incidents avant toute
+                intervention sur la production</strong>, ce qui constitue l'un des principaux apports de cette
+                phase de test.
+            </p>
+
+            <div class="table-wrap">
+                <table class="recap">
+                    <thead>
+                        <tr>
+                            <th>Problème rencontré</th>
+                            <th>Cause identifiée</th>
+                            <th>Solution appliquée</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#incident-1">Plugin OCS Inventory NG ne se désinstalle pas (aucune erreur visible)</a></td>
+                            <td>Le plugin tente de se connecter à une base «&nbsp;ocsweb&nbsp;» absente de la copie de la VM</td>
+                            <td>Diagnostic via les logs Apache en temps réel (<code>tail -f</code>) ; désinstallation reportée après l'update car non bloquante</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#incident-2">Téléchargement de GLPI 11 extrêmement lent (~7 Ko/s) en carte réseau «&nbsp;Bridged&nbsp;»</a></td>
+                            <td>Le réseau de l'entreprise limite ou filtre le trafic d'une VM avec sa propre adresse MAC</td>
+                            <td>Bascule de la carte réseau en mode NAT + redirection de ports (SSH et HTTP) pour conserver un accès confortable</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#incident-3">Page «&nbsp;The web server seems to be misconfigured&nbsp;» après remplacement des fichiers</a></td>
+                            <td>GLPI 11 exige que la racine web pointe vers le sous-dossier <code>/public</code>, contrairement à GLPI 10</td>
+                            <td>Correction du <code>DocumentRoot</code> Apache + ajout du bloc de réécriture d'URL vers <code>public/index.php</code></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#incident-4">Blocage sur la vérification des prérequis (extension <code>bcmath</code> absente)</a></td>
+                            <td>Debian 12 n'installe pas cette extension PHP par défaut ; elle est devenue obligatoire en GLPI 11</td>
+                            <td>Installation via <code>apt install php8.2-bcmath</code>, puis nouvelle vérification</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ==================== 9 ==================== -->
+            <h2 id="bilan">9. Bilan et perspectives</h2>
+
+            <div class="callout">
+                <p>
+                    L'axe «&nbsp;mise à jour&nbsp;» du projet est <strong>validé sur l'environnement de test</strong> :
+                    GLPI 11.0.8 fonctionne correctement, avec l'intégralité des données de production conservées.
+                </p>
+                <p>
+                    Un document complémentaire («&nbsp;Journal des changements GLPI 10.0.9 → 11.0.8&nbsp;») a été
+                    produit pour synthétiser les nouveautés fonctionnelles, les changements techniques et les
+                    correctifs de sécurité apportés par cette montée de version, à destination du maître
+                    d'apprentissage.
+                </p>
+            </div>
+
+            <h3>Prochaines étapes du projet</h3>
+            <ol class="next-steps">
+                <li class="done">
+                    <strong>Axe 1 — Mise à jour du cœur de GLPI</strong> : testée et validée sur l'environnement
+                    de test (objet de ce rapport).
+                </li>
+                <li>
+                    Validation de cette procédure par le maître d'apprentissage avant application sur le serveur
+                    de production.
+                </li>
+                <li>
+                    <strong>Axe 2</strong> — Remplacement du plugin OCS Inventory NG par GLPI Inventory.
+                </li>
+                <li>
+                    <strong>Axe 3</strong> — Structuration de la CMDB : inventaire des postes, contrats et licences.
+                </li>
+                <li>
+                    <strong>Axe 4</strong> — Mise en place de la création automatique de tickets par e-mail.
+                </li>
+            </ol>
+
+            <p>
+                Ce rapport sera complété au fur et à mesure de l'avancement de ces trois axes restants.
+            </p>
+
+        </article>
+
+        <footer class="project-footer">
+            <span>Rapport technique — Hugo Dos Santos, apprenti BTS SIO SISR</span>
+            <a href="index.html#projets">&larr; Retour au portfolio</a>
+        </footer>
+
+    </main>
+
+    <!-- LIGHTBOX CAPTURES -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Capture d'écran">
+        <button class="lightbox-close" id="lb-close" aria-label="Fermer">&times;</button>
+        <div class="lightbox-inner">
+            <img class="lightbox-img" id="lb-img" src="" alt="">
+            <p class="lightbox-caption" id="lb-caption"></p>
+        </div>
+    </div>
+
+    <script>
+        /* ===== LIGHTBOX DES CAPTURES ===== */
+        (function () {
+            const lb        = document.getElementById('lightbox');
+            const lbImg     = document.getElementById('lb-img');
+            const lbCaption = document.getElementById('lb-caption');
+            const btnClose  = document.getElementById('lb-close');
+            let lastFocused = null;
+
+            function open(src, alt, caption) {
+                lastFocused = document.activeElement;
+                lbImg.src = src;
+                lbImg.alt = alt || '';
+                lbCaption.textContent = caption || '';
+                lb.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                btnClose.focus();
+            }
+
+            function close() {
+                lb.classList.remove('open');
+                lbImg.src = '';
+                document.body.style.overflow = '';
+                if (lastFocused) lastFocused.focus();
+            }
+
+            document.querySelectorAll('.figure-frame').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const img = btn.querySelector('img');
+                    if (!img) return;
+                    open(img.src, img.alt, btn.dataset.caption || '');
+                });
+            });
+
+            btnClose.addEventListener('click', close);
+
+            // Clic en dehors de l'image = fermeture
+            lb.addEventListener('click', (e) => {
+                if (e.target === lb) close();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (lb.classList.contains('open') && e.key === 'Escape') close();
+            });
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Cryptographie — Veille Informatique BTS SIO SISR</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Fonds alignes sur le portfolio (index.html) */
+      --bg: #020617;
+      --bg2: #0f172a;
+      --bg3: #111827;
+      --border: rgba(148,163,184,0.18);
+      --border2: rgba(148,163,184,0.30);
+      --text: #e5e7eb;
+      --text2: #9ca3af;
+      --text3: #6b7280;
+
+      /* Accent principal : vert du portfolio.
+         Les anciennes variables --purple* pointent desormais
+         sur le vert pour harmoniser toute la page. */
+      --purple: #22c55e;
+      --purple-dark: #16a34a;
+      --purple-glow: rgba(34,197,94,0.15);
+
+      /* Accent secondaire : bleu du portfolio */
+      --teal: #0ea5e9;
+      --teal-dark: #0284c7;
+
+      --amber: #fbbf24;
+      --coral: #fb7185;
+      --green: #00f5a0;
+      --blue: #38bdf8;
+
+      --font-display: 'DM Serif Display', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── BACKGROUND GRID ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(34,197,94,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,197,94,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── GLOW TOP ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(22,163,74,0.18) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--purple);
+      border: 1px solid rgba(34,197,94,0.25);
+      background: rgba(34,197,94,0.06);
+      padding: 5px 14px;
+      border-radius: 100px;
+      letter-spacing: 0.08em;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 1.1;
+      color: var(--text);
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--purple);
+    }
+
+    .hero-sub {
+      margin-top: 20px;
+      font-size: 17px;
+      color: var(--text2);
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      font-weight: 300;
+      animation: fadeUp 0.6s ease 0.2s both;
+    }
+
+    .hero-meta {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      animation: fadeUp 0.6s ease 0.3s both;
+    }
+
+    .meta-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 0.05em;
+    }
+
+    .meta-pill span { color: var(--text2); }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2), transparent);
+      margin: 48px 0;
+    }
+
+    /* ─── SECTION HEADERS ─── */
+    .section { margin-bottom: 48px; animation: fadeUp 0.5s ease both; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .section-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--purple);
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.2);
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      color: var(--text);
+    }
+
+    /* ─── DEFINITION BOX ─── */
+    .def-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--purple);
+      border-radius: 0 12px 12px 0;
+      padding: 28px 32px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .def-box strong { color: var(--purple); font-weight: 500; }
+
+    .def-box .etymology {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text3);
+      letter-spacing: 0.04em;
+    }
+
+    .def-box .etymology span { color: var(--purple); }
+
+    /* ─── OBJECTIFS GRID ─── */
+    .obj-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .obj-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: default;
+    }
+
+    .obj-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-2px);
+    }
+
+    .obj-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 100px;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .badge-conf { background: rgba(34,197,94,0.12); color: var(--purple); border: 1px solid rgba(34,197,94,0.2); }
+    .badge-int  { background: rgba(45,212,191,0.1);  color: var(--teal);   border: 1px solid rgba(45,212,191,0.2); }
+    .badge-auth { background: rgba(251,191,36,0.1);  color: var(--amber);  border: 1px solid rgba(251,191,36,0.2); }
+    .badge-nr   { background: rgba(251,113,133,0.1); color: var(--coral);  border: 1px solid rgba(251,113,133,0.2); }
+
+    .obj-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .obj-body {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ─── FAMILLES ─── */
+    .fam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .fam-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 26px 24px;
+      transition: border-color 0.2s;
+    }
+
+    .fam-card:hover { border-color: var(--border2); }
+
+    .fam-card.sym { border-top: 2px solid var(--teal); }
+    .fam-card.asym { border-top: 2px solid var(--purple); }
+
+    .fam-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .fam-name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--text);
+    }
+
+    .fam-speed {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 3px 9px;
+      border-radius: 100px;
+    }
+
+    .fam-speed.fast { background: rgba(134,239,172,0.1); color: var(--green); border: 1px solid rgba(134,239,172,0.2); }
+    .fam-speed.sec  { background: rgba(34,197,94,0.1); color: var(--purple); border: 1px solid rgba(34,197,94,0.2); }
+
+    .fam-desc { font-size: 13px; color: var(--text2); margin-bottom: 14px; line-height: 1.6; }
+
+    .fam-key {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    .fam-key strong { color: var(--text); }
+
+    .algos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .algo-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text2);
+    }
+
+    .fam-usage {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    .fam-usage strong { color: var(--text2); }
+
+    /* ─── USAGES ─── */
+    .use-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .use-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 16px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .use-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-2px);
+    }
+
+    .use-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .ub-net  { background: rgba(96,165,250,0.1);  color: var(--blue);   border: 1px solid rgba(96,165,250,0.2); }
+    .ub-ssh  { background: rgba(45,212,191,0.1);  color: var(--teal);   border: 1px solid rgba(45,212,191,0.2); }
+    .ub-vpn  { background: rgba(251,191,36,0.1);  color: var(--amber);  border: 1px solid rgba(251,191,36,0.2); }
+    .ub-disk { background: rgba(251,113,133,0.1); color: var(--coral);  border: 1px solid rgba(251,113,133,0.2); }
+    .ub-pki  { background: rgba(34,197,94,0.1); color: var(--purple); border: 1px solid rgba(34,197,94,0.2); }
+    .ub-hash { background: rgba(134,239,172,0.1); color: var(--green);  border: 1px solid rgba(134,239,172,0.2); }
+
+    .use-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .use-desc { font-size: 12px; color: var(--text2); line-height: 1.55; }
+
+    /* ─── TIMELINE ─── */
+    .timeline { position: relative; padding-left: 32px; }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--purple), transparent);
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 32px;
+    }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 7px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--purple);
+      box-shadow: 0 0 12px rgba(34,197,94,0.5);
+    }
+
+    .tl-item:last-child { margin-bottom: 0; }
+
+    .tl-year {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--purple);
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .tl-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .tl-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+    /* ─── VEILLE ARTICLES ─── */
+    .art-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .art-card:hover {
+      border-color: rgba(34,197,94,0.3);
+      transform: translateY(-2px);
+    }
+
+    .art-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .art-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .ab-pqc   { background: rgba(34,197,94,0.1); color: var(--purple); border: 1px solid rgba(34,197,94,0.2); }
+    .ab-inn   { background: rgba(45,212,191,0.1);  color: var(--teal);   border: 1px solid rgba(45,212,191,0.2); }
+    .ab-tur   { background: rgba(251,191,36,0.1);  color: var(--amber);  border: 1px solid rgba(251,191,36,0.2); }
+    .ab-nist  { background: rgba(134,239,172,0.1); color: var(--green);  border: 1px solid rgba(134,239,172,0.2); }
+    .ab-anssi { background: rgba(251,113,133,0.1); color: var(--coral);  border: 1px solid rgba(251,113,133,0.2); }
+    .ab-ue    { background: rgba(96,165,250,0.1);  color: var(--blue);   border: 1px solid rgba(96,165,250,0.2); }
+
+    .art-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .art-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text3);
+      margin-bottom: 12px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .art-desc {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+      border-left: 2px solid rgba(34,197,94,0.25);
+      padding-left: 14px;
+      margin-bottom: 14px;
+    }
+
+    .art-link {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--purple);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .art-link:hover { opacity: 1; text-decoration: underline; }
+    .art-link::after { content: '↗'; }
+
+
+    /* ─── FOOTER ─── */
+    .footer {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer p {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 0.05em;
+      line-height: 1.8;
+    }
+
+    .footer span { color: var(--purple); }
+
+    /* ─── SCROLL INDICATOR ─── */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--purple-dark), var(--purple));
+      z-index: 100;
+      transition: width 0.1s linear;
+    }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(13,15,20,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+    }
+
+    .nav a {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text3);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover { color: var(--purple); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      .obj-grid, .fam-grid, .use-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 38px; }
+      .nav { gap: 14px; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="scroll-progress" id="progress"></div>
+
+<nav class="nav">
+  <a href="index.html#veille">&larr; Retour au portfolio</a>
+  <a href="#definition">Définition</a>
+  <a href="#objectifs">Objectifs</a>
+  <a href="#familles">Familles</a>
+  <a href="#usages">Usages SISR</a>
+  <a href="#histoire">Histoire</a>
+  <a href="#veille">Veille</a>
+</nav>
+
+<div class="container">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-tag">BTS SIO · SISR · Veille informatique</div>
+    <h1>La <em>Cryptographie</em></h1>
+    <p class="hero-sub">Science de la protection de l'information — des César aux algorithmes post-quantiques</p>
+    <div class="hero-meta">
+      <span class="meta-pill">Année <span>2025–2026</span></span>
+      <span class="meta-pill">Domaine <span>Sécurité réseau</span></span>
+      <span class="meta-pill">Niveau <span>Introduction</span></span>
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- 1 · DÉFINITION -->
+  <section class="section reveal" id="definition">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Définition</h2>
+    </div>
+    <div class="def-box">
+      La <strong>cryptographie</strong> est la science qui consiste à <strong>protéger des informations</strong> en les rendant illisibles pour toute personne non autorisée. Concrètement, elle transforme un message lisible — le <strong>texte clair</strong> — en un message incompréhensible appelé <strong>texte chiffré</strong>, grâce à un algorithme mathématique et une clé secrète. Seul celui qui possède la bonne clé peut déchiffrer le message et retrouver l'information d'origine.
+      <div class="etymology">
+        Étymologie : grec <span>kryptos</span> (caché) + <span>graphein</span> (écrire) → « écriture cachée »
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · OBJECTIFS -->
+  <section class="section reveal" id="objectifs">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Les 4 objectifs fondamentaux</h2>
+    </div>
+    <div class="obj-grid">
+      <div class="obj-card">
+        <span class="obj-badge badge-conf">Confidentialité</span>
+        <div class="obj-title">Garder le secret</div>
+        <div class="obj-body">Seules les personnes autorisées peuvent lire le message. Exemple concret : le chiffrement HTTPS entre ton navigateur et un site web empêche quiconque d'intercepter tes données.</div>
+      </div>
+      <div class="obj-card">
+        <span class="obj-badge badge-int">Intégrité</span>
+        <div class="obj-title">Détecter les modifications</div>
+        <div class="obj-body">Garantir qu'un message n'a pas été altéré pendant son transport. Exemple : le hash SHA-256 d'un fichier téléchargé permet de vérifier qu'il n'a pas été corrompu.</div>
+      </div>
+      <div class="obj-card">
+        <span class="obj-badge badge-auth">Authentification</span>
+        <div class="obj-title">Vérifier l'identité</div>
+        <div class="obj-body">S'assurer que l'expéditeur est bien celui qu'il prétend être. Exemple : les certificats SSL d'un site web prouvent que tu es bien connecté au bon serveur.</div>
+      </div>
+      <div class="obj-card">
+        <span class="obj-badge badge-nr">Non-répudiation</span>
+        <div class="obj-title">Prouver l'origine</div>
+        <div class="obj-body">Empêcher qu'une personne nie avoir envoyé un message. Exemple : la signature numérique d'un contrat PDF prouve de façon irréfutable qui l'a signé.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · FAMILLES -->
+  <section class="section reveal" id="familles">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Les 2 grandes familles</h2>
+    </div>
+    <div class="fam-grid">
+
+      <div class="fam-card sym">
+        <div class="fam-head">
+          <div class="fam-name">Symétrique</div>
+          <span class="fam-speed fast">Rapide</span>
+        </div>
+        <div class="fam-desc">Une seule clé secrète est partagée entre l'émetteur et le destinataire. La même clé sert à chiffrer et à déchiffrer le message.</div>
+        <div class="fam-key"><strong>Principe :</strong> Alice et Bob partagent une clé commune → rapide mais nécessite un échange sécurisé de la clé au préalable.</div>
+        <div class="algos">
+          <span class="algo-tag">AES-256</span>
+          <span class="algo-tag">ChaCha20</span>
+          <span class="algo-tag">DES (obsolète)</span>
+          <span class="algo-tag">3DES</span>
+        </div>
+        <div class="fam-usage"><strong>Usages :</strong> chiffrement de disques durs, tunnels VPN, chiffrement de fichiers volumineux</div>
+      </div>
+
+      <div class="fam-card asym">
+        <div class="fam-head">
+          <div class="fam-name">Asymétrique</div>
+          <span class="fam-speed sec">Sécurisé à distance</span>
+        </div>
+        <div class="fam-desc">Deux clés mathématiquement liées : une clé publique (diffusée à tous) et une clé privée (gardée secrète). Ce qui est chiffré avec l'une ne se déchiffre qu'avec l'autre.</div>
+        <div class="fam-key"><strong>Principe :</strong> n'importe qui peut chiffrer avec la clé publique, seul le propriétaire de la clé privée peut déchiffrer.</div>
+        <div class="algos">
+          <span class="algo-tag">RSA-2048</span>
+          <span class="algo-tag">ECC</span>
+          <span class="algo-tag">DSA</span>
+          <span class="algo-tag">Ed25519</span>
+        </div>
+        <div class="fam-usage"><strong>Usages :</strong> HTTPS, SSH, certificats numériques, signatures électroniques</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4 · USAGES SISR -->
+  <section class="section reveal" id="usages">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Usages concrets en SISR</h2>
+    </div>
+    <div class="use-grid">
+      <div class="use-card">
+        <span class="use-badge ub-net">Réseau</span>
+        <div class="use-title">HTTPS / TLS</div>
+        <div class="use-desc">Chiffre les échanges entre navigateur et serveur web. Base de la sécurité internet depuis les années 90.</div>
+      </div>
+      <div class="use-card">
+        <span class="use-badge ub-ssh">Accès distant</span>
+        <div class="use-title">SSH</div>
+        <div class="use-desc">Connexion sécurisée à un serveur Linux. Utilise la cryptographie asymétrique pour l'authentification sans mot de passe.</div>
+      </div>
+      <div class="use-card">
+        <span class="use-badge ub-vpn">VPN</span>
+        <div class="use-title">IPsec / OpenVPN</div>
+        <div class="use-desc">Tunnel chiffré entre deux sites ou entre un poste distant et le réseau d'entreprise.</div>
+      </div>
+      <div class="use-card">
+        <span class="use-badge ub-disk">Stockage</span>
+        <div class="use-title">BitLocker / LUKS</div>
+        <div class="use-desc">Chiffrement du disque dur d'un poste de travail. Protège les données en cas de vol de matériel.</div>
+      </div>
+      <div class="use-card">
+        <span class="use-badge ub-pki">Authentification</span>
+        <div class="use-title">Certificats PKI</div>
+        <div class="use-desc">Infrastructure à clé publique. Base des certificats SSL des sites web et des cartes d'identité numériques.</div>
+      </div>
+      <div class="use-card">
+        <span class="use-badge ub-hash">Intégrité</span>
+        <div class="use-title">SHA-256 / MD5</div>
+        <div class="use-desc">Empreinte numérique d'un fichier ou d'un mot de passe. Vérifie l'intégrité sans stocker le secret en clair.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · HISTOIRE -->
+  <section class="section reveal" id="histoire">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Repères historiques</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">~50 AV. J.-C.</div>
+        <div class="tl-name">Chiffre de César</div>
+        <div class="tl-desc">Jules César décale les lettres de l'alphabet de 3 rangs pour ses communications militaires. Premier exemple documenté de chiffrement par substitution.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1943</div>
+        <div class="tl-name">Enigma cassée par Alan Turing</div>
+        <div class="tl-desc">Alan Turing et son équipe de Bletchley Park brisent le code nazi Enigma. La cryptanalyse devient un enjeu militaire décisif et pose les bases de l'informatique moderne.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1976</div>
+        <div class="tl-name">Invention de Diffie-Hellman</div>
+        <div class="tl-desc">Whitfield Diffie et Martin Hellman inventent la cryptographie asymétrique. Révolution majeure : deux personnes peuvent désormais établir un secret commun sans jamais se rencontrer.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1977</div>
+        <div class="tl-name">RSA — premier algorithme asymétrique</div>
+        <div class="tl-desc">Rivest, Shamir et Adleman publient RSA, basé sur la difficulté de factoriser de grands nombres. Il reste l'algorithme asymétrique le plus utilisé 50 ans après.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2001</div>
+        <div class="tl-name">Standard AES adopté par le NIST</div>
+        <div class="tl-desc">L'AES (Advanced Encryption Standard) remplace le DES et devient le standard mondial du chiffrement symétrique. Il est encore utilisé dans quasiment tous les systèmes aujourd'hui.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2024–2026</div>
+        <div class="tl-name">Ère post-quantique — la prochaine révolution</div>
+        <div class="tl-desc">Les ordinateurs quantiques menacent les algorithmes actuels (RSA, ECC). Le NIST et l'Union Européenne standardisent de nouveaux algorithmes résistants aux attaques quantiques (PQC). Google, IBM et des chercheurs du monde entier accélèrent la course.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 6 · VEILLE ARTICLES -->
+  <section class="section reveal" id="veille">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Veille informatique — Articles sélectionnés</h2>
+    </div>
+
+    <!-- Article 1 -->
+    <div class="art-card">
+      <div class="art-header">
+        <span class="art-badge ab-pqc">Post-quantique</span>
+        <div class="art-title">Google avertit : l'informatique quantique menace les normes cryptographiques actuelles</div>
+      </div>
+      <div class="art-meta"><span>Euronews</span><span>27 mars 2026</span></div>
+      <div class="art-desc">Google annonce que les ordinateurs quantiques représentent une menace directe pour les algorithmes de chiffrement utilisés aujourd'hui sur Internet. L'entreprise se fixe une migration vers la cryptographie post-quantique (PQC) d'ici 2029 et appelle toute l'industrie à suivre. L'un des risques majeurs soulevés est l'attaque "stocker maintenant, déchiffrer plus tard" : des données chiffrées aujourd'hui pourraient être déchiffrées demain par des machines quantiques suffisamment puissantes.</div>
+      <a class="art-link" href="https://fr.euronews.com/next/2026/03/27/google-avertit-la-nouvelle-ere-de-linformatique-quantique-menace-plus-quon-ne-croit" target="_blank">fr.euronews.com</a>    </div>
+
+    <!-- Article 2 -->
+    <div class="art-card">
+      <div class="art-header">
+        <span class="art-badge ab-ue">Union Européenne</span>
+        <div class="art-title">L'UE impose la transition vers la cryptographie post-quantique</div>
+      </div>
+      <div class="art-meta"><span>Commission européenne</span><span>23 juin 2025</span></div>
+      <div class="art-desc">La Commission européenne publie une feuille de route imposant à tous les États membres de migrer vers la cryptographie post-quantique d'ici fin 2026. Les infrastructures critiques (énergie, santé, finance) devront être protégées par la PQC au plus tard en 2030. Cette initiative illustre l'urgence réglementaire qui pousse les entreprises et administrations à anticiper la menace quantique sur leurs systèmes d'information.</div>
+      <a class="art-link" href="https://digital-strategy.ec.europa.eu/fr/news/eu-reinforces-its-cybersecurity-post-quantum-cryptography" target="_blank">digital-strategy.ec.europa.eu</a>    </div>
+
+    <!-- Article 3 -->
+    <div class="art-card">
+      <div class="art-header">
+        <span class="art-badge ab-anssi">ANSSI · France</span>
+        <div class="art-title">Premiers visas de sécurité ANSSI incluant de la cryptographie post-quantique</div>
+      </div>
+      <div class="art-meta"><span>ANSSI (cyber.gouv.fr)</span><span>Octobre 2025</span></div>
+      <div class="art-desc">L'ANSSI délivre les tout premiers certificats de sécurité français intégrant de la cryptographie post-quantique, aux solutions de Thales et Samsung. À partir de 2027, cette intégration deviendra obligatoire pour obtenir une qualification ANSSI, l'autorité nationale de référence en cybersécurité dont les certifications concernent directement les équipements de sécurité déployés en entreprise.</div>
+      <a class="art-link" href="https://cyber.gouv.fr/actualites/premiers-visas-de-securite-incluant-de-la-cryptographie-post-quantique" target="_blank">cyber.gouv.fr</a>    </div>
+
+    <!-- Article 4 -->
+    <div class="art-card">
+      <div class="art-header">
+        <span class="art-badge ab-inn">Innovation</span>
+        <div class="art-title">Cryptographie sur ADN : une nouvelle approche franco-japonaise fait ses preuves</div>
+      </div>
+      <div class="art-meta"><span>ESPCI Paris – CNRS</span><span>1er avril 2026</span></div>
+      <div class="art-desc">Une équipe franco-japonaise (CNRS, Université de Tokyo, ESPCI) a mis au point un système de chiffrement utilisant des brins d'ADN synthétique pour générer des clés aléatoires, testé en conditions réelles lors de la visite d'État au Japon. L'approche repose sur la seule méthode réputée inviolable (One-Time Pad), indépendante de toute puissance de calcul. Une avancée spectaculaire qui repousse les frontières de la cryptographie classique.</div>
+      <a class="art-link" href="https://www.espci.psl.eu/fr/actualites/2026/cryptographie-sur-adn-une-nouvelle-approche-franco" target="_blank">espci.psl.eu</a>    </div>
+
+    <!-- Article 5 -->
+    <div class="art-card">
+      <div class="art-header">
+        <span class="art-badge ab-tur">Prix Turing 2026</span>
+        <div class="art-title">Bennett &amp; Brassard récompensés — pionniers de la cryptographie quantique</div>
+      </div>
+      <div class="art-meta"><span>Agence Science-Presse</span><span>Mars 2026</span></div>
+      <div class="art-desc">Charles Bennett et Gilles Brassard, inventeurs du protocole BB84 (premier protocole de distribution quantique de clés, 1984), reçoivent le prix Turing, la plus haute distinction en informatique. Cet article retrace leur parcours et explique comment leurs travaux fondateurs sur la cryptographie quantique sont aujourd'hui au cœur des enjeux de sécurité modernes. Un bon article pour contextualiser l'évolution historique du domaine.</div>
+      <a class="art-link" href="https://www.sciencepresse.qc.ca/actualites-scientifiques/2026/03/18/cryptographie-teleportation-celebrites-quantiques" target="_blank">sciencepresse.qc.ca</a>    </div>
+
+    <!-- Article 6 — quinzaine -->
+    <div class="art-card" style="border-color: rgba(34,197,94,0.25);">
+      <div class="art-header">
+        <span class="art-badge ab-nist">NIST · Menace quantique</span>
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--purple); background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); padding: 3px 10px; border-radius: 100px;">Veille du 15 avril 2026</span>
+        <div class="art-title">Bitcoin menacé par l'informatique quantique — rapport NIST du 7 avril 2026</div>
+      </div>
+      <div class="art-meta"><span>The Currency Analytics</span><span>13 avril 2026</span></div>
+      <div class="art-desc">Le 7 avril 2026, le NIST a publié un nouveau rapport évaluant la résistance des algorithmes cryptographiques actuels face aux ordinateurs quantiques — ouvert aux commentaires publics jusqu'en mai 2026. Dans le même temps, Google et IBM ont accéléré leurs programmes quantiques, et des chercheurs chinois ont démontré des attaques sur des courbes elliptiques à petites clés. Concrètement, les portefeuilles Bitcoin inactifs dont les clés publiques sont exposées sont considérés comme les premières cibles potentielles, avec des milliards de dollars en jeu.</div>
+      <a class="art-link" href="https://fr.thecurrencyanalytics.com/altcoins-fr/bitcoin-menace-par-linformatique-quantique-252392" target="_blank">fr.thecurrencyanalytics.com</a>    </div>
+
+    <!-- Article 7 — juin 2026 -->
+    <div class="art-card" style="border-color: rgba(251,113,133,0.3);">
+      <div class="art-header">
+        <span class="art-badge ab-anssi" style="background:rgba(251,113,133,0.12); color:var(--coral); border:1px solid rgba(251,113,133,0.25);">Zero-Knowledge · Faille critique</span>
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--coral); background: rgba(251,113,133,0.08); border: 1px solid rgba(251,113,133,0.2); padding: 3px 10px; border-radius: 100px;">Veille — Juin 2026</span>
+        <div class="art-title">Une IA découvre en 24h une faille cryptographique vieille de 4 ans dans Zcash — ZEC s'effondre de 40 %</div>
+      </div>
+      <div class="art-meta"><span>Korben.info · CoinAcademy · CoinDesk</span><span>5 juin 2026</span></div>
+      <div class="art-desc">
+        Le 29 mai 2026, le chercheur en sécurité Taylor Hornby utilise un modèle d'IA pour auditer le code de Zcash, une cryptomonnaie reposant sur un protocole de confidentialité appelé <em>zero-knowledge proof</em>. En une journée, l'IA repère une faille critique présente depuis mai 2022 dans le pool de transactions privées "Orchard" : une partie du circuit de vérification cryptographique était mal contrainte, ce qui aurait permis de créer des ZEC contrefaits en quantité illimitée, indétectables par le réseau. La faille est corrigée en urgence le 1er juin via un hard fork. Mais lors de la divulgation publique le 5 juin, le cours de ZEC s'effondre de 40 % en 24 heures, effaçant plusieurs milliards de dollars de capitalisation. La zone d'ombre reste entière : la confidentialité même du protocole rend impossible de prouver cryptographiquement que la faille n'a jamais été exploitée pendant 4 ans.
+      </div>
+      <a class="art-link" href="https://korben.info/claude-opus-faille-zcash-vie-privee.html" target="_blank">korben.info</a>    </div>
+
+    <!-- Article 8 — juillet 2026 -->
+    <div class="art-card" style="border-color: rgba(34,197,94,0.35);">
+      <div class="art-header">
+        <span class="art-badge ab-anssi" style="background:rgba(34,197,94,0.12); color:var(--purple); border:1px solid rgba(34,197,94,0.25);">ANSSI · Réglementation</span>
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--purple); background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); padding: 3px 10px; border-radius: 100px;">Veille — Juillet 2026</span>
+        <div class="art-title">L'ANSSI ne certifiera plus les produits de sécurité sans cryptographie post-quantique à partir de 2027</div>
+      </div>
+      <div class="art-meta"><span>Tech Insider · Cointribune</span><span>16 juin 2026</span></div>
+      <div class="art-desc">Lors de la conférence France Quantum à Paris, l'ANSSI a annoncé qu'à partir de 2027 elle cesserait de certifier les produits de sécurité (VPN, HSM, messageries chiffrées) qui n'intègrent pas de cryptographie post-quantique, et recommande de n'acheter plus que des solutions « quantum-safe » d'ici 2030. La raison : le scénario « récolter maintenant, déchiffrer plus tard », où des données chiffrées interceptées aujourd'hui pourront être déchiffrées une fois l'ordinateur quantique disponible. La recommandation devient une véritable contrainte de marché pour les entreprises françaises.</div>
+      <a class="art-link" href="https://tech-insider.org/fr/cryptographie-post-quantique-anssi-2027/" target="_blank" rel="noopener">tech-insider.org</a>    </div>
+
+    <!-- Article 9 — août 2026 -->
+    <div class="art-card" style="border-color: rgba(56,189,248,0.35);">
+      <div class="art-header">
+        <span class="art-badge ab-nist" style="background:rgba(56,189,248,0.12); color:var(--blue); border:1px solid rgba(56,189,248,0.25);">Passkeys · Authentification</span>
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--blue); background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); padding: 3px 10px; border-radius: 100px;">Veille — Août 2026</span>
+        <div class="art-title">« Pass-the-Passkey » : les clés d'accès réputées inviolables mises à l'épreuve à Black Hat 2026</div>
+      </div>
+      <div class="art-meta"><span>Dark Reading · NotebookCheck</span><span>5 août 2026</span></div>
+      <div class="art-desc">Présentées comme le remplaçant définitif du mot de passe résistant au phishing, les passkeys ont encaissé plus de 20 techniques d'attaque baptisées « Pass-the-Passkey », dévoilées à la conférence Black Hat par le chercheur Michael Grafnetter. La cryptographie n'a pas été cassée : les chercheurs ont exploité des erreurs d'implémentation, Windows enregistrant d'anciennes signatures d'authentification en clair dans ses journaux, rejouables pour usurper des comptes. La faille (CVE-2026-34348) a été corrigée le 14 juillet 2026. La leçon : un outil n'est jamais plus solide que son implémentation.</div>
+      <a class="art-link" href="https://www.darkreading.com/identity-access-management-security/flaws-passkeys-implementation-old-attacks-work" target="_blank" rel="noopener">darkreading.com</a>    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>Portfolio BTS SIO · Option <span>SISR</span> · 2025–2027</p>
+    <p>Veille informatique — Thème : <span>Cryptographie</span></p>
+    <p style="margin-top: 8px;">Mise à jour : <span>Août 2026</span></p>
+  </footer>
+
+</div>
+
+<script>
+  // Scroll progress bar
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = (window.scrollY / total) * 100;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(r => obs.observe(r));
+</script>
+
+</body>
+</html>
