@@ -17,8 +17,9 @@ Site en 3 pages HTML :
 ## Page veille cryptographie
 - Cadence : un article par mois
 - Objectif : ~12 articles d'ici mars-avril 2027
-- Articles collectés jusqu'à juillet 2026
-- Dernier article en date : mandat de certification post-quantique de l'ANSSI (2027)
+- Articles collectés jusqu'à novembre 2026 (12 articles)
+- Dernier article en date : suppression de l'article 16 bis interdisant les portes dérobées (novembre 2026)
+- Une copie PDF de chaque article est archivée dans `veille-archives/`, nommée `AAAA-MM_source_sujet.pdf`
 
 ## Instructions pour Claude Code
 - Respecter la charte graphique et les typographies ci-dessus pour toute nouvelle page ou section

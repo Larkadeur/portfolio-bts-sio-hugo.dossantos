@@ -913,13 +913,46 @@
       <div class="art-desc">Présentées comme le remplaçant définitif du mot de passe résistant au phishing, les passkeys ont encaissé plus de 20 techniques d'attaque baptisées « Pass-the-Passkey », dévoilées à la conférence Black Hat par le chercheur Michael Grafnetter. La cryptographie n'a pas été cassée : les chercheurs ont exploité des erreurs d'implémentation, Windows enregistrant d'anciennes signatures d'authentification en clair dans ses journaux, rejouables pour usurper des comptes. La faille (CVE-2026-34348) a été corrigée le 14 juillet 2026. La leçon : un outil n'est jamais plus solide que son implémentation.</div>
       <a class="art-link" href="https://www.darkreading.com/identity-access-management-security/flaws-passkeys-implementation-old-attacks-work" target="_blank" rel="noopener">darkreading.com</a>    </div>
 
+    <!-- Article 10 — septembre 2026 -->
+    <div class="art-card" style="border-color: rgba(96,165,250,0.35);">
+      <div class="art-header">
+        <span class="art-badge ab-ue">G7 · ANSSI</span>
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--blue); background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.2); padding: 3px 10px; border-radius: 100px;">Veille — Septembre 2026</span>
+        <div class="art-title">« Preparing for the Post-Quantum Era » : le G7 et l'ANSSI reclassent la menace quantique en risque à court terme</div>
+      </div>
+      <div class="art-meta"><span>ANSSI (cyber.gouv.fr) · groupe cyber du G7</span><span>3 septembre 2026</span></div>
+      <div class="art-desc">Le 3 septembre 2026, le groupe de travail cybersécurité du G7, piloté par l'ANSSI dans le cadre de la présidence française, publie un appel à l'action commun sur la cryptographie post-quantique, co-signé par les agences britannique (NCSC), allemande (BSI), canadienne (CSE), japonaise (NCO) et italienne (ACN). Le changement de ton est notable&nbsp;: la menace n'est plus décrite comme un horizon lointain mais comme un risque à court terme, à cause du scénario « récolter maintenant, déchiffrer plus tard » (des données interceptées aujourd'hui et déchiffrées une fois l'ordinateur quantique disponible). Le texte fixe cinq priorités, dont l'intégration du post-quantique dans les exigences des marchés publics, et s'appuie sur un constat sévère&nbsp;: si une large majorité d'organisations déclarent planifier ou tester la migration, environ 7&nbsp;% seulement l'ont réellement déployée sur la majorité de leur parc. La première étape recommandée est très concrète pour un administrateur&nbsp;: réaliser un <em>inventaire cryptographique</em>, c'est-à-dire recenser tout ce qui repose sur RSA et ECC — TLS, SSH, IPsec, S/MIME — avant même de pouvoir planifier la suite.</div>
+      <a class="art-link" href="https://cyber.gouv.fr/nous-connaitre/publications/publications-internationales/preparing-for-the-post-quantum-era-a-call-to-action/" target="_blank" rel="noopener">cyber.gouv.fr</a>    </div>
+
+    <!-- Article 11 — octobre 2026 -->
+    <div class="art-card" style="border-color: rgba(251,113,133,0.35);">
+      <div class="art-header">
+        <span class="art-badge ab-anssi">PKI · Certificats TLS</span>
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--coral); background: rgba(251,113,133,0.08); border: 1px solid rgba(251,113,133,0.2); padding: 3px 10px; border-radius: 100px;">Veille — Octobre 2026</span>
+        <div class="art-title">Une autorité de certification signe avec des clés privées devinables en 255 essais — eMudhra quitte le marché TLS</div>
+      </div>
+      <div class="art-meta"><span>IT-Connect · Mozilla (CCADB)</span><span>22 octobre 2026</span></div>
+      <div class="art-desc">Le 17 octobre 2026, un chercheur analysant la base publique CCADB découvre que huit certificats intermédiaires de l'autorité de certification indienne eMudhra ont été signés avec des clés privées aberrantes&nbsp;: des clés sur courbe elliptique P-384, qui devraient être tirées dans un espace astronomique, dont la valeur réelle était comprise entre 1 et 255. Autrement dit, n'importe qui pouvait les retrouver en quelques essais — le chercheur l'a prouvé en signant un message avec chacune d'elles. En cause, un script de génération de clés défectueux&nbsp;: les certificats, d'abord signés avec les bonnes clés, avaient été re-signés avec les clés défaillantes. Mozilla, Google, Apple et Microsoft ont bloqué les certificats le jour même, eMudhra les a révoqués le 18 octobre pour « caCompromise », la racine emSign ECC Root CA - G3 a été retirée des navigateurs et environ 30 000 certificats ont dû être migrés. Le 22 octobre, eMudhra annonçait son retrait du marché mondial des certificats SSL/TLS. Aucun certificat frauduleux n'a été retrouvé dans les journaux de transparence. La leçon pour un administrateur&nbsp;: toute la chaîne de confiance TLS repose sur la qualité de l'aléa au moment de la génération des clés.</div>
+      <a class="art-link" href="https://www.it-connect.tech/emudhra-trivial-private-keys-force-mozilla-google-apple-and-microsoft-to-block-8-certificates/" target="_blank" rel="noopener">it-connect.tech</a>    </div>
+
+    <!-- Article 12 — novembre 2026 -->
+    <div class="art-card" style="border-color: rgba(251,191,36,0.35);">
+      <div class="art-header">
+        <span class="art-badge ab-tur">France · Réglementation</span>
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--amber); background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); padding: 3px 10px; border-radius: 100px;">Veille — Novembre 2026</span>
+        <div class="art-title">Chiffrement : les députés suppriment l'article qui interdisait les portes dérobées dans les messageries</div>
+      </div>
+      <div class="art-meta"><span>Politique Matin · Cryptoast</span><span>10 novembre 2026</span></div>
+      <div class="art-desc">Le 10 novembre 2026, l'Assemblée nationale a supprimé par 69 voix contre 37 l'article 16 bis du projet de loi sur la résilience des infrastructures critiques et la cybersécurité (transposition de la directive NIS 2). Introduit au Sénat en mars 2025, cet article interdisait d'imposer aux fournisseurs de services chiffrés des dispositifs affaiblissant volontairement leur sécurité&nbsp;: portes dérobées ou clés de déchiffrement maîtres. Sa suppression ne crée aucune porte dérobée — le droit actuel n'en impose pas — mais retire la garantie explicite que le Sénat voulait inscrire dans la loi. Le gouvernement a justifié ce retrait en estimant que le débat sur l'accès aux communications chiffrées relève d'un cadre législatif dédié&nbsp;; ses opposants y voient un recul pour les utilisateurs comme pour les éditeurs de solutions sécurisées. Les deux chambres divergeant sur ce point, le texte doit encore être arbitré avant son adoption définitive. Un rappel utile&nbsp;: la solidité d'un chiffrement ne tient pas qu'à ses mathématiques, mais aussi au cadre légal qui l'entoure.</div>
+      <a class="art-link" href="https://www.politiquematin.fr/assemblee-chiffrement-article-16-bis-porte-derobee-suppression-10-novembre-2026" target="_blank" rel="noopener">politiquematin.fr</a>    </div>
+
   </section>
 
   <!-- FOOTER -->
   <footer class="footer">
     <p>Portfolio BTS SIO · Option <span>SISR</span> · 2025–2027</p>
     <p>Veille informatique — Thème : <span>Cryptographie</span></p>
-    <p style="margin-top: 8px;">Mise à jour : <span>Août 2026</span></p>
+    <p style="margin-top: 8px;">Mise à jour : <span>Novembre 2026</span></p>
   </footer>
 
 </div>
