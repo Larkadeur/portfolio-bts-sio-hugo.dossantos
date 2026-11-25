@@ -1,0 +1,2390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dossier de preuves E5 — Hugo Dos Santos</title>
+  <meta name="description" content="Dossier de preuves de l'épreuve E5 : captures, commandes et documents classés par réalisation professionnelle." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --font-display: 'DM Serif Display', serif;
+      --font-body: 'Outfit', system-ui, -apple-system, sans-serif;
+      --font-mono: 'DM Mono', monospace;
+
+      --bg: #020617;
+      --bg2: #0f172a;
+      --bg3: #111827;
+      --bg-card: rgba(15, 23, 42, 0.9);
+      --bg-card-soft: rgba(15, 23, 42, 0.6);
+      --border: rgba(148, 163, 184, 0.18);
+      --border2: rgba(148, 163, 184, 0.3);
+      --text: #e5e7eb;
+      --text2: #9ca3af;
+      --text3: #6b7280;
+
+      --accent: #22c55e;
+      --accent-strong: #00f5a0;
+      --blue: #0ea5e9;
+      --blue-soft: #38bdf8;
+      --amber: #fbbf24;
+      --radius: 18px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(34,197,94,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,197,94,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -220px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(22,163,74,0.16) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: min(1500px, 95vw);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ==================== HEADER ==================== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(15,23,42,0.94), rgba(15,23,42,0.75));
+      border-bottom: 1px solid var(--border2);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 12px 24px;
+    }
+
+    .logo { display: flex; align-items: center; gap: 10px; }
+
+    .logo-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0%, #22c55e, #0ea5e9);
+      color: #020617;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .logo-text { font-family: var(--font-mono); font-size: 0.95rem; color: #f9fafb; }
+
+    .nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    .nav-link {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text2);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+    }
+
+    .nav-link:hover { color: var(--accent-strong); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+
+    /* ==================== HERO ==================== */
+    .hero { padding: 56px 0 28px; }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      border: 1px solid rgba(34,197,94,0.25);
+      background: rgba(34,197,94,0.06);
+      padding: 5px 14px;
+      border-radius: 100px;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      font-weight: 400;
+      line-height: 1.12;
+      color: #f9fafb;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(to right, var(--accent-strong), var(--blue-soft));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p.lead {
+      max-width: 72ch;
+      color: var(--text2);
+      font-size: 1.02rem;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      background: var(--bg-card-soft);
+      border-radius: 14px;
+      padding: 12px 18px;
+      min-width: 132px;
+    }
+
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      color: var(--accent-strong);
+      line-height: 1.2;
+    }
+
+    .stat-lab {
+      font-size: 0.78rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .stat.pending .stat-val { color: var(--amber); }
+
+    .notice {
+      margin-top: 26px;
+      border: 1px solid rgba(251,191,36,0.25);
+      background: rgba(251,191,36,0.05);
+      border-left: 3px solid var(--amber);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      color: var(--text2);
+      max-width: 90ch;
+    }
+
+    .notice strong { color: var(--amber); font-weight: 500; }
+
+    /* ==================== BARRE D'OUTILS ==================== */
+    .toolbar {
+      position: sticky;
+      top: 58px;
+      z-index: 30;
+      margin: 32px 0 0;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(2,6,23,0.92);
+      backdrop-filter: blur(14px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toolbar-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+
+    .search {
+      flex: 1 1 240px;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border2);
+      background: rgba(15,23,42,0.8);
+      border-radius: 999px;
+      padding: 7px 14px;
+    }
+
+    .search input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+    }
+
+    .search input::placeholder { color: var(--text3); }
+
+    .chip {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.03em;
+      color: var(--text2);
+      background: rgba(15,23,42,0.8);
+      border: 1px solid var(--border2);
+      border-radius: 999px;
+      padding: 6px 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .chip:hover { color: var(--text); border-color: rgba(34,197,94,0.4); }
+
+    .chip.active {
+      color: #020617;
+      background: linear-gradient(to right, var(--accent), var(--blue));
+      border-color: transparent;
+      font-weight: 500;
+    }
+
+    .chip-label { font-size: 0.74rem; color: var(--text3); font-family: var(--font-mono); margin-right: 2px; }
+
+    .tool-btn {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text2);
+      background: transparent;
+      border: 1px solid var(--border2);
+      border-radius: 999px;
+      padding: 6px 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tool-btn:hover { color: var(--accent-strong); border-color: rgba(34,197,94,0.4); }
+    .tool-btn.on { color: #020617; background: var(--amber); border-color: transparent; }
+
+    /* ==================== EXPLORATEUR ==================== */
+    .explorer {
+      display: grid;
+      grid-template-columns: 262px minmax(0, 1fr);
+      gap: 28px;
+      padding: 28px 0 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tree {
+      position: sticky;
+      top: 150px;
+      align-self: start;
+      max-height: calc(100vh - 180px);
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card-soft);
+      padding: 16px 14px;
+    }
+
+    .tree-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 10px;
+    }
+
+    .tree-group {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 16px 0 6px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .tree-group:first-of-type { margin-top: 4px; border-top: none; padding-top: 0; }
+
+    .tree a {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text2);
+      font-size: 0.85rem;
+      padding: 5px 8px;
+      border-radius: 8px;
+      border-left: 2px solid transparent;
+      transition: all 0.18s;
+    }
+
+    .tree a:hover { background: rgba(34,197,94,0.07); color: var(--text); border-left-color: var(--accent); }
+
+    .tree a .num { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text3); }
+    .tree a .cnt { margin-left: auto; font-family: var(--font-mono); font-size: 0.68rem; color: var(--text3); }
+
+    .folders { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+    .block-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .block-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(34,197,94,0.35), transparent);
+    }
+
+    .folder {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      overflow: hidden;
+      scroll-margin-top: 170px;
+    }
+
+    .folder[open] { border-color: var(--border2); }
+
+    .folder > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .folder > summary::-webkit-details-marker { display: none; }
+    .folder > summary:hover { background: rgba(34,197,94,0.04); }
+
+    .f-num {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #020617;
+      background: linear-gradient(135deg, var(--accent), var(--blue));
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+    }
+
+    .folder.pending .f-num { background: rgba(251,191,36,0.18); color: var(--amber); border: 1px solid rgba(251,191,36,0.4); }
+
+    .f-head-main { min-width: 0; }
+
+    .f-title {
+      font-size: 1.02rem;
+      font-weight: 500;
+      color: #f9fafb;
+      line-height: 1.35;
+    }
+
+    .f-sub {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+
+    .comp-badge {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      color: var(--blue-soft);
+      background: rgba(14,165,233,0.08);
+      border: 1px solid rgba(14,165,233,0.25);
+      border-radius: 6px;
+      padding: 2px 7px;
+      cursor: help;
+    }
+
+    .f-count {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text2);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .f-count .miss { color: var(--amber); }
+
+    .f-arrow { display: none; }
+
+    .folder > summary::after {
+      content: '▸';
+      font-family: var(--font-mono);
+      color: var(--text3);
+      transition: transform 0.2s;
+    }
+
+    .folder[open] > summary::after { transform: rotate(90deg); color: var(--accent); }
+
+    .f-body { padding: 4px 20px 20px; border-top: 1px dashed var(--border); }
+
+    .f-desc {
+      font-size: 0.88rem;
+      color: var(--text2);
+      padding: 14px 0 4px;
+      max-width: 95ch;
+    }
+
+    .items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: 118px minmax(0, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(2,6,23,0.55);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .item:hover { border-color: rgba(34,197,94,0.4); transform: translateY(-2px); }
+
+    .item-thumb {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 94px;
+      border: none;
+      border-right: 1px solid var(--border);
+      background: #000;
+      padding: 0;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .item-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top left;
+      display: block;
+      opacity: 0.85;
+      transition: opacity 0.2s, transform 0.3s;
+    }
+
+    .item:hover .item-thumb img { opacity: 1; transform: scale(1.04); }
+
+    .item-badge {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: #020617;
+      background: var(--accent-strong);
+      border-radius: 5px;
+      padding: 1px 6px;
+      font-weight: 500;
+    }
+
+    .item-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      text-decoration: none;
+      background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(34,197,94,0.07));
+      border-right: 1px solid var(--border);
+      min-height: 94px;
+      cursor: pointer;
+    }
+
+    .item-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+
+    .item-title { font-size: 0.92rem; font-weight: 500; color: #f9fafb; line-height: 1.3; }
+
+    .item-desc { font-size: 0.8rem; color: var(--text2); line-height: 1.45; }
+
+    .item-foot {
+      margin-top: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      padding-top: 4px;
+    }
+
+    .skill-tag {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      color: var(--accent);
+      background: rgba(34,197,94,0.07);
+      border: 1px solid rgba(34,197,94,0.22);
+      border-radius: 6px;
+      padding: 2px 7px;
+    }
+
+    .path {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      color: var(--text3);
+      word-break: break-all;
+    }
+
+    .item-open {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--blue-soft);
+      text-decoration: none;
+      border: 1px solid rgba(14,165,233,0.3);
+      border-radius: 999px;
+      padding: 2px 10px;
+      transition: all 0.2s;
+    }
+
+    .item-open:hover { background: rgba(14,165,233,0.12); color: #fff; }
+
+    /* Pièce manquante */
+    .item.missing {
+      border-style: dashed;
+      border-color: rgba(251,191,36,0.3);
+      background: rgba(251,191,36,0.03);
+    }
+
+    .item.missing:hover { border-color: rgba(251,191,36,0.55); }
+
+    .item.missing .item-icon {
+      background: rgba(251,191,36,0.06);
+      color: var(--amber);
+      cursor: default;
+    }
+
+    .item.missing .item-title { color: #fde68a; }
+
+    .todo-tag {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      color: var(--amber);
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.3);
+      border-radius: 6px;
+      padding: 2px 7px;
+    }
+
+    .empty-msg {
+      font-size: 0.85rem;
+      color: var(--text3);
+      font-style: italic;
+      padding: 12px 0;
+    }
+
+    [hidden] { display: none !important; }
+
+    .no-result {
+      border: 1px dashed var(--border2);
+      border-radius: var(--radius);
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text3);
+      font-size: 0.92rem;
+    }
+
+    /* ==================== LIGHTBOX ==================== */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2,6,23,0.95);
+      backdrop-filter: blur(6px);
+      padding: 24px;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-inner { max-width: 1400px; width: 100%; text-align: center; }
+
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 76vh;
+      border-radius: 12px;
+      border: 1px solid var(--border2);
+      background: #000;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    }
+
+    .lightbox-caption {
+      margin-top: 14px;
+      color: var(--text);
+      font-size: 0.92rem;
+      max-width: 90ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .lightbox-meta {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .lightbox-meta a { color: var(--blue-soft); text-decoration: none; }
+    .lightbox-meta a:hover { text-decoration: underline; }
+
+    .lightbox-close,
+    .lightbox-nav {
+      position: absolute;
+      border: 1px solid var(--border2);
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      cursor: pointer;
+      border-radius: 999px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .lightbox-close {
+      top: 20px; right: 24px;
+      width: 42px; height: 42px;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .lightbox-nav {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px; height: 46px;
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .lightbox-prev { left: 24px; }
+    .lightbox-next { right: 24px; }
+    .lightbox-close:hover, .lightbox-nav:hover { background: var(--accent); color: #020617; }
+
+    /* ==================== FOOTER ==================== */
+    .footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      text-align: center;
+      color: var(--text3);
+      font-size: 0.85rem;
+    }
+
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 1000px) {
+      .explorer { grid-template-columns: minmax(0, 1fr); }
+      .tree { position: static; max-height: none; }
+      .toolbar { position: static; }
+    }
+
+    @media (max-width: 560px) {
+      .items { grid-template-columns: minmax(0, 1fr); }
+      .item { grid-template-columns: 92px minmax(0, 1fr); }
+      .folder > summary { grid-template-columns: auto minmax(0, 1fr); }
+      .f-count { grid-column: 2; text-align: left; }
+      .lightbox-prev { left: 6px; }
+      .lightbox-next { right: 6px; }
+      .lightbox-img { max-height: 60vh; }
+    }
+  </style>
+</head>
+<body id="top">
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">&lt;/&gt;</span>
+        <span class="logo-text">Hugo Dos Santos</span>
+      </div>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">&larr; Portfolio</a>
+        <a href="index.html#e5" class="nav-link">Tableau E5</a>
+        <a href="projet-glpi.html" class="nav-link">Projet GLPI</a>
+        <a href="veille-cryptographie.html" class="nav-link">Veille</a>
+        <a href="tableau-synthese-E5.xlsx" class="nav-link" download>Tableau .xlsx</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="container hero">
+    <p class="hero-tag">BTS SIO SISR &middot; Session 2026 &middot; Épreuve E5</p>
+    <h1>Dossier de <span>preuves</span></h1>
+    <p class="lead">
+      Chaque réalisation du tableau de synthèse E5 possède ici son dossier, avec les pièces qui
+      l'attestent&nbsp;: captures d'écran, lignes de commande, journaux, documents et livrables.
+      Les dossiers sont numérotés dans l'ordre du tableau, et chaque pièce indique la compétence
+      qu'elle démontre.
+    </p>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-val" id="stat-folders">—</div><div class="stat-lab">Réalisations</div></div>
+      <div class="stat"><div class="stat-val" id="stat-items">—</div><div class="stat-lab">Pièces fournies</div></div>
+      <div class="stat"><div class="stat-val" id="stat-shots">—</div><div class="stat-lab">Captures</div></div>
+      <div class="stat pending"><div class="stat-val" id="stat-missing">—</div><div class="stat-lab">Pièces à fournir</div></div>
+    </div>
+
+    <p class="notice">
+      <strong>Note de travail —</strong> les cartes en pointillé jaune marquées « À fournir » signalent les
+      pièces qui restent à récupérer (captures à faire, documents à exporter, données à anonymiser).
+      Le bouton <em>Masquer les pièces à fournir</em> permet de n'afficher que le dossier réellement
+      présentable au jury.
+    </p>
+  </section>
+
+  <!-- ==================== BARRE D'OUTILS ==================== -->
+  <div class="container">
+    <div class="toolbar">
+      <div class="toolbar-row">
+        <label class="search">
+          <span aria-hidden="true">🔍</span>
+          <input type="search" id="search" placeholder="Rechercher une preuve (GLPI, sauvegarde, GPO, RGPD…)" aria-label="Rechercher une preuve">
+        </label>
+        <button class="tool-btn" id="toggle-missing">Masquer les pièces à fournir</button>
+        <button class="tool-btn" id="toggle-all">Tout replier</button>
+      </div>
+      <div class="toolbar-row">
+        <span class="chip-label">Compétence&nbsp;:</span>
+        <button class="chip active" data-comp="all">Toutes</button>
+        <button class="chip" data-comp="c1">C1 · Patrimoine informatique</button>
+        <button class="chip" data-comp="c2">C2 · Incidents &amp; assistance</button>
+        <button class="chip" data-comp="c3">C3 · Présence en ligne</button>
+        <button class="chip" data-comp="c4">C4 · Mode projet</button>
+        <button class="chip" data-comp="c5">C5 · Mise à disposition d'un service</button>
+        <button class="chip" data-comp="c6">C6 · Développement professionnel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== EXPLORATEUR ==================== -->
+  <div class="container">
+    <div class="explorer">
+
+      <!-- ===== ARBORESCENCE ===== -->
+      <aside class="tree" id="tree">
+        <div class="tree-title">Dossiers</div>
+
+        <div class="tree-group">En formation</div>
+        <a href="#d01"><span class="num">01</span> Certifications <span class="cnt"></span></a>
+        <a href="#d02"><span class="num">02</span> Veille cryptographie <span class="cnt"></span></a>
+        <a href="#d03"><span class="num">03</span> CV &amp; LinkedIn <span class="cnt"></span></a>
+        <a href="#d04"><span class="num">04</span> Portfolio <span class="cnt"></span></a>
+
+        <div class="tree-group">1<sup>re</sup> année en entreprise</div>
+        <a href="#d05"><span class="num">05</span> Comptes &amp; licences <span class="cnt"></span></a>
+        <a href="#d06"><span class="num">06</span> Migration Windows 11 <span class="cnt"></span></a>
+        <a href="#d07"><span class="num">07</span> Nouveaux switchs <span class="cnt"></span></a>
+        <a href="#d08"><span class="num">08</span> Mise à jour GLPI <span class="cnt"></span></a>
+        <a href="#d09"><span class="num">09</span> Déploiement des postes <span class="cnt"></span></a>
+
+        <div class="tree-group">2<sup>e</sup> année en entreprise</div>
+        <a href="#d10"><span class="num">10</span> Agent GLPI par GPO <span class="cnt"></span></a>
+        <a href="#d11"><span class="num">11</span> Postes techniciens <span class="cnt"></span></a>
+
+        <div class="tree-group">Référence</div>
+        <a href="#d12"><span class="num">12</span> Documents officiels <span class="cnt"></span></a>
+      </aside>
+
+      <!-- ===== DOSSIERS ===== -->
+      <main class="folders" id="folders">
+
+        <!-- ============================================================
+             BLOC 1 — RÉALISATIONS EN COURS DE FORMATION
+        ============================================================= -->
+        <h2 class="block-title">Réalisations en cours de formation</h2>
+
+        <!-- ===== 01 — CERTIFICATIONS ===== -->
+        <details class="folder" id="d01" data-comp="c6" open>
+          <summary>
+            <span class="f-num">01</span>
+            <span class="f-head-main">
+              <span class="f-title">Certifications et formations complémentaires</span>
+              <span class="f-sub">
+                <span>2025 – 2027</span>
+                <span class="comp-badge" title="Organiser son développement professionnel">C6</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Attestations obtenues en autoformation, hors cursus&nbsp;: elles matérialisent la démarche
+              de développement professionnel et de montée en compétences sur la cybersécurité et la
+              protection des données.
+            </p>
+            <div class="items">
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["certifs/cisco-cybersecurity.png"]'
+                  data-titles='["Cisco — Introduction to Cybersecurity : attestation de réussite."]'>
+                  <img src="certifs/cisco-cybersecurity.png" alt="Attestation Cisco Introduction to Cybersecurity" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Cisco — Introduction to Cybersecurity</h4>
+                  <p class="item-desc">Attestation de réussite délivrée par Cisco Networking Academy.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Développer son projet professionnel</span>
+                    <span class="path">certifs/cisco-cybersecurity.png</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["certifs/ebios.png"]'
+                  data-titles='["Club EBIOS — Introduction à la méthode EBIOS Risk Manager (ANSSI)."]'>
+                  <img src="certifs/ebios.png" alt="Attestation EBIOS Risk Manager" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">EBIOS Risk Manager — Club EBIOS / ANSSI</h4>
+                  <p class="item-desc">Introduction à la méthode d'analyse de risques recommandée par l'ANSSI.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Exploiter des référentiels, normes et standards</span>
+                    <span class="path">certifs/ebios.png</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["certifs/rgpd-1.png","certifs/rgpd-2.png","certifs/rgpd-3.png","certifs/rgpd-4.png","certifs/rgpd-5.png","certifs/rgpd-6.png"]'
+                  data-titles='["Module 1 — Le RGPD et ses notions clés (96 %).","Module 2 — Les principes de la protection des données (98 %).","Module 3 — Les responsabilités des acteurs (100 %).","Module 4 — Le DPO et les outils de la conformité (100 %).","Module 5 — Les collectivités territoriales (100 %).","Module 6 — Travail et données personnelles (91 %)."]'>
+                  <img src="certifs/rgpd-1.png" alt="Atelier RGPD de la CNIL, module 1" loading="lazy">
+                  <span class="item-badge">6 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Atelier RGPD de la CNIL — 6 modules</h4>
+                  <p class="item-desc">Les six modules validés, avec le score obtenu à chaque évaluation.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Exploiter des référentiels, normes et standards</span>
+                    <span class="path">certifs/rgpd-1 → 6.png</span>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ===== 02 — VEILLE ===== -->
+        <details class="folder" id="d02" data-comp="c6" open>
+          <summary>
+            <span class="f-num">02</span>
+            <span class="f-head-main">
+              <span class="f-title">Veille informatique sur la cryptographie</span>
+              <span class="f-sub">
+                <span>2025 – 2027</span>
+                <span class="comp-badge" title="Organiser son développement professionnel">C6</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Un article analysé par mois depuis le début de la formation, avec sources identifiées
+              (ANSSI, CERT-FR, LeMagIT, IT-Connect). Chaque article est résumé sur la page de veille et
+              archivé en PDF pour garantir sa disponibilité même si la source disparaît.
+            </p>
+            <div class="items">
+
+              <article class="item">
+                <a class="item-icon" href="veille-cryptographie.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">🗂️</a>
+                <div class="item-body">
+                  <h4 class="item-title">Dossier de veille en ligne</h4>
+                  <p class="item-desc">
+                    Les 12 articles analysés, classés par mois, avec résumé, source datée et lien d'origine.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Mettre en œuvre des outils et stratégies de veille</span>
+                    <a class="item-open" href="veille-cryptographie.html" target="_blank" rel="noopener">Ouvrir la page</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <a class="item-icon" href="veille-archives/2026-11_Assemblee-nationale_portes-derobees-chiffrement.pdf" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">📄</a>
+                <div class="item-body">
+                  <h4 class="item-title">Articles archivés en PDF</h4>
+                  <p class="item-desc">
+                    Copie horodatée des articles sources, nommée <span class="path">AAAA-MM_source_sujet.pdf</span>&nbsp;:
+                    <a class="item-open" href="veille-archives/2026-09_G7-ANSSI_appel-action-post-quantique.pdf" target="_blank" rel="noopener">09/2026 · post-quantique</a>
+                    <a class="item-open" href="veille-archives/2026-10_eMudhra_cles-TLS-faibles.pdf" target="_blank" rel="noopener">10/2026 · clés TLS</a>
+                    <a class="item-open" href="veille-archives/2026-11_Assemblee-nationale_portes-derobees-chiffrement.pdf" target="_blank" rel="noopener">11/2026 · portes dérobées</a>
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Mettre en place son environnement d'apprentissage</span>
+                    <span class="path">veille-archives/ — 3 PDF sur 12</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Outils de veille — captures</h4>
+                  <p class="item-desc">
+                    Capture des flux RSS / alertes configurés (agrégateur, abonnements ANSSI et CERT-FR)
+                    pour prouver le dispositif de veille, et non seulement son résultat.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">PDF des 9 articles les plus anciens</h4>
+                  <p class="item-desc">
+                    Compléter <span class="path">veille-archives/</span> pour les mois de 2025 et du début 2026,
+                    avec la même convention de nommage.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ===== 03 — CV / LINKEDIN ===== -->
+        <details class="folder" id="d03" data-comp="c6" open>
+          <summary>
+            <span class="f-num">03</span>
+            <span class="f-head-main">
+              <span class="f-title">CV et profil professionnel LinkedIn</span>
+              <span class="f-sub">
+                <span>2025 – 2027</span>
+                <span class="comp-badge" title="Organiser son développement professionnel">C6</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Gestion de l'identité professionnelle numérique&nbsp;: rédaction du CV et animation du profil LinkedIn.
+            </p>
+            <div class="items">
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">CV au format PDF</h4>
+                  <p class="item-desc">
+                    Le fichier est arrivé dans le dossier de dépôt. Avant mise en ligne, il reste à décider
+                    ce qu'on y laisse&nbsp;: un CV publié sur un site public ne devrait pas porter de numéro de
+                    téléphone ni d'adresse postale.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">En attente de validation</span></div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/03-cv-linkedin/03-01_linkedin-profil.png"]'
+                  data-titles='["Profil LinkedIn : titre, entreprise d’alternance, établissement de formation et statistiques de visibilité du profil."]'>
+                  <img src="preuves/03-cv-linkedin/03-01_linkedin-profil.png" alt="Haut du profil LinkedIn de Hugo Dos Santos" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Profil LinkedIn — identité professionnelle</h4>
+                  <p class="item-desc">
+                    Photo, titre « Étudiant à l'UTEC d'Émerainville — BTS SIO SISR », entreprise d'alternance et
+                    établissement de formation. Le bloc Statistiques montre le suivi de la visibilité du profil&nbsp;:
+                    vues et apparitions dans les recherches.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Gérer son identité professionnelle</span>
+                    <span class="path">03-01</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/03-cv-linkedin/03-02_linkedin-experience-formation.png"]'
+                  data-titles='["Sections Expérience et Formation du profil LinkedIn : alternance en cours chez Hobart France, BTS SIO SISR à l’UTEC 77 et parcours antérieur."]'>
+                  <img src="preuves/03-cv-linkedin/03-02_linkedin-experience-formation.png" alt="Sections Expérience et Formation du profil LinkedIn" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Expériences, formation et compétences</h4>
+                  <p class="item-desc">
+                    Les sections renseignées du profil&nbsp;: alternance d'assistant informatique chez Hobart France
+                    depuis septembre 2025, BTS SIO SISR à l'UTEC 77 et baccalauréat technologique.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Développer son projet professionnel</span>
+                    <span class="path">03-02</span>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ===== 04 — PORTFOLIO ===== -->
+        <details class="folder" id="d04" data-comp="c3 c6" open>
+          <summary>
+            <span class="f-num">04</span>
+            <span class="f-head-main">
+              <span class="f-title">Conception et mise en ligne du portfolio professionnel</span>
+              <span class="f-sub">
+                <span>2025 – 2027</span>
+                <span class="comp-badge" title="Développer la présence en ligne de l'organisation">C3</span>
+                <span class="comp-badge" title="Organiser son développement professionnel">C6</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Site développé en HTML, CSS et JavaScript sans framework&nbsp;: structure, charte graphique,
+              galeries en lightbox et pages de rapport technique.
+            </p>
+            <div class="items">
+
+              <article class="item">
+                <a class="item-icon" href="index.html" tabindex="-1" aria-hidden="true">🌐</a>
+                <div class="item-body">
+                  <h4 class="item-title">Le portfolio lui-même</h4>
+                  <p class="item-desc">
+                    Quatre pages en ligne&nbsp;: accueil, veille cryptographie, rapport GLPI et ce dossier de preuves.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Participer à l'évolution d'un site Web</span>
+                    <a class="item-open" href="index.html">Ouvrir l'accueil</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Hébergement et nom de domaine</h4>
+                  <p class="item-desc">
+                    Capture de l'interface d'hébergement (ou du dépôt GitHub Pages) et de l'adresse publique du site.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Suivi des versions (Git)</h4>
+                  <p class="item-desc">
+                    Capture de l'historique des commits&nbsp;: elle prouve le travail progressif et le versionnement du code.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Mesure de la visibilité</h4>
+                  <p class="item-desc">
+                    Capture d'un outil de mesure (statistiques de visite, test de performance ou d'accessibilité)
+                    pour la compétence « référencer les services en ligne et mesurer leur visibilité ».
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ============================================================
+             BLOC 2 — MILIEU PROFESSIONNEL, PREMIÈRE ANNÉE
+        ============================================================= -->
+        <h2 class="block-title">Réalisations en milieu professionnel — première année</h2>
+
+        <!-- ===== 05 — COMPTES, LICENCES, HABILITATIONS ===== -->
+        <details class="folder" id="d05" data-comp="c1 c2" open>
+          <summary>
+            <span class="f-num">05</span>
+            <span class="f-head-main">
+              <span class="f-title">Gestion des comptes, des licences et des habilitations</span>
+              <span class="f-sub">
+                <span>2025 – 2027</span>
+                <span class="comp-badge" title="Gérer le patrimoine informatique">C1</span>
+                <span class="comp-badge" title="Répondre aux incidents et aux demandes d'assistance et d'évolution">C2</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Portail Microsoft 365&nbsp;: comptes, droits d'accès et licences des utilisateurs et des techniciens.
+              Forfaits mobiles et internet via l'espace client Orange.
+              <strong>Toutes les captures doivent être anonymisées</strong> (noms, adresses, numéros de ligne masqués).
+            </p>
+            <div class="items">
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/05-comptes-licences/05-01_gabarit-nouvel-arrivant.png"]'
+                  data-titles='["Gabarit de ticket « Nouvel arrivant » : liste des comptes et accès à ouvrir, puis check-list de préparation du poste."]'>
+                  <img src="preuves/05-comptes-licences/05-01_gabarit-nouvel-arrivant.png" alt="Gabarit de ticket Nouvel arrivant dans GLPI" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Procédure d'arrivée — gabarit de ticket</h4>
+                  <p class="item-desc">
+                    Modèle de ticket « Nouvel arrivant » utilisé à chaque embauche&nbsp;: comptes et accès à ouvrir
+                    (Windows, Outlook, VPN, applications métier), puis check-list de mise en service du poste
+                    avec vérification de BitLocker. La procédure est normalisée, pas improvisée.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Mettre en place et vérifier les niveaux d'habilitation</span>
+                    <span class="path">05-01</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Création d'un compte, pas à pas</h4>
+                  <p class="item-desc">
+                    Le formulaire de création d'un utilisateur et le résultat obtenu. Les captures ci-dessous
+                    montrent un compte existant&nbsp;; il manque le geste de création lui-même.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/05-comptes-licences/05-04_entra-licences.png"]'
+                  data-titles='["Licences attribuées dans Entra ID : produits, services activés et chemin d’affectation (direct ou hérité d’un groupe)."]'>
+                  <img src="preuves/05-comptes-licences/05-04_entra-licences.png" alt="Licences Microsoft 365 attribuées dans Entra ID" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Licences Microsoft 365 attribuées</h4>
+                  <p class="item-desc">
+                    Les cinq produits actifs sur le compte — Microsoft 365 E3, Entra ID P2, Defender for Office 365,
+                    Teams Phone et Power Automate — avec le nombre de services activés et le mode d'attribution,
+                    direct ou hérité d'un groupe.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">05-04</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/05-comptes-licences/05-03_entra-groupes-habilitations.png"]'
+                  data-titles='["Appartenances aux groupes dans Entra ID : groupes de sécurité et de distribution, affectation dynamique ou nominative."]'>
+                  <img src="preuves/05-comptes-licences/05-03_entra-groupes-habilitations.png" alt="Appartenances aux groupes d'un utilisateur dans Entra ID" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Appartenances aux groupes — habilitations</h4>
+                  <p class="item-desc">
+                    Les treize groupes de sécurité et de distribution qui portent les droits d'accès du compte,
+                    avec leur type d'appartenance&nbsp;: dynamique, calculée par règle, ou affectée nominativement.
+                    Identifiants et adresses masqués.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Mettre en place et vérifier les niveaux d'habilitation</span>
+                    <span class="path">05-03</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/05-comptes-licences/05-02_entra-fiche-utilisateur.png"]'
+                  data-titles='["Centre d’administration Microsoft Entra : fiche d’un compte utilisateur, 13 groupes et 5 licences rattachés."]'>
+                  <img src="preuves/05-comptes-licences/05-02_entra-fiche-utilisateur.png" alt="Fiche d'un utilisateur dans le centre d'administration Entra" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Fiche utilisateur dans Entra ID</h4>
+                  <p class="item-desc">
+                    Vue d'ensemble d'un compte&nbsp;: état activé, date de création, type d'utilisateur, treize
+                    appartenances de groupe et cinq licences. Identifiants techniques masqués.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">05-02</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/05-comptes-licences/05-06_orange-parc-mobile.png"]'
+                  data-titles='["Espace client Orange : gestion des 239 lignes mobiles de l’entreprise, statut et forfait de chaque ligne."]'>
+                  <img src="preuves/05-comptes-licences/05-06_orange-parc-mobile.png" alt="Parc mobile de l'entreprise dans l'espace client Orange" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Parc mobile Orange — 239 lignes</h4>
+                  <p class="item-desc">
+                    Espace client Orange&nbsp;: les 239 lignes mobiles de l'entreprise, leur statut — active ou
+                    résiliée — et le forfait associé. Numéros, noms et références de compte masqués.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">05-06</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/05-comptes-licences/05-05_ticket-glpi-clos.png"]'
+                  data-titles='["Ticket GLPI clos : demande d’un utilisateur d’agence, suivi ajouté, dates d’ouverture, de résolution et de fermeture renseignées."]'>
+                  <img src="preuves/05-comptes-licences/05-05_ticket-glpi-clos.png" alt="Ticket GLPI traité et clos" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Ticket traité et clos</h4>
+                  <p class="item-desc">
+                    Un incident réseau signalé par un utilisateur d'agence&nbsp;: prise en charge, suivi renseigné
+                    puis clôture, avec les dates d'ouverture, de résolution et de fermeture. Nom de l'utilisateur masqué.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Collecter, suivre et orienter des demandes</span>
+                    <span class="path">05-05</span>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ===== 06 — MIGRATION WINDOWS 11 ===== -->
+        <details class="folder" id="d06" data-comp="c1 c4 c5" open>
+          <summary>
+            <span class="f-num">06</span>
+            <span class="f-head-main">
+              <span class="f-title">Migration du parc de Windows 10 vers Windows 11</span>
+              <span class="f-sub">
+                <span>2026</span>
+                <span class="comp-badge" title="Gérer le patrimoine informatique">C1</span>
+                <span class="comp-badge" title="Travailler en mode projet">C4</span>
+                <span class="comp-badge" title="Mettre à disposition des utilisateurs un service informatique">C5</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Recensement des postes via l'inventaire du parc et un ticket par poste, puis migration
+              d'environ 80 postes par clé USB d'installation.
+            </p>
+            <div class="items">
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/06-migration-w11/06-01_glpi-inventaire-postes.png"]'
+                  data-titles='["GLPI, Parc > Ordinateurs : postes inventoriés sous Windows 11 Entreprise, avec modèle, processeur, mémoire et date d’expiration de garantie."]'>
+                  <img src="preuves/06-migration-w11/06-01_glpi-inventaire-postes.png" alt="Inventaire des ordinateurs dans GLPI après migration" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Inventaire du parc après migration</h4>
+                  <p class="item-desc">
+                    Liste Parc&nbsp;&gt;&nbsp;Ordinateurs de GLPI&nbsp;: les postes remontent désormais Windows&nbsp;11
+                    Entreprise, avec modèle, processeur, mémoire et date d'expiration de garantie. Noms de postes
+                    et numéros de série masqués.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">06-01</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Liste de départ sous Windows 10</h4>
+                  <p class="item-desc">
+                    L'inventaire ci-dessus montre le parc une fois migré. Une capture de la liste filtrée sur
+                    Windows&nbsp;10, antérieure au chantier, donnerait le point de départ et le volume à traiter.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Suivi du projet — tickets</h4>
+                  <p class="item-desc">
+                    Vue de la liste des tickets de migration (un par poste) montrant l'avancement&nbsp;:
+                    preuve de la planification et des indicateurs de suivi.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Média d'installation</h4>
+                  <p class="item-desc">
+                    Capture de la préparation de la clé USB (Media Creation Tool ou Rufus) et de la version déployée.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/06-migration-w11/06-02_winver-poste-migre.png"]'
+                  data-titles='["winver sur un poste migré : Windows 11 Entreprise, version 26H2, build 26300.9974."]'>
+                  <img src="preuves/06-migration-w11/06-02_winver-poste-migre.png" alt="winver sur un poste migré vers Windows 11" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Recette après migration — winver</h4>
+                  <p class="item-desc">
+                    <span class="path">winver</span> sur un poste du parc&nbsp;: Windows&nbsp;11 Entreprise,
+                    version 26H2, build 26300.9974. La vérification côté poste, après la bascule.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
+                    <span class="path">06-02</span>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ===== 07 — SWITCHS ===== -->
+        <details class="folder pending" id="d07" data-comp="c1 c5" open>
+          <summary>
+            <span class="f-num">07</span>
+            <span class="f-head-main">
+              <span class="f-title">Mise en place de nouveaux switchs</span>
+              <span class="f-sub">
+                <span>06/2025</span>
+                <span class="comp-badge" title="Gérer le patrimoine informatique">C1</span>
+                <span class="comp-badge" title="Mettre à disposition des utilisateurs un service informatique">C5</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Remplacement et mise en service de commutateurs réseau au sein de l'entreprise.
+            </p>
+            <div class="items">
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Photo de la baie avant / après</h4>
+                  <p class="item-desc">Installation physique et câblage des nouveaux commutateurs.</p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Configuration — lignes de commande</h4>
+                  <p class="item-desc">
+                    Extrait de la configuration (VLAN, ports, adresse de gestion) ou copie de la
+                    <span class="path">running-config</span> anonymisée&nbsp;: la preuve technique la plus forte pour ce projet.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Validation du service</h4>
+                  <p class="item-desc">
+                    Test de connectivité après bascule (ping, table d'adresses MAC, état des ports) et
+                    inscription du matériel à l'inventaire.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ===== 08 — MISE À JOUR GLPI ===== -->
+        <details class="folder" id="d08" data-comp="c1 c4 c5" open>
+          <summary>
+            <span class="f-num">08</span>
+            <span class="f-head-main">
+              <span class="f-title">Mise à jour du serveur GLPI 10.0.9 vers 11.0.8</span>
+              <span class="f-sub">
+                <span>Fin juillet 2026</span>
+                <span class="comp-badge" title="Gérer le patrimoine informatique">C1</span>
+                <span class="comp-badge" title="Travailler en mode projet">C4</span>
+                <span class="comp-badge" title="Mettre à disposition des utilisateurs un service informatique">C5</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Montée de version d'abord testée sur un clone de la production, puis appliquée en production&nbsp;:
+              sauvegardes, migration de la base, diagnostic et résolution des incidents. Les captures
+              ci-dessous suivent l'ordre chronologique du chantier et sont toutes reprises, commentées,
+              dans le rapport technique.
+            </p>
+            <div class="items">
+
+              <article class="item">
+                <a class="item-icon" href="projet-glpi.html" tabindex="-1" aria-hidden="true">📘</a>
+                <div class="item-body">
+                  <h4 class="item-title">Rapport technique complet</h4>
+                  <p class="item-desc">
+                    Contexte, déroulé, incidents et conclusion — la pièce principale du dossier.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Analyser les objectifs et modalités d'organisation d'un projet</span>
+                    <a class="item-open" href="projet-glpi.html">Lire le rapport</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <a class="item-icon" href="documentation%20pour%20le%20tableau/Rapport_GLPI_MiseAJour_et_Agent_GLPI.docx" tabindex="-1" aria-hidden="true">📝</a>
+                <div class="item-body">
+                  <h4 class="item-title">Rapport remis en entreprise (.docx)</h4>
+                  <p class="item-desc">
+                    Document de synthèse rédigé pour le service informatique, sur la mise à jour et l'agent GLPI.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Évaluer les indicateurs de suivi et analyser les écarts</span>
+                    <a class="item-open" href="documentation%20pour%20le%20tableau/Rapport_GLPI_MiseAJour_et_Agent_GLPI.docx" download>Télécharger</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/GLPI/01-vm-parametres-import.png","glpi/GLPI/02-vm-import-virtualbox.png","glpi/GLPI/03-vm-ecran-connexion.png","glpi/GLPI/04-vm-activation-reseau.png","glpi/GLPI/05-ssh-premiere-connexion.png"]'
+                  data-titles='["Paramètres de la VM détectés lors de l’import de l’appareil virtuel (Debian 64-bit, 2 vCPU, 4 Go de RAM).","Import de la machine virtuelle en cours dans VirtualBox.","Écran de connexion de la VM importée (Debian GNU/Linux 12, hostname glpiv2).","Activation de l’interface réseau et obtention d’une adresse IP (172.17.10.7 en mode Bridged).","Première connexion SSH réussie à la VM de test depuis PowerShell."]'>
+                  <img src="glpi/GLPI/01-vm-parametres-import.png" alt="Paramètres de la VM de test lors de l'import" loading="lazy">
+                  <span class="item-badge">5 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Clone de la production et VM de test</h4>
+                  <p class="item-desc">
+                    Import du clone dans VirtualBox, démarrage, réseau et premier accès SSH&nbsp;: l'environnement
+                    de test monté avant de toucher à la production.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
+                    <span class="path">glpi/GLPI/01 → 05</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/GLPI/06-config-db-localise.png","glpi/GLPI/07-downstream-php.png","glpi/GLPI/08-local-define-php.png"]'
+                  data-titles='["Fichier /etc/glpi/config_db.php localisé (identifiants de connexion masqués).","inc/downstream.php : redirection de la configuration vers /etc/glpi/.","local_define.php : redirection des fichiers (GLPI_VAR_DIR) et des journaux (GLPI_LOG_DIR)."]'>
+                  <img src="glpi/GLPI/07-downstream-php.png" alt="Fichier downstream.php de GLPI" loading="lazy">
+                  <span class="item-badge">3 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Localisation de la configuration</h4>
+                  <p class="item-desc">
+                    Repérage de l'installation&nbsp;: base de données, dossiers de configuration, de fichiers et
+                    de journaux redirigés hors du dossier applicatif.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">glpi/GLPI/06 → 08</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/GLPI/09-sauvegarde-base.png","glpi/GLPI/10-sauvegarde-fichiers.png"]'
+                  data-titles='["Sauvegarde de la base de données réussie (30 Mo).","Sauvegarde des fichiers et de la configuration réussie (65 Mo)."]'>
+                  <img src="glpi/GLPI/09-sauvegarde-base.png" alt="Sauvegarde de la base de données GLPI" loading="lazy">
+                  <span class="item-badge">2 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Sauvegardes avant migration</h4>
+                  <p class="item-desc">
+                    Base de données (30&nbsp;Mo) et fichiers de configuration (65&nbsp;Mo) sauvegardés avant toute
+                    opération, avec vérification de la taille des archives.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Gérer des sauvegardes</span>
+                    <span class="path">glpi/GLPI/09 → 10</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/GLPI/11-plugin-ocs-decouverte.png","glpi/GLPI/12-plugin-ocs-version.png","glpi/GLPI/13-plugin-ocs-desactive.png","glpi/GLPI/14-logs-apache-ocsweb.png"]'
+                  data-titles='["Découverte du plugin ocsinventoryng dans le dossier plugins de GLPI.","Version du plugin détectée dans le code source : 1.7.3, obsolète pour GLPI 11.","Le plugin apparaît déjà désactivé dans l’interface GLPI.","Extrait des journaux Apache confirmant la cause du blocage : base « ocsweb » introuvable."]'>
+                  <img src="glpi/GLPI/14-logs-apache-ocsweb.png" alt="Journaux Apache montrant l'erreur sur la base ocsweb" loading="lazy">
+                  <span class="item-badge">4 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Incident : plugin OCS obsolète</h4>
+                  <p class="item-desc">
+                    Diagnostic complet d'un blocage&nbsp;: plugin en version 1.7.3 incompatible, puis preuve par
+                    les journaux Apache que la base <span class="path">ocsweb</span> était introuvable.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Vérifier les conditions de la continuité d'un service</span>
+                    <span class="path">glpi/GLPI/11 → 14</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/GLPI/15-test-connectivite.png","glpi/GLPI/16-debit-reseau-faible.png","glpi/GLPI/17-nat-redirection-ssh.png","glpi/GLPI/18-ssh-via-nat.png"]'
+                  data-titles='["Test de connectivité internet depuis la VM avant téléchargement.","Diagnostic du débit réseau anormalement faible depuis la VM (6,74 Ko/s).","Règle de redirection de port SSH configurée dans VirtualBox (mode NAT).","Connexion SSH fonctionnelle via la redirection de port en mode NAT."]'>
+                  <img src="glpi/GLPI/16-debit-reseau-faible.png" alt="Diagnostic du débit réseau faible depuis la VM" loading="lazy">
+                  <span class="item-badge">4 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Incident réseau et bascule en NAT</h4>
+                  <p class="item-desc">
+                    Débit anormalement faible mesuré depuis la VM, puis passage en NAT avec redirection de
+                    port SSH pour rétablir un accès utilisable.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Traiter des demandes concernant les services réseau et système</span>
+                    <span class="path">glpi/GLPI/15 → 18</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/GLPI/19-telechargement-glpi.png","glpi/GLPI/20-extraction-archive.png","glpi/GLPI/21-downstream-recopie.png","glpi/GLPI/22-apache-arret.png","glpi/GLPI/23-remplacement-fichiers.png","glpi/GLPI/24-apache-redemarrage.png"]'
+                  data-titles='["Téléchargement de glpi-11.0.8.tgz à 18,2 Mo/s.","Extraction de l’archive : structure standard de GLPI 11 obtenue.","Vérification du fichier downstream.php recopié dans la nouvelle version.","Arrêt du service Apache avant remplacement des fichiers.","Ancienne version renommée, nouvelle version mise en place, permissions corrigées.","Redémarrage d’Apache : service actif sans erreur."]'>
+                  <img src="glpi/GLPI/23-remplacement-fichiers.png" alt="Remplacement des fichiers de GLPI et correction des permissions" loading="lazy">
+                  <span class="item-badge">6 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Mise en place des fichiers de GLPI 11</h4>
+                  <p class="item-desc">
+                    Téléchargement, extraction, report de la configuration, arrêt d'Apache, bascule des
+                    dossiers, permissions puis redémarrage du service.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Déployer un service</span>
+                    <span class="path">glpi/GLPI/19 → 24</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/GLPI/25-erreur-webroot.png","glpi/GLPI/26-prerequis-liste.png","glpi/GLPI/27-prerequis-valides.jpg"]'
+                  data-titles='["Erreur affichée avant correction de la configuration Apache.","Fin de la liste des prérequis validés, bouton de relance de la vérification.","Ensemble des prérequis PHP/MariaDB validés après installation de l’extension bcmath."]'>
+                  <img src="glpi/GLPI/27-prerequis-valides.jpg" alt="Prérequis PHP et MariaDB validés" loading="lazy">
+                  <span class="item-badge">3 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Webroot et prérequis PHP</h4>
+                  <p class="item-desc">
+                    Correction de la racine web d'Apache imposée par GLPI 11, puis validation de tous les
+                    prérequis après ajout de l'extension <span class="path">bcmath</span>.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
+                    <span class="path">glpi/GLPI/25 → 27</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/GLPI/28-migration-en-cours.png","glpi/GLPI/29-migration-terminee.png","glpi/GLPI/30-glpi11-connexion.png","glpi/GLPI/32-glpi11-version.png","glpi/GLPI/31-glpi11-tableau-bord.png"]'
+                  data-titles='["Migration de la base de données en cours : exécution séquentielle des mises à jour intermédiaires.","Écran final de l’assistant d’installation, confirmant la fin de la migration.","Page de connexion GLPI 11 fonctionnelle.","Confirmation finale de la version active : GLPI 11.0.8.","Tableau de bord GLPI 11.0.8 opérationnel, données historiques conservées (5,0 K tickets)."]'>
+                  <img src="glpi/GLPI/31-glpi11-tableau-bord.png" alt="Tableau de bord de GLPI 11.0.8 après migration" loading="lazy">
+                  <span class="item-badge">5 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Migration de la base et recette finale</h4>
+                  <p class="item-desc">
+                    Migration de la base, connexion en 11.0.8, version confirmée et tableau de bord
+                    opérationnel avec les 5&nbsp;000 tickets historiques conservés.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Évaluer les indicateurs de suivi et analyser les écarts</span>
+                    <span class="path">glpi/GLPI/28 → 32</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/08-glpi-maj/08-01_glpi11-version-production.png"]'
+                  data-titles='["Fenêtre « À propos » du serveur GLPI de production : version 11.0.8."]'>
+                  <img src="preuves/08-glpi-maj/08-01_glpi11-version-production.png" alt="Version 11.0.8 affichée par le GLPI de production" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Version en production après bascule</h4>
+                  <p class="item-desc">
+                    La fenêtre « À propos » du serveur de production affiche GLPI&nbsp;11.0.8&nbsp;: la montée de
+                    version validée sur le clone a bien été appliquée au serveur réel.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Déployer un service</span>
+                    <span class="path">08-01</span>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ===== 09 — DÉPLOIEMENT DES POSTES ===== -->
+        <details class="folder" id="d09" data-comp="c1 c2 c5" open>
+          <summary>
+            <span class="f-num">09</span>
+            <span class="f-head-main">
+              <span class="f-title">Préparation et déploiement des postes de travail</span>
+              <span class="f-sub">
+                <span>2025 – 2027</span>
+                <span class="comp-badge" title="Gérer le patrimoine informatique">C1</span>
+                <span class="comp-badge" title="Répondre aux incidents et aux demandes d'assistance et d'évolution">C2</span>
+                <span class="comp-badge" title="Mettre à disposition des utilisateurs un service informatique">C5</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Sur demande de remplacement de postes anciens&nbsp;: déploiement d'une image par le réseau (RJ45),
+              applications et restrictions appliquées par GPO.
+            </p>
+            <div class="items">
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Déploiement de l'image par le réseau</h4>
+                  <p class="item-desc">
+                    Capture du démarrage PXE ou de la console de déploiement pendant l'installation d'un poste.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">GPO d'applications et de restrictions</h4>
+                  <p class="item-desc">
+                    Console de gestion des stratégies de groupe&nbsp;: les GPO appliquées aux postes déployés.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/09-deploiement-postes/09-01_gpresult-gpo-appliquees.png"]'
+                  data-titles='["gpresult /r : objets de stratégie de groupe appliqués sur un poste du domaine et heure de la dernière application."]'>
+                  <img src="preuves/09-deploiement-postes/09-01_gpresult-gpo-appliquees.png" alt="Résultat de gpresult /r sur un poste du domaine" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Contrôle d'application des GPO</h4>
+                  <p class="item-desc">
+                    <span class="path">gpresult /r</span> sur un poste du domaine&nbsp;: les stratégies réellement
+                    appliquées — authentification unique, politique de mot de passe, gestionnaire de mots de passe,
+                    polices, PowerShell Remoting — et l'heure de la dernière application. Contrôleur de domaine masqué.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Mettre en place et vérifier les niveaux d'habilitation</span>
+                    <span class="path">09-01</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Remise à l'utilisateur</h4>
+                  <p class="item-desc">
+                    Ticket de demande de remplacement, de sa création à sa clôture, et fiche d'inventaire du
+                    nouveau poste&nbsp;: accompagnement des utilisateurs dans la mise en place.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ============================================================
+             BLOC 3 — MILIEU PROFESSIONNEL, SECONDE ANNÉE
+        ============================================================= -->
+        <h2 class="block-title">Réalisations en milieu professionnel — seconde année</h2>
+
+        <!-- ===== 10 — AGENT GLPI PAR GPO ===== -->
+        <details class="folder" id="d10" data-comp="c1 c4 c5" open>
+          <summary>
+            <span class="f-num">10</span>
+            <span class="f-head-main">
+              <span class="f-title">Déploiement de l'agent GLPI par GPO sur le parc</span>
+              <span class="f-sub">
+                <span>Septembre – octobre 2026</span>
+                <span class="comp-badge" title="Gérer le patrimoine informatique">C1</span>
+                <span class="comp-badge" title="Travailler en mode projet">C4</span>
+                <span class="comp-badge" title="Mettre à disposition des utilisateurs un service informatique">C5</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Remplacement de l'inventaire OCS par l'agent GLPI&nbsp;: validation sur une VM, puis sur un poste
+              pilote, puis déploiement par GPO sur 223 postes. Les captures suivent les quatre étapes du
+              projet — test, pilote, industrialisation, recette.
+            </p>
+            <div class="items">
+
+              <article class="item">
+                <a class="item-icon" href="projet-glpi.html#agent" tabindex="-1" aria-hidden="true">📘</a>
+                <div class="item-body">
+                  <h4 class="item-title">Rapport technique — partie agent</h4>
+                  <p class="item-desc">
+                    Déroulé complet du déploiement, incidents rencontrés et résultats mesurés.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Analyser les objectifs et modalités d'organisation d'un projet</span>
+                    <a class="item-open" href="projet-glpi.html">Lire le rapport</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/Agent%20GLPI/agent-01_telechargement.png","glpi/Agent%20GLPI/agent-02_installation.png","glpi/Agent%20GLPI/agent-03_config-agent.png","glpi/Agent%20GLPI/agent-04_service-actif.png","glpi/Agent%20GLPI/agent-05_activation-inventaire.png"]'
+                  data-titles='["Téléchargement du paquet glpi-agent_1.19-1_all.deb (4,1 Mo) sur la machine virtuelle.","Installation du paquet de l’agent sur la machine virtuelle.","Fichier de configuration de l’agent : directive server pointant vers l’inventaire natif de GLPI.","Service glpi-agent actif (systemctl status) : serveur HTTP de l’agent sur le port 62354 et prochaine exécution planifiée.","Configuration de l’inventaire natif de GLPI : inventaire activé, fréquence de 24 heures."]'>
+                  <img src="glpi/Agent%20GLPI/agent-04_service-actif.png" alt="Service glpi-agent actif sur la VM de test" loading="lazy">
+                  <span class="item-badge">5 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Agent sur la VM de test</h4>
+                  <p class="item-desc">
+                    Installation du paquet, configuration de la directive <span class="path">server</span>,
+                    service actif et activation de l'inventaire natif côté GLPI.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
+                    <span class="path">glpi/Agent GLPI/agent-01 → 05</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/Agent%20GLPI/agent-06_inventaire-force.png","glpi/Agent%20GLPI/agent-10_agent-enregistre.png","glpi/Agent%20GLPI/agent-07_ordinateur-remonte.png","glpi/Agent%20GLPI/agent-08_logiciels.png"]'
+                  data-titles='["Inventaire forcé : le serveur répond et enregistre « New inventory from glpiv2… ».","Liste des agents dans GLPI : l’agent de la VM (GLPI-Agent_v1.19-1) a contacté le serveur.","Ordinateur glpiv2 créé automatiquement dans Parc > Ordinateurs (Debian GNU/Linux 12).","Fiche de l’ordinateur : 567 logiciels remontés automatiquement par l’inventaire."]'>
+                  <img src="glpi/Agent%20GLPI/agent-08_logiciels.png" alt="567 logiciels remontés automatiquement dans GLPI" loading="lazy">
+                  <span class="item-badge">4 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Premier inventaire remonté</h4>
+                  <p class="item-desc">
+                    Inventaire forcé accepté par le serveur, agent enregistré, machine créée automatiquement
+                    et 567 logiciels recensés sans intervention.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">glpi/Agent GLPI/agent-06 → 10</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/Agent%20GLPI/agent-11_msi-telecharge.png","glpi/Agent%20GLPI/agent-12_config-serveur.png","glpi/Agent%20GLPI/agent-14_service-windows.png","glpi/Agent%20GLPI/agent-15_inventaire-force.png"]'
+                  data-titles='["Page officielle de la version 1.19 de l’agent : installateur Windows 64 bits (MSI).","Assistant d’installation : adresse du serveur GLPI de test saisie dans « Remote Targets ».","Service glpi-agent en cours d’exécution sur le poste (Get-Service).","Inventaire forcé en ligne de commande avec glpi-agent.bat --force."]'>
+                  <img src="glpi/Agent%20GLPI/agent-15_inventaire-force.png" alt="Inventaire forcé en ligne de commande sur le poste pilote" loading="lazy">
+                  <span class="item-badge">4 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Poste pilote Windows — installation MSI</h4>
+                  <p class="item-desc">
+                    Récupération de l'installeur officiel, saisie du serveur cible, vérification du service
+                    Windows et inventaire déclenché en ligne de commande.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Déployer un service</span>
+                    <span class="path">glpi/Agent GLPI/agent-11 → 15</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/Agent%20GLPI/agent-16_pc-dell-remonte.png","glpi/Agent%20GLPI/agent-17_fiche-pc-dell.png"]'
+                  data-titles='["Le poste Windows (HUGODOSSANTOS-B) apparaît dans le GLPI de test, à côté de la machine virtuelle Linux.","Fiche du poste : constructeur, modèle, numéro de série, utilisateur et « Source de mise à jour : GLPI Native Inventory »."]'>
+                  <img src="glpi/Agent%20GLPI/agent-17_fiche-pc-dell.png" alt="Fiche du poste pilote dans GLPI" loading="lazy">
+                  <span class="item-badge">2 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Poste pilote remonté dans GLPI</h4>
+                  <p class="item-desc">
+                    Le poste apparaît dans l'inventaire avec constructeur, modèle, numéro de série et
+                    source « GLPI Native Inventory ».
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">glpi/Agent GLPI/agent-16 → 17</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/Deploy%20GLPI/deploy-02_verif-url.png","glpi/Deploy%20GLPI/deploy-07-glpiagent-dans%20-serveur-fichier.png"]'
+                  data-titles='["L’adresse d’inventaire répond par une erreur 405 : le point d’entrée existe et attend un envoi d’agent.","Dossier GLPIAgent créé sur le partage de déploiement (le nom d’un dossier est masqué)."]'>
+                  <img src="glpi/Deploy%20GLPI/deploy-02_verif-url.png" alt="Vérification du point d'entrée d'inventaire du GLPI de production" loading="lazy">
+                  <span class="item-badge">2 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Préparation du déploiement</h4>
+                  <p class="item-desc">
+                    Vérification du point d'entrée d'inventaire de la production, puis mise à disposition de
+                    l'installeur sur le partage réseau de déploiement.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Planifier les activités</span>
+                    <span class="path">glpi/Deploy GLPI/deploy-02, 07</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/Deploy%20GLPI/deploy-03_script-pc-hugo.png","glpi/Deploy%20GLPI/erreur%20non%20bloquante.png"]'
+                  data-titles='["Exécution du script : agent détecté, serveur joignable, installation, service démarré, inventaire envoyé.","Message de Set-ExecutionPolicy : la stratégie « Unrestricted » imposée par GPO prévaut, sans conséquence."]'>
+                  <img src="glpi/Deploy%20GLPI/deploy-03_script-pc-hugo.png" alt="Exécution du script PowerShell d'installation de l'agent" loading="lazy">
+                  <span class="item-badge">2 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Script PowerShell d'installation</h4>
+                  <p class="item-desc">
+                    Sortie complète du script&nbsp;: détection de l'agent, test du serveur, installation
+                    silencieuse, démarrage du service et envoi de l'inventaire.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Déployer un service</span>
+                    <span class="path">glpi/Deploy GLPI/deploy-03</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/Deploy%20GLPI/deploy-01.png","glpi/Deploy%20GLPI/deploy-04_bug-ancienne-config.png","glpi/Deploy%20GLPI/deploy-05_log-apres-correction.png","glpi/Deploy%20GLPI/deploy-06_pc-hugo-remonte.png"]'
+                  data-titles='["Avant correction : la liste des ordinateurs du vrai GLPI ne contient pas le poste (noms et numéros de série masqués).","Clé « server » du registre pointant encore vers 127.0.0.1:8080, et journal d’installation du script.","Correction : adresse du vrai serveur écrite dans le registre, service redémarré, puis « New inventory » accepté par le serveur.","Après correction : le poste HUGODOSSANTOS-B apparaît dans le GLPI de production (autres noms et numéros de série masqués)."]'>
+                  <img src="glpi/Deploy%20GLPI/deploy-04_bug-ancienne-config.png" alt="Clé de registre pointant vers l'ancienne adresse du serveur" loading="lazy">
+                  <span class="item-badge">4 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Incident : ancienne adresse dans le registre</h4>
+                  <p class="item-desc">
+                    Poste absent de l'inventaire, cause trouvée dans la clé de registre
+                    <span class="path">server</span>, correction appliquée et remontée confirmée&nbsp;:
+                    un diagnostic complet du symptôme à la preuve de résolution.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Traiter des demandes concernant les services réseau et système</span>
+                    <span class="path">glpi/Deploy GLPI/deploy-01, 04 → 06</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/Deploy%20GLPI/deploy-GPO.png","glpi/Deploy%20GLPI/deploy%20GPO%20zoom.png","glpi/Deploy%20GLPI/deploy-08_ciblage-registre.png"]'
+                  data-titles='["Console de gestion des stratégies de groupe : tâche immédiate « GLPI AGENT install » exécutée par le compte système, et programme lancé (msiexec.exe).","Paramètres de la tâche : relances toutes les heures (3 fois), exécution dès que possible, indépendante de l’alimentation secteur, règle IgnoreNew.","Onglet « Commun » de la tâche : ciblage « KEYEXISTS » sur HKLM\\SOFTWARE\\GLPI-Agent avec l’opérateur NOT."]'>
+                  <img src="glpi/Deploy%20GLPI/deploy-GPO.png" alt="GPO de déploiement de l'agent GLPI dans la console GPMC" loading="lazy">
+                  <span class="item-badge">3 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">GPO de déploiement et ciblage</h4>
+                  <p class="item-desc">
+                    Tâche immédiate exécutée par le compte système, relances planifiées, et ciblage par clé de
+                    registre pour n'installer l'agent que sur les postes qui ne l'ont pas.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Déployer un service</span>
+                    <span class="path">glpi/Deploy GLPI/deploy-GPO, zoom, 08</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["glpi/Deploy%20GLPI/deploy,%20GPO%20fonctionne%20!.png"]'
+                  data-titles='["Liste Parc > Ordinateurs de GLPI après le déploiement : 223 ordinateurs, inventoriés les 15 et 16 octobre (noms et numéros de série masqués)."]'>
+                  <img src="glpi/Deploy%20GLPI/deploy,%20GPO%20fonctionne%20!.png" alt="223 ordinateurs inventoriés après le déploiement par GPO" loading="lazy">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Résultat : 223 postes inventoriés</h4>
+                  <p class="item-desc">
+                    La preuve de fin de projet&nbsp;: 223 ordinateurs remontés les 15 et 16 octobre 2026,
+                    inventaire OCS définitivement remplacé.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Évaluer les indicateurs de suivi et analyser les écarts</span>
+                    <span class="path">glpi/Deploy GLPI/deploy, GPO fonctionne !.png</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Script d'installation — code source</h4>
+                  <p class="item-desc">
+                    Le fichier <span class="path">.ps1</span> lui-même (ou son extrait commenté), à ajouter dans
+                    un dossier <span class="path">scripts/</span>&nbsp;: une ligne de commande vaut souvent mieux
+                    qu'une capture devant le jury.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ===== 11 — POSTES TECHNICIENS ===== -->
+        <details class="folder pending" id="d11" data-comp="c1 c4 c5" open>
+          <summary>
+            <span class="f-num">11</span>
+            <span class="f-head-main">
+              <span class="f-title">À venir — renouvellement des postes techniciens</span>
+              <span class="f-sub">
+                <span>À compléter</span>
+                <span class="comp-badge" title="Compétences à confirmer au démarrage du projet">C1 · C4 · C5</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Refonte d'environ 150 postes techniciens, prévue en seconde année. Dossier ouvert d'avance
+              pour collecter les preuves au fil du projet plutôt qu'après coup.
+            </p>
+            <div class="items">
+
+              <article class="item missing">
+                <div class="item-icon" aria-hidden="true">＋</div>
+                <div class="item-body">
+                  <h4 class="item-title">Preuves à collecter pendant le projet</h4>
+                  <p class="item-desc">
+                    Recensement de départ, planning, image de référence, déploiement d'un premier lot,
+                    recette et bilan chiffré. À alimenter dès le lancement.
+                  </p>
+                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <!-- ============================================================
+             BLOC 4 — DOCUMENTS DE RÉFÉRENCE
+        ============================================================= -->
+        <h2 class="block-title">Documents de référence</h2>
+
+        <details class="folder" id="d12" data-comp="c1 c2 c3 c4 c5 c6" open>
+          <summary>
+            <span class="f-num">12</span>
+            <span class="f-head-main">
+              <span class="f-title">Documents officiels de l'épreuve</span>
+              <span class="f-sub">
+                <span>Session 2026</span>
+                <span class="comp-badge" title="Toutes compétences">Transverse</span>
+              </span>
+            </span>
+            <span class="f-count"></span>
+          </summary>
+          <div class="f-body">
+            <p class="f-desc">
+              Les documents que le jury peut demander à consulter directement, dans leur format d'origine.
+            </p>
+            <div class="items">
+
+              <article class="item">
+                <a class="item-icon" href="tableau-synthese-E5.xlsx" download tabindex="-1" aria-hidden="true">📊</a>
+                <div class="item-body">
+                  <h4 class="item-title">Tableau de synthèse E5 (.xlsx)</h4>
+                  <p class="item-desc">
+                    Le fichier source, reproduction du modèle officiel (Annexe VI-1). La version affichée sur
+                    le portfolio en est la copie synchronisée.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Document d'épreuve</span>
+                    <a class="item-open" href="tableau-synthese-E5.xlsx" download>Télécharger</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <a class="item-icon" href="index.html#e5" tabindex="-1" aria-hidden="true">📋</a>
+                <div class="item-body">
+                  <h4 class="item-title">Tableau de synthèse en ligne</h4>
+                  <p class="item-desc">
+                    La version consultable du tableau, avec liens vers les rapports et ce dossier de preuves.
+                  </p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Document d'épreuve</span>
+                    <a class="item-open" href="index.html#e5">Ouvrir le tableau</a>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </details>
+
+        <div class="no-result" id="no-result" hidden>
+          Aucune pièce ne correspond à cette recherche.
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== LIGHTBOX ==================== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Preuve">
+    <button class="lightbox-close" id="lb-close" aria-label="Fermer">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lb-prev" aria-label="Précédent">&#8249;</button>
+    <button class="lightbox-nav lightbox-next" id="lb-next" aria-label="Suivant">&#8250;</button>
+    <div class="lightbox-inner">
+      <img class="lightbox-img" id="lb-img" src="" alt="">
+      <p class="lightbox-caption" id="lb-caption"></p>
+      <p class="lightbox-meta">
+        <span id="lb-counter"></span>
+        <a id="lb-file" href="#" target="_blank" rel="noopener">Ouvrir le fichier d'origine ↗</a>
+      </p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>
+        Dossier de preuves — Épreuve E5 · BTS SIO option SISR · Hugo Dos Santos ·
+        <a href="index.html">retour au portfolio</a>
+      </p>
+      <p style="margin-top:6px; font-size:0.78rem;">
+        Les captures contenant des données internes (noms d'utilisateurs, numéros de série, adresses)
+        sont masquées avant publication.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    /* ===== STATISTIQUES ET COMPTEURS ===== */
+    (function () {
+      const folders = Array.from(document.querySelectorAll('.folder'));
+      let totalItems = 0, totalMissing = 0, totalShots = 0;
+
+      folders.forEach(folder => {
+        const items   = folder.querySelectorAll('.item');
+        const missing = folder.querySelectorAll('.item.missing');
+        const ok      = items.length - missing.length;
+
+        let shots = 0;
+        folder.querySelectorAll('.item-thumb[data-gallery]').forEach(btn => {
+          try { shots += JSON.parse(btn.dataset.gallery || '[]').length; } catch (e) {}
+        });
+
+        totalItems   += ok;
+        totalMissing += missing.length;
+        totalShots   += shots;
+
+        // Compteur dans l'en-tête du dossier
+        const parts = [];
+        parts.push(ok + (ok > 1 ? ' pièces' : ' pièce'));
+        if (shots) parts.push(shots + (shots > 1 ? ' captures' : ' capture'));
+        let html = parts.join(' · ');
+        if (missing.length) html += ' <span class="miss">· ' + missing.length + ' à fournir</span>';
+        folder.querySelector('.f-count').innerHTML = html;
+
+        // Compteur dans l'arborescence
+        const link = document.querySelector('.tree a[href="#' + folder.id + '"] .cnt');
+        if (link) link.textContent = ok ? ok : '—';
+      });
+
+      document.getElementById('stat-folders').textContent = folders.length;
+      document.getElementById('stat-items').textContent   = totalItems;
+      document.getElementById('stat-shots').textContent   = totalShots;
+      document.getElementById('stat-missing').textContent = totalMissing;
+    })();
+
+    /* ===== FILTRES : COMPÉTENCE, RECHERCHE, PIÈCES À FOURNIR ===== */
+    (function () {
+      const folders    = Array.from(document.querySelectorAll('.folder'));
+      const blocks     = Array.from(document.querySelectorAll('.block-title'));
+      const chips      = Array.from(document.querySelectorAll('.chip[data-comp]'));
+      const search     = document.getElementById('search');
+      const btnMissing = document.getElementById('toggle-missing');
+      const btnAll     = document.getElementById('toggle-all');
+      const noResult   = document.getElementById('no-result');
+
+      let comp = 'all';
+      let hideMissing = false;
+
+      function apply() {
+        const q = search.value.trim().toLowerCase();
+        let visibleFolders = 0;
+
+        folders.forEach(folder => {
+          const comps = (folder.dataset.comp || '').split(/\s+/);
+          const compOk = comp === 'all' || comps.includes(comp);
+
+          let visibleItems = 0;
+          folder.querySelectorAll('.item').forEach(item => {
+            const isMissing = item.classList.contains('missing');
+            const text = item.textContent.toLowerCase();
+            const show = (!q || text.includes(q) || folder.querySelector('.f-title').textContent.toLowerCase().includes(q))
+                      && !(hideMissing && isMissing);
+            item.hidden = !show;
+            if (show) visibleItems++;
+          });
+
+          const show = compOk && visibleItems > 0;
+          folder.hidden = !show;
+          if (show) {
+            visibleFolders++;
+            if (q) folder.open = true;
+          }
+        });
+
+        // Un titre de bloc ne s'affiche que s'il reste un dossier visible en dessous
+        blocks.forEach(block => {
+          let node = block.nextElementSibling;
+          let any = false;
+          while (node && !node.classList.contains('block-title')) {
+            if (node.classList.contains('folder') && !node.hidden) { any = true; break; }
+            node = node.nextElementSibling;
+          }
+          block.hidden = !any;
+        });
+
+        noResult.hidden = visibleFolders > 0;
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          comp = chip.dataset.comp;
+          apply();
+        });
+      });
+
+      search.addEventListener('input', apply);
+
+      btnMissing.addEventListener('click', () => {
+        hideMissing = !hideMissing;
+        btnMissing.classList.toggle('on', hideMissing);
+        btnMissing.textContent = hideMissing ? 'Afficher les pièces à fournir' : 'Masquer les pièces à fournir';
+        apply();
+      });
+
+      btnAll.addEventListener('click', () => {
+        const anyOpen = folders.some(f => f.open && !f.hidden);
+        folders.forEach(f => { f.open = !anyOpen; });
+        btnAll.textContent = anyOpen ? 'Tout déplier' : 'Tout replier';
+      });
+
+      // Un clic dans l'arborescence ouvre le dossier visé
+      document.querySelectorAll('.tree a').forEach(link => {
+        link.addEventListener('click', () => {
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) target.open = true;
+        });
+      });
+
+      apply();
+    })();
+
+    /* ===== LIGHTBOX ===== */
+    (function () {
+      const lb        = document.getElementById('lightbox');
+      const lbImg     = document.getElementById('lb-img');
+      const lbCaption = document.getElementById('lb-caption');
+      const lbCounter = document.getElementById('lb-counter');
+      const lbFile    = document.getElementById('lb-file');
+      const btnClose  = document.getElementById('lb-close');
+      const btnPrev   = document.getElementById('lb-prev');
+      const btnNext   = document.getElementById('lb-next');
+
+      let images = [], titles = [], index = 0, lastFocused = null;
+
+      function render() {
+        lbImg.src = images[index];
+        lbImg.alt = titles[index] || 'Preuve';
+        lbCaption.textContent = titles[index] || '';
+        lbFile.href = images[index];
+
+        const multiple = images.length > 1;
+        lbCounter.textContent = multiple ? (index + 1) + ' / ' + images.length : '';
+        btnPrev.hidden = !multiple;
+        btnNext.hidden = !multiple;
+      }
+
+      function open(gallery, captions, start) {
+        images = gallery;
+        titles = captions;
+        index  = start || 0;
+        lastFocused = document.activeElement;
+        render();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        btnClose.focus();
+      }
+
+      function close() {
+        lb.classList.remove('open');
+        lbImg.src = '';
+        document.body.style.overflow = '';
+        if (lastFocused) lastFocused.focus();
+      }
+
+      function step(dir) {
+        if (images.length < 2) return;
+        index = (index + dir + images.length) % images.length;
+        render();
+      }
+
+      document.querySelectorAll('.item-thumb[data-gallery]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          let gallery = [], captions = [];
+          try {
+            gallery  = JSON.parse(btn.dataset.gallery || '[]');
+            captions = JSON.parse(btn.dataset.titles  || '[]');
+          } catch (e) {
+            console.error('Galerie invalide', e);
+            return;
+          }
+          if (gallery.length) open(gallery, captions, 0);
+        });
+      });
+
+      btnClose.addEventListener('click', close);
+      btnPrev.addEventListener('click', () => step(-1));
+      btnNext.addEventListener('click', () => step(1));
+      lb.addEventListener('click', e => { if (e.target === lb) close(); });
+
+      document.addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')    close();
+        if (e.key === 'ArrowLeft')  step(-1);
+        if (e.key === 'ArrowRight') step(1);
+      });
+    })();
+  </script>
+</body>
+</html>

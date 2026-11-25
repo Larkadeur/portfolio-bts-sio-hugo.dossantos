@@ -1162,10 +1162,20 @@
             margin-top: 1.8rem;
             text-align: center;
         }
+        /* Rangee de boutons sous le tableau : dossier de preuves + telechargement */
+        .e5-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+        }
         .e5-note {
             margin-top: 0.9rem;
             font-size: 0.8rem;
             color: var(--text-muted);
+            max-width: 90ch;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         @media (max-width: 720px) {
@@ -1256,6 +1266,7 @@
                 <a href="#profil" class="nav-link">Profil</a>
                 <a href="#competences" class="nav-link">Compétences</a>
                 <a href="#e5" class="nav-link">Tableau E5</a>
+                <a href="preuves-E5.html" class="nav-link">Preuves</a>
                 <a href="#projets" class="nav-link">Projets</a>
                 <a href="#experiences" class="nav-link">Parcours</a>
                 <a href="#veille" class="nav-link">Veille</a>
@@ -1756,9 +1767,13 @@
             </div>
 
             <div class="e5-actions">
-                <a href="tableau-synthese-E5.xlsx" class="btn primary" download>⬇ Télécharger le tableau de synthèse (.xlsx)</a>
+                <div class="e5-buttons">
+                    <a href="preuves-E5.html" class="btn primary">📁 Ouvrir le dossier de preuves</a>
+                    <a href="tableau-synthese-E5.xlsx" class="btn ghost" download>⬇ Télécharger le tableau de synthèse (.xlsx)</a>
+                </div>
                 <p class="e5-note">
                     Reproduction fidèle du modèle officiel (Annexe VI-1, BTS SIO session 2026). Tableau complété au fil de la formation.
+                    Le dossier de preuves regroupe, pour chaque réalisation ci-dessus, les captures, commandes et documents qui l'attestent.
                 </p>
             </div>
         </div>

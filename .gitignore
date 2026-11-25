@@ -1,0 +1,4 @@
+# Depot temporaire de preuves : les captures brutes (non floutees) et les
+# documents en attente de validation ne sont ni versionnes ni publies.
+# Seules les versions traitees, rangees dans preuves/, le sont.
+PREUVES-A-TRIER/
