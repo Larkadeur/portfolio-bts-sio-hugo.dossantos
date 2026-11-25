@@ -61,12 +61,14 @@
             background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #020617 100%);
         }
 
+        /* Cercles de decor volontairement statiques : une animation infinie
+           sur une surface floutee de 60 px empeche la page de se mettre au
+           repos et hache le defilement. */
         .background-animated .circle {
             position: absolute;
             border-radius: 50%;
             filter: blur(60px);
             opacity: 0.5;
-            animation: float 18s infinite alternate ease-in-out;
         }
 
         .background-animated .c1 {
@@ -83,7 +85,6 @@
             background: rgba(56, 189, 248, 0.25);
             bottom: -120px;
             right: -60px;
-            animation-delay: 3s;
         }
 
         .background-animated .c3 {
@@ -92,16 +93,6 @@
             background: rgba(244, 63, 94, 0.22);
             bottom: 10%;
             left: 5%;
-            animation-delay: 6s;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) translateX(0);
-            }
-            100% {
-                transform: translateY(-40px) translateX(40px);
-            }
         }
 
         /* ==================== LAYOUT GLOBAL ==================== */
@@ -407,9 +398,11 @@
             opacity: 1;
         }
 
+        /* Pas de backdrop-filter ici : la propriete est recalculee a chaque
+           frame, et la page compte une douzaine de cartes. Le fond semi-opaque
+           suffit a l'effet verre sur un fond sombre. */
         .card-glass {
             background: var(--bg-card-soft);
-            backdrop-filter: blur(18px);
         }
 
         .card-title {
@@ -992,7 +985,6 @@
             border-radius: 12px 12px 0 0;
             border-bottom: none;
             padding: 1.2rem 1.4rem;
-            backdrop-filter: blur(18px);
         }
         .e5-doc-row {
             display: flex;
@@ -1033,7 +1025,6 @@
             border: 1px solid var(--border-soft);
             border-radius: 0 0 12px 12px;
             background: var(--bg-card-soft);
-            backdrop-filter: blur(18px);
             box-shadow: var(--shadow-soft);
         }
         .e5-table {
@@ -1793,8 +1784,8 @@
             <div class="grid grid-2">
                 <article class="card card-glass fade-in">
                     <div style="margin-bottom: 1rem; border-radius: 12px; height: 180px; background: #000; overflow: hidden;">
-                        <img src="glpi/GLPI/31-glpi11-tableau-bord.png" alt="Tableau de bord GLPI 11.0.8 après migration"
-                             loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
+                        <img src="vignettes/glpi/GLPI/31-glpi11-tableau-bord.jpg" alt="Tableau de bord GLPI 11.0.8 après migration"
+                             loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;" width="1000" height="511">
                     </div>
                     <div class="project-tag">Alternance &middot; 1<sup>re</sup> et 2<sup>e</sup> année</div>
                     <h3 class="card-title">Mise à jour du serveur GLPI</h3>
@@ -1977,7 +1968,7 @@
                     </p>
 
                     <button class="certif-thumb" data-gallery='["certifs/cisco-cybersecurity.png"]' data-titles='["Cisco &mdash; Introduction to Cybersecurity"]'>
-                        <img src="certifs/cisco-cybersecurity.png" alt="Certificat Cisco Introduction to Cybersecurity" loading="lazy">
+                        <img src="vignettes/certifs/cisco-cybersecurity.jpg" alt="Certificat Cisco Introduction to Cybersecurity" loading="lazy" width="800" height="542">
                         <span class="certif-thumb-overlay">Voir le certificat</span>
                     </button>
 
@@ -1993,7 +1984,7 @@
                     </p>
 
                     <button class="certif-thumb" data-gallery='["certifs/ebios.png"]' data-titles='["Club EBIOS &mdash; Introduction &agrave; la m&eacute;thode EBIOS Risk Manager"]'>
-                        <img src="certifs/ebios.png" alt="Certificat EBIOS Risk Manager" loading="lazy">
+                        <img src="vignettes/certifs/ebios.jpg" alt="Certificat EBIOS Risk Manager" loading="lazy" width="800" height="566">
                         <span class="certif-thumb-overlay">Voir le certificat</span>
                     </button>
 
@@ -2012,7 +2003,7 @@
                     <button class="certif-thumb"
                         data-gallery='["certifs/rgpd-1.png","certifs/rgpd-2.png","certifs/rgpd-3.png","certifs/rgpd-4.png","certifs/rgpd-5.png","certifs/rgpd-6.png"]'
                         data-titles='["Module 1 &mdash; Le RGPD et ses notions cl&eacute;s (96 %)","Module 2 &mdash; Les principes de la protection des donn&eacute;es (98 %)","Module 3 &mdash; Les responsabilit&eacute;s des acteurs (100 %)","Module 4 &mdash; Le DPO et les outils de la conformit&eacute; (100 %)","Module 5 &mdash; Les collectivit&eacute;s territoriales (100 %)","Module 6 &mdash; Travail et donn&eacute;es personnelles (91 %)"]'>
-                        <img src="certifs/rgpd-1.png" alt="Certificats CNIL Atelier RGPD" loading="lazy">
+                        <img src="vignettes/certifs/rgpd-1.jpg" alt="Certificats CNIL Atelier RGPD" loading="lazy" width="800" height="565">
                         <span class="certif-thumb-overlay">Voir les 6 modules</span>
                         <span class="certif-count">6</span>
                     </button>

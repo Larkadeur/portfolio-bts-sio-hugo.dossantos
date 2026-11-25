@@ -232,8 +232,9 @@
       padding: 14px 18px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      background: rgba(2,6,23,0.92);
-      backdrop-filter: blur(14px);
+      /* Fond opaque plutot qu'un backdrop-filter : la barre est collante,
+         le flou serait recalcule a chaque frame de defilement. */
+      background: #040b1c;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -395,6 +396,10 @@
       background: var(--bg-card);
       overflow: hidden;
       scroll-margin-top: 170px;
+      /* Le navigateur ne calcule la mise en page d'un dossier que lorsqu'il
+         approche de l'ecran. La taille estimee evite les sauts d'ascenseur. */
+      content-visibility: auto;
+      contain-intrinsic-size: auto 220px;
     }
 
     .folder[open] { border-color: var(--border2); }
@@ -892,7 +897,7 @@
                 <button class="item-thumb"
                   data-gallery='["certifs/cisco-cybersecurity.png"]'
                   data-titles='["Cisco — Introduction to Cybersecurity : attestation de réussite."]'>
-                  <img src="certifs/cisco-cybersecurity.png" alt="Attestation Cisco Introduction to Cybersecurity" loading="lazy">
+                  <img src="vignettes-mini/certifs/cisco-cybersecurity.jpg" alt="Attestation Cisco Introduction to Cybersecurity" loading="lazy" width="400" height="271">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -909,7 +914,7 @@
                 <button class="item-thumb"
                   data-gallery='["certifs/ebios.png"]'
                   data-titles='["Club EBIOS — Introduction à la méthode EBIOS Risk Manager (ANSSI)."]'>
-                  <img src="certifs/ebios.png" alt="Attestation EBIOS Risk Manager" loading="lazy">
+                  <img src="vignettes-mini/certifs/ebios.jpg" alt="Attestation EBIOS Risk Manager" loading="lazy" width="400" height="283">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -926,7 +931,7 @@
                 <button class="item-thumb"
                   data-gallery='["certifs/rgpd-1.png","certifs/rgpd-2.png","certifs/rgpd-3.png","certifs/rgpd-4.png","certifs/rgpd-5.png","certifs/rgpd-6.png"]'
                   data-titles='["Module 1 — Le RGPD et ses notions clés (96 %).","Module 2 — Les principes de la protection des données (98 %).","Module 3 — Les responsabilités des acteurs (100 %).","Module 4 — Le DPO et les outils de la conformité (100 %).","Module 5 — Les collectivités territoriales (100 %).","Module 6 — Travail et données personnelles (91 %)."]'>
-                  <img src="certifs/rgpd-1.png" alt="Atelier RGPD de la CNIL, module 1" loading="lazy">
+                  <img src="vignettes-mini/certifs/rgpd-1.jpg" alt="Atelier RGPD de la CNIL, module 1" loading="lazy" width="400" height="283">
                   <span class="item-badge">6 captures</span>
                 </button>
                 <div class="item-body">
@@ -944,7 +949,7 @@
         </details>
 
         <!-- ===== 02 — VEILLE ===== -->
-        <details class="folder" id="d02" data-comp="c6" open>
+        <details class="folder" id="d02" data-comp="c6">
           <summary>
             <span class="f-num">02</span>
             <span class="f-head-main">
@@ -1024,7 +1029,7 @@
         </details>
 
         <!-- ===== 03 — CV / LINKEDIN ===== -->
-        <details class="folder" id="d03" data-comp="c6" open>
+        <details class="folder" id="d03" data-comp="c6">
           <summary>
             <span class="f-num">03</span>
             <span class="f-head-main">
@@ -1059,7 +1064,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/03-cv-linkedin/03-01_linkedin-profil.png"]'
                   data-titles='["Profil LinkedIn : titre, entreprise d’alternance, établissement de formation et statistiques de visibilité du profil."]'>
-                  <img src="preuves/03-cv-linkedin/03-01_linkedin-profil.png" alt="Haut du profil LinkedIn de Hugo Dos Santos" loading="lazy">
+                  <img src="vignettes-mini/preuves/03-cv-linkedin/03-01_linkedin-profil.jpg" alt="Haut du profil LinkedIn de Hugo Dos Santos" loading="lazy" width="400" height="869">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1080,7 +1085,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/03-cv-linkedin/03-02_linkedin-experience-formation.png"]'
                   data-titles='["Sections Expérience et Formation du profil LinkedIn : alternance en cours chez Hobart France, BTS SIO SISR à l’UTEC 77 et parcours antérieur."]'>
-                  <img src="preuves/03-cv-linkedin/03-02_linkedin-experience-formation.png" alt="Sections Expérience et Formation du profil LinkedIn" loading="lazy">
+                  <img src="vignettes-mini/preuves/03-cv-linkedin/03-02_linkedin-experience-formation.jpg" alt="Sections Expérience et Formation du profil LinkedIn" loading="lazy" width="400" height="869">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1101,7 +1106,7 @@
         </details>
 
         <!-- ===== 04 — PORTFOLIO ===== -->
-        <details class="folder" id="d04" data-comp="c3 c6" open>
+        <details class="folder" id="d04" data-comp="c3 c6">
           <summary>
             <span class="f-num">04</span>
             <span class="f-head-main">
@@ -1187,7 +1192,7 @@
         <h2 class="block-title">Réalisations en milieu professionnel — première année</h2>
 
         <!-- ===== 05 — COMPTES, LICENCES, HABILITATIONS ===== -->
-        <details class="folder" id="d05" data-comp="c1 c2" open>
+        <details class="folder" id="d05" data-comp="c1 c2">
           <summary>
             <span class="f-num">05</span>
             <span class="f-head-main">
@@ -1212,7 +1217,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/05-comptes-licences/05-01_gabarit-nouvel-arrivant.png"]'
                   data-titles='["Gabarit de ticket « Nouvel arrivant » : liste des comptes et accès à ouvrir, puis check-list de préparation du poste."]'>
-                  <img src="preuves/05-comptes-licences/05-01_gabarit-nouvel-arrivant.png" alt="Gabarit de ticket Nouvel arrivant dans GLPI" loading="lazy">
+                  <img src="vignettes-mini/preuves/05-comptes-licences/05-01_gabarit-nouvel-arrivant.jpg" alt="Gabarit de ticket Nouvel arrivant dans GLPI" loading="lazy" width="400" height="243">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1245,7 +1250,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/05-comptes-licences/05-04_entra-licences.png"]'
                   data-titles='["Licences attribuées dans Entra ID : produits, services activés et chemin d’affectation (direct ou hérité d’un groupe)."]'>
-                  <img src="preuves/05-comptes-licences/05-04_entra-licences.png" alt="Licences Microsoft 365 attribuées dans Entra ID" loading="lazy">
+                  <img src="vignettes-mini/preuves/05-comptes-licences/05-04_entra-licences.jpg" alt="Licences Microsoft 365 attribuées dans Entra ID" loading="lazy" width="400" height="166">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1266,7 +1271,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/05-comptes-licences/05-03_entra-groupes-habilitations.png"]'
                   data-titles='["Appartenances aux groupes dans Entra ID : groupes de sécurité et de distribution, affectation dynamique ou nominative."]'>
-                  <img src="preuves/05-comptes-licences/05-03_entra-groupes-habilitations.png" alt="Appartenances aux groupes d'un utilisateur dans Entra ID" loading="lazy">
+                  <img src="vignettes-mini/preuves/05-comptes-licences/05-03_entra-groupes-habilitations.jpg" alt="Appartenances aux groupes d'un utilisateur dans Entra ID" loading="lazy" width="400" height="208">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1287,7 +1292,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/05-comptes-licences/05-02_entra-fiche-utilisateur.png"]'
                   data-titles='["Centre d’administration Microsoft Entra : fiche d’un compte utilisateur, 13 groupes et 5 licences rattachés."]'>
-                  <img src="preuves/05-comptes-licences/05-02_entra-fiche-utilisateur.png" alt="Fiche d'un utilisateur dans le centre d'administration Entra" loading="lazy">
+                  <img src="vignettes-mini/preuves/05-comptes-licences/05-02_entra-fiche-utilisateur.jpg" alt="Fiche d'un utilisateur dans le centre d'administration Entra" loading="lazy" width="400" height="199">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1307,7 +1312,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/05-comptes-licences/05-06_orange-parc-mobile.png"]'
                   data-titles='["Espace client Orange : gestion des 239 lignes mobiles de l’entreprise, statut et forfait de chaque ligne."]'>
-                  <img src="preuves/05-comptes-licences/05-06_orange-parc-mobile.png" alt="Parc mobile de l'entreprise dans l'espace client Orange" loading="lazy">
+                  <img src="vignettes-mini/preuves/05-comptes-licences/05-06_orange-parc-mobile.jpg" alt="Parc mobile de l'entreprise dans l'espace client Orange" loading="lazy" width="400" height="214">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1327,7 +1332,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/05-comptes-licences/05-05_ticket-glpi-clos.png"]'
                   data-titles='["Ticket GLPI clos : demande d’un utilisateur d’agence, suivi ajouté, dates d’ouverture, de résolution et de fermeture renseignées."]'>
-                  <img src="preuves/05-comptes-licences/05-05_ticket-glpi-clos.png" alt="Ticket GLPI traité et clos" loading="lazy">
+                  <img src="vignettes-mini/preuves/05-comptes-licences/05-05_ticket-glpi-clos.jpg" alt="Ticket GLPI traité et clos" loading="lazy" width="400" height="228">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1348,7 +1353,7 @@
         </details>
 
         <!-- ===== 06 — MIGRATION WINDOWS 11 ===== -->
-        <details class="folder" id="d06" data-comp="c1 c4 c5" open>
+        <details class="folder" id="d06" data-comp="c1 c4 c5">
           <summary>
             <span class="f-num">06</span>
             <span class="f-head-main">
@@ -1373,7 +1378,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/06-migration-w11/06-01_glpi-inventaire-postes.png"]'
                   data-titles='["GLPI, Parc > Ordinateurs : postes inventoriés sous Windows 11 Entreprise, avec modèle, processeur, mémoire et date d’expiration de garantie."]'>
-                  <img src="preuves/06-migration-w11/06-01_glpi-inventaire-postes.png" alt="Inventaire des ordinateurs dans GLPI après migration" loading="lazy">
+                  <img src="vignettes-mini/preuves/06-migration-w11/06-01_glpi-inventaire-postes.jpg" alt="Inventaire des ordinateurs dans GLPI après migration" loading="lazy" width="400" height="223">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1429,7 +1434,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/06-migration-w11/06-02_winver-poste-migre.png"]'
                   data-titles='["winver sur un poste migré : Windows 11 Entreprise, version 26H2, build 26300.9974."]'>
-                  <img src="preuves/06-migration-w11/06-02_winver-poste-migre.png" alt="winver sur un poste migré vers Windows 11" loading="lazy">
+                  <img src="vignettes-mini/preuves/06-migration-w11/06-02_winver-poste-migre.jpg" alt="winver sur un poste migré vers Windows 11" loading="lazy" width="400" height="325">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1450,7 +1455,7 @@
         </details>
 
         <!-- ===== 07 — SWITCHS ===== -->
-        <details class="folder pending" id="d07" data-comp="c1 c5" open>
+        <details class="folder pending" id="d07" data-comp="c1 c5">
           <summary>
             <span class="f-num">07</span>
             <span class="f-head-main">
@@ -1507,7 +1512,7 @@
         </details>
 
         <!-- ===== 08 — MISE À JOUR GLPI ===== -->
-        <details class="folder" id="d08" data-comp="c1 c4 c5" open>
+        <details class="folder" id="d08" data-comp="c1 c4 c5">
           <summary>
             <span class="f-num">08</span>
             <span class="f-head-main">
@@ -1562,7 +1567,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/GLPI/01-vm-parametres-import.png","glpi/GLPI/02-vm-import-virtualbox.png","glpi/GLPI/03-vm-ecran-connexion.png","glpi/GLPI/04-vm-activation-reseau.png","glpi/GLPI/05-ssh-premiere-connexion.png"]'
                   data-titles='["Paramètres de la VM détectés lors de l’import de l’appareil virtuel (Debian 64-bit, 2 vCPU, 4 Go de RAM).","Import de la machine virtuelle en cours dans VirtualBox.","Écran de connexion de la VM importée (Debian GNU/Linux 12, hostname glpiv2).","Activation de l’interface réseau et obtention d’une adresse IP (172.17.10.7 en mode Bridged).","Première connexion SSH réussie à la VM de test depuis PowerShell."]'>
-                  <img src="glpi/GLPI/01-vm-parametres-import.png" alt="Paramètres de la VM de test lors de l'import" loading="lazy">
+                  <img src="vignettes-mini/glpi/GLPI/01-vm-parametres-import.jpg" alt="Paramètres de la VM de test lors de l'import" loading="lazy" width="400" height="92">
                   <span class="item-badge">5 captures</span>
                 </button>
                 <div class="item-body">
@@ -1582,7 +1587,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/GLPI/06-config-db-localise.png","glpi/GLPI/07-downstream-php.png","glpi/GLPI/08-local-define-php.png"]'
                   data-titles='["Fichier /etc/glpi/config_db.php localisé (identifiants de connexion masqués).","inc/downstream.php : redirection de la configuration vers /etc/glpi/.","local_define.php : redirection des fichiers (GLPI_VAR_DIR) et des journaux (GLPI_LOG_DIR)."]'>
-                  <img src="glpi/GLPI/07-downstream-php.png" alt="Fichier downstream.php de GLPI" loading="lazy">
+                  <img src="vignettes-mini/glpi/GLPI/07-downstream-php.jpg" alt="Fichier downstream.php de GLPI" loading="lazy" width="400" height="89">
                   <span class="item-badge">3 captures</span>
                 </button>
                 <div class="item-body">
@@ -1602,7 +1607,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/GLPI/09-sauvegarde-base.png","glpi/GLPI/10-sauvegarde-fichiers.png"]'
                   data-titles='["Sauvegarde de la base de données réussie (30 Mo).","Sauvegarde des fichiers et de la configuration réussie (65 Mo)."]'>
-                  <img src="glpi/GLPI/09-sauvegarde-base.png" alt="Sauvegarde de la base de données GLPI" loading="lazy">
+                  <img src="vignettes-mini/glpi/GLPI/09-sauvegarde-base.jpg" alt="Sauvegarde de la base de données GLPI" loading="lazy" width="400" height="57">
                   <span class="item-badge">2 captures</span>
                 </button>
                 <div class="item-body">
@@ -1622,7 +1627,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/GLPI/11-plugin-ocs-decouverte.png","glpi/GLPI/12-plugin-ocs-version.png","glpi/GLPI/13-plugin-ocs-desactive.png","glpi/GLPI/14-logs-apache-ocsweb.png"]'
                   data-titles='["Découverte du plugin ocsinventoryng dans le dossier plugins de GLPI.","Version du plugin détectée dans le code source : 1.7.3, obsolète pour GLPI 11.","Le plugin apparaît déjà désactivé dans l’interface GLPI.","Extrait des journaux Apache confirmant la cause du blocage : base « ocsweb » introuvable."]'>
-                  <img src="glpi/GLPI/14-logs-apache-ocsweb.png" alt="Journaux Apache montrant l'erreur sur la base ocsweb" loading="lazy">
+                  <img src="vignettes-mini/glpi/GLPI/14-logs-apache-ocsweb.jpg" alt="Journaux Apache montrant l'erreur sur la base ocsweb" loading="lazy" width="400" height="55">
                   <span class="item-badge">4 captures</span>
                 </button>
                 <div class="item-body">
@@ -1642,7 +1647,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/GLPI/15-test-connectivite.png","glpi/GLPI/16-debit-reseau-faible.png","glpi/GLPI/17-nat-redirection-ssh.png","glpi/GLPI/18-ssh-via-nat.png"]'
                   data-titles='["Test de connectivité internet depuis la VM avant téléchargement.","Diagnostic du débit réseau anormalement faible depuis la VM (6,74 Ko/s).","Règle de redirection de port SSH configurée dans VirtualBox (mode NAT).","Connexion SSH fonctionnelle via la redirection de port en mode NAT."]'>
-                  <img src="glpi/GLPI/16-debit-reseau-faible.png" alt="Diagnostic du débit réseau faible depuis la VM" loading="lazy">
+                  <img src="vignettes-mini/glpi/GLPI/16-debit-reseau-faible.jpg" alt="Diagnostic du débit réseau faible depuis la VM" loading="lazy" width="400" height="67">
                   <span class="item-badge">4 captures</span>
                 </button>
                 <div class="item-body">
@@ -1662,7 +1667,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/GLPI/19-telechargement-glpi.png","glpi/GLPI/20-extraction-archive.png","glpi/GLPI/21-downstream-recopie.png","glpi/GLPI/22-apache-arret.png","glpi/GLPI/23-remplacement-fichiers.png","glpi/GLPI/24-apache-redemarrage.png"]'
                   data-titles='["Téléchargement de glpi-11.0.8.tgz à 18,2 Mo/s.","Extraction de l’archive : structure standard de GLPI 11 obtenue.","Vérification du fichier downstream.php recopié dans la nouvelle version.","Arrêt du service Apache avant remplacement des fichiers.","Ancienne version renommée, nouvelle version mise en place, permissions corrigées.","Redémarrage d’Apache : service actif sans erreur."]'>
-                  <img src="glpi/GLPI/23-remplacement-fichiers.png" alt="Remplacement des fichiers de GLPI et correction des permissions" loading="lazy">
+                  <img src="vignettes-mini/glpi/GLPI/23-remplacement-fichiers.jpg" alt="Remplacement des fichiers de GLPI et correction des permissions" loading="lazy" width="400" height="170">
                   <span class="item-badge">6 captures</span>
                 </button>
                 <div class="item-body">
@@ -1682,7 +1687,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/GLPI/25-erreur-webroot.png","glpi/GLPI/26-prerequis-liste.png","glpi/GLPI/27-prerequis-valides.jpg"]'
                   data-titles='["Erreur affichée avant correction de la configuration Apache.","Fin de la liste des prérequis validés, bouton de relance de la vérification.","Ensemble des prérequis PHP/MariaDB validés après installation de l’extension bcmath."]'>
-                  <img src="glpi/GLPI/27-prerequis-valides.jpg" alt="Prérequis PHP et MariaDB validés" loading="lazy">
+                  <img src="vignettes-mini/glpi/GLPI/27-prerequis-valides.jpg" alt="Prérequis PHP et MariaDB validés" loading="lazy" width="400" height="566">
                   <span class="item-badge">3 captures</span>
                 </button>
                 <div class="item-body">
@@ -1702,7 +1707,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/GLPI/28-migration-en-cours.png","glpi/GLPI/29-migration-terminee.png","glpi/GLPI/30-glpi11-connexion.png","glpi/GLPI/32-glpi11-version.png","glpi/GLPI/31-glpi11-tableau-bord.png"]'
                   data-titles='["Migration de la base de données en cours : exécution séquentielle des mises à jour intermédiaires.","Écran final de l’assistant d’installation, confirmant la fin de la migration.","Page de connexion GLPI 11 fonctionnelle.","Confirmation finale de la version active : GLPI 11.0.8.","Tableau de bord GLPI 11.0.8 opérationnel, données historiques conservées (5,0 K tickets)."]'>
-                  <img src="glpi/GLPI/31-glpi11-tableau-bord.png" alt="Tableau de bord de GLPI 11.0.8 après migration" loading="lazy">
+                  <img src="vignettes-mini/glpi/GLPI/31-glpi11-tableau-bord.jpg" alt="Tableau de bord de GLPI 11.0.8 après migration" loading="lazy" width="400" height="204">
                   <span class="item-badge">5 captures</span>
                 </button>
                 <div class="item-body">
@@ -1722,7 +1727,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/08-glpi-maj/08-01_glpi11-version-production.png"]'
                   data-titles='["Fenêtre « À propos » du serveur GLPI de production : version 11.0.8."]'>
-                  <img src="preuves/08-glpi-maj/08-01_glpi11-version-production.png" alt="Version 11.0.8 affichée par le GLPI de production" loading="lazy">
+                  <img src="vignettes-mini/preuves/08-glpi-maj/08-01_glpi11-version-production.jpg" alt="Version 11.0.8 affichée par le GLPI de production" loading="lazy" width="400" height="183">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1743,7 +1748,7 @@
         </details>
 
         <!-- ===== 09 — DÉPLOIEMENT DES POSTES ===== -->
-        <details class="folder" id="d09" data-comp="c1 c2 c5" open>
+        <details class="folder" id="d09" data-comp="c1 c2 c5">
           <summary>
             <span class="f-num">09</span>
             <span class="f-head-main">
@@ -1790,7 +1795,7 @@
                 <button class="item-thumb"
                   data-gallery='["preuves/09-deploiement-postes/09-01_gpresult-gpo-appliquees.png"]'
                   data-titles='["gpresult /r : objets de stratégie de groupe appliqués sur un poste du domaine et heure de la dernière application."]'>
-                  <img src="preuves/09-deploiement-postes/09-01_gpresult-gpo-appliquees.png" alt="Résultat de gpresult /r sur un poste du domaine" loading="lazy">
+                  <img src="vignettes-mini/preuves/09-deploiement-postes/09-01_gpresult-gpo-appliquees.jpg" alt="Résultat de gpresult /r sur un poste du domaine" loading="lazy" width="400" height="305">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -1829,7 +1834,7 @@
         <h2 class="block-title">Réalisations en milieu professionnel — seconde année</h2>
 
         <!-- ===== 10 — AGENT GLPI PAR GPO ===== -->
-        <details class="folder" id="d10" data-comp="c1 c4 c5" open>
+        <details class="folder" id="d10" data-comp="c1 c4 c5">
           <summary>
             <span class="f-num">10</span>
             <span class="f-head-main">
@@ -1869,7 +1874,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/Agent%20GLPI/agent-01_telechargement.png","glpi/Agent%20GLPI/agent-02_installation.png","glpi/Agent%20GLPI/agent-03_config-agent.png","glpi/Agent%20GLPI/agent-04_service-actif.png","glpi/Agent%20GLPI/agent-05_activation-inventaire.png"]'
                   data-titles='["Téléchargement du paquet glpi-agent_1.19-1_all.deb (4,1 Mo) sur la machine virtuelle.","Installation du paquet de l’agent sur la machine virtuelle.","Fichier de configuration de l’agent : directive server pointant vers l’inventaire natif de GLPI.","Service glpi-agent actif (systemctl status) : serveur HTTP de l’agent sur le port 62354 et prochaine exécution planifiée.","Configuration de l’inventaire natif de GLPI : inventaire activé, fréquence de 24 heures."]'>
-                  <img src="glpi/Agent%20GLPI/agent-04_service-actif.png" alt="Service glpi-agent actif sur la VM de test" loading="lazy">
+                  <img src="vignettes-mini/glpi/Agent%20GLPI/agent-04_service-actif.jpg" alt="Service glpi-agent actif sur la VM de test" loading="lazy" width="400" height="70">
                   <span class="item-badge">5 captures</span>
                 </button>
                 <div class="item-body">
@@ -1889,7 +1894,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/Agent%20GLPI/agent-06_inventaire-force.png","glpi/Agent%20GLPI/agent-10_agent-enregistre.png","glpi/Agent%20GLPI/agent-07_ordinateur-remonte.png","glpi/Agent%20GLPI/agent-08_logiciels.png"]'
                   data-titles='["Inventaire forcé : le serveur répond et enregistre « New inventory from glpiv2… ».","Liste des agents dans GLPI : l’agent de la VM (GLPI-Agent_v1.19-1) a contacté le serveur.","Ordinateur glpiv2 créé automatiquement dans Parc > Ordinateurs (Debian GNU/Linux 12).","Fiche de l’ordinateur : 567 logiciels remontés automatiquement par l’inventaire."]'>
-                  <img src="glpi/Agent%20GLPI/agent-08_logiciels.png" alt="567 logiciels remontés automatiquement dans GLPI" loading="lazy">
+                  <img src="vignettes-mini/glpi/Agent%20GLPI/agent-08_logiciels.jpg" alt="567 logiciels remontés automatiquement dans GLPI" loading="lazy" width="400" height="222">
                   <span class="item-badge">4 captures</span>
                 </button>
                 <div class="item-body">
@@ -1909,7 +1914,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/Agent%20GLPI/agent-11_msi-telecharge.png","glpi/Agent%20GLPI/agent-12_config-serveur.png","glpi/Agent%20GLPI/agent-14_service-windows.png","glpi/Agent%20GLPI/agent-15_inventaire-force.png"]'
                   data-titles='["Page officielle de la version 1.19 de l’agent : installateur Windows 64 bits (MSI).","Assistant d’installation : adresse du serveur GLPI de test saisie dans « Remote Targets ».","Service glpi-agent en cours d’exécution sur le poste (Get-Service).","Inventaire forcé en ligne de commande avec glpi-agent.bat --force."]'>
-                  <img src="glpi/Agent%20GLPI/agent-15_inventaire-force.png" alt="Inventaire forcé en ligne de commande sur le poste pilote" loading="lazy">
+                  <img src="vignettes-mini/glpi/Agent%20GLPI/agent-15_inventaire-force.jpg" alt="Inventaire forcé en ligne de commande sur le poste pilote" loading="lazy" width="400" height="57">
                   <span class="item-badge">4 captures</span>
                 </button>
                 <div class="item-body">
@@ -1929,7 +1934,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/Agent%20GLPI/agent-16_pc-dell-remonte.png","glpi/Agent%20GLPI/agent-17_fiche-pc-dell.png"]'
                   data-titles='["Le poste Windows (HUGODOSSANTOS-B) apparaît dans le GLPI de test, à côté de la machine virtuelle Linux.","Fiche du poste : constructeur, modèle, numéro de série, utilisateur et « Source de mise à jour : GLPI Native Inventory »."]'>
-                  <img src="glpi/Agent%20GLPI/agent-17_fiche-pc-dell.png" alt="Fiche du poste pilote dans GLPI" loading="lazy">
+                  <img src="vignettes-mini/glpi/Agent%20GLPI/agent-17_fiche-pc-dell.jpg" alt="Fiche du poste pilote dans GLPI" loading="lazy" width="400" height="199">
                   <span class="item-badge">2 captures</span>
                 </button>
                 <div class="item-body">
@@ -1949,7 +1954,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/Deploy%20GLPI/deploy-02_verif-url.png","glpi/Deploy%20GLPI/deploy-07-glpiagent-dans%20-serveur-fichier.png"]'
                   data-titles='["L’adresse d’inventaire répond par une erreur 405 : le point d’entrée existe et attend un envoi d’agent.","Dossier GLPIAgent créé sur le partage de déploiement (le nom d’un dossier est masqué)."]'>
-                  <img src="glpi/Deploy%20GLPI/deploy-02_verif-url.png" alt="Vérification du point d'entrée d'inventaire du GLPI de production" loading="lazy">
+                  <img src="vignettes-mini/glpi/Deploy%20GLPI/deploy-02_verif-url.jpg" alt="Vérification du point d'entrée d'inventaire du GLPI de production" loading="lazy" width="400" height="240">
                   <span class="item-badge">2 captures</span>
                 </button>
                 <div class="item-body">
@@ -1969,7 +1974,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/Deploy%20GLPI/deploy-03_script-pc-hugo.png","glpi/Deploy%20GLPI/erreur%20non%20bloquante.png"]'
                   data-titles='["Exécution du script : agent détecté, serveur joignable, installation, service démarré, inventaire envoyé.","Message de Set-ExecutionPolicy : la stratégie « Unrestricted » imposée par GPO prévaut, sans conséquence."]'>
-                  <img src="glpi/Deploy%20GLPI/deploy-03_script-pc-hugo.png" alt="Exécution du script PowerShell d'installation de l'agent" loading="lazy">
+                  <img src="vignettes-mini/glpi/Deploy%20GLPI/deploy-03_script-pc-hugo.jpg" alt="Exécution du script PowerShell d'installation de l'agent" loading="lazy" width="400" height="118">
                   <span class="item-badge">2 captures</span>
                 </button>
                 <div class="item-body">
@@ -1989,7 +1994,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/Deploy%20GLPI/deploy-01.png","glpi/Deploy%20GLPI/deploy-04_bug-ancienne-config.png","glpi/Deploy%20GLPI/deploy-05_log-apres-correction.png","glpi/Deploy%20GLPI/deploy-06_pc-hugo-remonte.png"]'
                   data-titles='["Avant correction : la liste des ordinateurs du vrai GLPI ne contient pas le poste (noms et numéros de série masqués).","Clé « server » du registre pointant encore vers 127.0.0.1:8080, et journal d’installation du script.","Correction : adresse du vrai serveur écrite dans le registre, service redémarré, puis « New inventory » accepté par le serveur.","Après correction : le poste HUGODOSSANTOS-B apparaît dans le GLPI de production (autres noms et numéros de série masqués)."]'>
-                  <img src="glpi/Deploy%20GLPI/deploy-04_bug-ancienne-config.png" alt="Clé de registre pointant vers l'ancienne adresse du serveur" loading="lazy">
+                  <img src="vignettes-mini/glpi/Deploy%20GLPI/deploy-04_bug-ancienne-config.jpg" alt="Clé de registre pointant vers l'ancienne adresse du serveur" loading="lazy" width="400" height="105">
                   <span class="item-badge">4 captures</span>
                 </button>
                 <div class="item-body">
@@ -2010,7 +2015,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/Deploy%20GLPI/deploy-GPO.png","glpi/Deploy%20GLPI/deploy%20GPO%20zoom.png","glpi/Deploy%20GLPI/deploy-08_ciblage-registre.png"]'
                   data-titles='["Console de gestion des stratégies de groupe : tâche immédiate « GLPI AGENT install » exécutée par le compte système, et programme lancé (msiexec.exe).","Paramètres de la tâche : relances toutes les heures (3 fois), exécution dès que possible, indépendante de l’alimentation secteur, règle IgnoreNew.","Onglet « Commun » de la tâche : ciblage « KEYEXISTS » sur HKLM\\SOFTWARE\\GLPI-Agent avec l’opérateur NOT."]'>
-                  <img src="glpi/Deploy%20GLPI/deploy-GPO.png" alt="GPO de déploiement de l'agent GLPI dans la console GPMC" loading="lazy">
+                  <img src="vignettes-mini/glpi/Deploy%20GLPI/deploy-GPO.jpg" alt="GPO de déploiement de l'agent GLPI dans la console GPMC" loading="lazy" width="400" height="204">
                   <span class="item-badge">3 captures</span>
                 </button>
                 <div class="item-body">
@@ -2030,7 +2035,7 @@
                 <button class="item-thumb"
                   data-gallery='["glpi/Deploy%20GLPI/deploy,%20GPO%20fonctionne%20!.png"]'
                   data-titles='["Liste Parc > Ordinateurs de GLPI après le déploiement : 223 ordinateurs, inventoriés les 15 et 16 octobre (noms et numéros de série masqués)."]'>
-                  <img src="glpi/Deploy%20GLPI/deploy,%20GPO%20fonctionne%20!.png" alt="223 ordinateurs inventoriés après le déploiement par GPO" loading="lazy">
+                  <img src="vignettes-mini/glpi/Deploy%20GLPI/deploy%2C%20GPO%20fonctionne%20!.jpg" alt="223 ordinateurs inventoriés après le déploiement par GPO" loading="lazy" width="400" height="217">
                   <span class="item-badge">1 capture</span>
                 </button>
                 <div class="item-body">
@@ -2064,7 +2069,7 @@
         </details>
 
         <!-- ===== 11 — POSTES TECHNICIENS ===== -->
-        <details class="folder pending" id="d11" data-comp="c1 c4 c5" open>
+        <details class="folder pending" id="d11" data-comp="c1 c4 c5">
           <summary>
             <span class="f-num">11</span>
             <span class="f-head-main">
@@ -2104,7 +2109,7 @@
         ============================================================= -->
         <h2 class="block-title">Documents de référence</h2>
 
-        <details class="folder" id="d12" data-comp="c1 c2 c3 c4 c5 c6" open>
+        <details class="folder" id="d12" data-comp="c1 c2 c3 c4 c5 c6">
           <summary>
             <span class="f-num">12</span>
             <span class="f-head-main">
