@@ -15,7 +15,11 @@ param(
     [Parameter(Mandatory = $true)][string]$In,
     [Parameter(Mandatory = $true)][string]$Out,
     [Parameter(Mandatory = $true)][string]$Zones,
-    [int]$Bloc = 10
+    [int]$Bloc = 10,
+    # Remplit les zones en noir plein au lieu de les pixelliser.
+    # A utiliser pour les secrets (mots de passe, cles) : la pixellisation
+    # d'un texte court laisse une empreinte theoriquement exploitable.
+    [switch]$Plein
 )
 
 Add-Type -AssemblyName System.Drawing
@@ -43,6 +47,12 @@ foreach ($zone in ($Zones -split ';')) {
     if ($w -le 0 -or $h -le 0) { continue }
 
     $rect = New-Object System.Drawing.Rectangle($x, $y, $w, $h)
+
+    if ($Plein) {
+        $g.FillRectangle([System.Drawing.Brushes]::Black, $rect)
+        continue
+    }
+
     $petitW = [Math]::Max(1, [int]($w / $Bloc))
     $petitH = [Math]::Max(1, [int]($h / $Bloc))
 

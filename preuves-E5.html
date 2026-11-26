@@ -242,30 +242,6 @@
 
     .toolbar-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 
-    .search {
-      flex: 1 1 240px;
-      min-width: 200px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--border2);
-      background: rgba(15,23,42,0.8);
-      border-radius: 999px;
-      padding: 7px 14px;
-    }
-
-    .search input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-    }
-
-    .search input::placeholder { color: var(--text3); }
-
     .chip {
       font-family: var(--font-mono);
       font-size: 0.74rem;
@@ -735,6 +711,46 @@
     .lightbox-next { right: 24px; }
     .lightbox-close:hover, .lightbox-nav:hover { background: var(--accent); color: #020617; }
 
+    /* Liste des PDF archivés de la veille */
+    button.item-icon { border: 0; border-right: 1px solid var(--border); color: inherit; font: inherit; font-size: 1.7rem; }
+    button.item-open { background: none; cursor: pointer; }
+
+    .pdf-panel {
+      width: 100%;
+      max-width: 760px;
+      max-height: 86vh;
+      overflow-y: auto;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    }
+
+    .pdf-panel-title { font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; color: #f9fafb; }
+    .pdf-panel-sub { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text3); margin: 4px 0 16px; }
+
+    .pdf-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+    .pdf-list a {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr);
+      column-gap: 14px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-card-soft);
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .pdf-list a:hover, .pdf-list a:focus-visible { border-color: rgba(14,165,233,0.5); background: rgba(14,165,233,0.08); }
+
+    .pdf-date { grid-row: span 2; font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); padding-top: 2px; }
+    .pdf-name { font-size: 0.88rem; color: var(--text); line-height: 1.35; }
+    .pdf-src  { font-family: var(--font-mono); font-size: 0.66rem; color: var(--text3); }
+    .pdf-name::after { content: " ↗"; color: var(--blue-soft); }
+
     /* ==================== FOOTER ==================== */
     .footer {
       position: relative;
@@ -764,6 +780,9 @@
       .lightbox-prev { left: 6px; }
       .lightbox-next { right: 6px; }
       .lightbox-img { max-height: 60vh; }
+      .pdf-panel { padding: 18px 14px; margin-top: 48px; }
+      .pdf-list a { grid-template-columns: minmax(0, 1fr); }
+      .pdf-date { grid-row: auto; }
     }
   </style>
 </head>
@@ -787,14 +806,7 @@
 
   <!-- ==================== HERO ==================== -->
   <section class="container hero">
-    <p class="hero-tag">BTS SIO SISR &middot; Session 2026 &middot; Épreuve E5</p>
     <h1>Dossier de <span>preuves</span></h1>
-    <p class="lead">
-      Chaque réalisation du tableau de synthèse E5 possède ici son dossier, avec les pièces qui
-      l'attestent&nbsp;: captures d'écran, lignes de commande, journaux, documents et livrables.
-      Les dossiers sont numérotés dans l'ordre du tableau, et chaque pièce indique la compétence
-      qu'elle démontre.
-    </p>
 
     <div class="stats">
       <div class="stat"><div class="stat-val" id="stat-folders">—</div><div class="stat-lab">Réalisations</div></div>
@@ -802,23 +814,12 @@
       <div class="stat"><div class="stat-val" id="stat-shots">—</div><div class="stat-lab">Captures</div></div>
       <div class="stat pending"><div class="stat-val" id="stat-missing">—</div><div class="stat-lab">Pièces à fournir</div></div>
     </div>
-
-    <p class="notice">
-      <strong>Note de travail —</strong> les cartes en pointillé jaune marquées « À fournir » signalent les
-      pièces qui restent à récupérer (captures à faire, documents à exporter, données à anonymiser).
-      Le bouton <em>Masquer les pièces à fournir</em> permet de n'afficher que le dossier réellement
-      présentable au jury.
-    </p>
   </section>
 
   <!-- ==================== BARRE D'OUTILS ==================== -->
   <div class="container">
     <div class="toolbar">
       <div class="toolbar-row">
-        <label class="search">
-          <span aria-hidden="true">🔍</span>
-          <input type="search" id="search" placeholder="Rechercher une preuve (GLPI, sauvegarde, GPO, RGPD…)" aria-label="Rechercher une preuve">
-        </label>
         <button class="tool-btn" id="toggle-missing">Masquer les pièces à fournir</button>
         <button class="tool-btn" id="toggle-all">Tout replier</button>
       </div>
@@ -973,9 +974,7 @@
                 <a class="item-icon" href="veille-cryptographie.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">🗂️</a>
                 <div class="item-body">
                   <h4 class="item-title">Dossier de veille en ligne</h4>
-                  <p class="item-desc">
-                    Les 12 articles analysés, classés par mois, avec résumé, source datée et lien d'origine.
-                  </p>
+                  <p class="item-desc">Les 12 articles de veille analysés et classés par mois.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Mettre en œuvre des outils et stratégies de veille</span>
                     <a class="item-open" href="veille-cryptographie.html" target="_blank" rel="noopener">Ouvrir la page</a>
@@ -984,43 +983,31 @@
               </article>
 
               <article class="item">
-                <a class="item-icon" href="veille-archives/2026-11_Assemblee-nationale_portes-derobees-chiffrement.pdf" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">📄</a>
+                <button class="item-icon pdf-trigger" type="button" tabindex="-1" aria-hidden="true">📄</button>
                 <div class="item-body">
                   <h4 class="item-title">Articles archivés en PDF</h4>
-                  <p class="item-desc">
-                    Copie horodatée des articles sources, nommée <span class="path">AAAA-MM_source_sujet.pdf</span>&nbsp;:
-                    <a class="item-open" href="veille-archives/2026-09_G7-ANSSI_appel-action-post-quantique.pdf" target="_blank" rel="noopener">09/2026 · post-quantique</a>
-                    <a class="item-open" href="veille-archives/2026-10_eMudhra_cles-TLS-faibles.pdf" target="_blank" rel="noopener">10/2026 · clés TLS</a>
-                    <a class="item-open" href="veille-archives/2026-11_Assemblee-nationale_portes-derobees-chiffrement.pdf" target="_blank" rel="noopener">11/2026 · portes dérobées</a>
-                  </p>
+                  <p class="item-desc">Copies PDF horodatées des articles sources de la veille.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Mettre en place son environnement d'apprentissage</span>
-                    <span class="path">veille-archives/ — 3 PDF sur 12</span>
+                    <button class="item-open pdf-trigger" type="button">Voir les 12 PDF</button>
                   </div>
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/02-veille/02-01_google-alertes.png"]'
+                  data-titles='["Google Alertes : quatre alertes configurées pour la veille (ANSSI et chiffrement, cryptographie post-quantique, hachage, ransomware). Capture recadrée sur la liste des alertes."]'>
+                  <img src="vignettes-mini/preuves/02-veille/02-01_google-alertes.jpg" alt="Liste des alertes Google configurées pour la veille" loading="lazy" width="400" height="261">
+                  <span class="item-badge">1 capture</span>
+                </button>
                 <div class="item-body">
-                  <h4 class="item-title">Outils de veille — captures</h4>
-                  <p class="item-desc">
-                    Capture des flux RSS / alertes configurés (agrégateur, abonnements ANSSI et CERT-FR)
-                    pour prouver le dispositif de veille, et non seulement son résultat.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
-                </div>
-              </article>
-
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
-                <div class="item-body">
-                  <h4 class="item-title">PDF des 9 articles les plus anciens</h4>
-                  <p class="item-desc">
-                    Compléter <span class="path">veille-archives/</span> pour les mois de 2025 et du début 2026,
-                    avec la même convention de nommage.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <h4 class="item-title">Outils de veille — Google Alertes</h4>
+                  <p class="item-desc">Les quatre alertes Google qui alimentent la veille sur la cryptographie.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Mettre en œuvre des outils et stratégies de veille</span>
+                    <span class="path">02-01</span>
+                  </div>
                 </div>
               </article>
 
@@ -1047,16 +1034,20 @@
             </p>
             <div class="items">
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/03-cv-linkedin/03-03_cv-pdf.png"]'
+                  data-titles='["CV à jour (novembre 2026) : alternance chez Hobart, compétences, certifications et permis B. Version publique, sans numéro de téléphone."]'>
+                  <img src="vignettes-mini/preuves/03-cv-linkedin/03-03_cv-pdf.jpg" alt="CV de Hugo Dos Santos" loading="lazy" width="400" height="566">
+                  <span class="item-badge">1 page</span>
+                </button>
                 <div class="item-body">
                   <h4 class="item-title">CV au format PDF</h4>
-                  <p class="item-desc">
-                    Le fichier est arrivé dans le dossier de dépôt. Avant mise en ligne, il reste à décider
-                    ce qu'on y laisse&nbsp;: un CV publié sur un site public ne devrait pas porter de numéro de
-                    téléphone ni d'adresse postale.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">En attente de validation</span></div>
+                  <p class="item-desc">Le CV à jour, téléchargeable depuis le portfolio.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Gérer son identité professionnelle</span>
+                    <a class="item-open" href="cv/CV-Hugo-Dos-Santos.pdf" download>Télécharger le PDF</a>
+                  </div>
                 </div>
               </article>
 
@@ -1069,11 +1060,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Profil LinkedIn — identité professionnelle</h4>
-                  <p class="item-desc">
-                    Photo, titre « Étudiant à l'UTEC d'Émerainville — BTS SIO SISR », entreprise d'alternance et
-                    établissement de formation. Le bloc Statistiques montre le suivi de la visibilité du profil&nbsp;:
-                    vues et apparitions dans les recherches.
-                  </p>
+                  <p class="item-desc">Profil LinkedIn complet, avec les statistiques de visibilité.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Gérer son identité professionnelle</span>
                     <span class="path">03-01</span>
@@ -1090,10 +1077,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Expériences, formation et compétences</h4>
-                  <p class="item-desc">
-                    Les sections renseignées du profil&nbsp;: alternance d'assistant informatique chez Hobart France
-                    depuis septembre 2025, BTS SIO SISR à l'UTEC 77 et baccalauréat technologique.
-                  </p>
+                  <p class="item-desc">Les sections expérience, formation et compétences renseignées sur le profil.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Développer son projet professionnel</span>
                     <span class="path">03-02</span>
@@ -1130,9 +1114,7 @@
                 <a class="item-icon" href="index.html" tabindex="-1" aria-hidden="true">🌐</a>
                 <div class="item-body">
                   <h4 class="item-title">Le portfolio lui-même</h4>
-                  <p class="item-desc">
-                    Quatre pages en ligne&nbsp;: accueil, veille cryptographie, rapport GLPI et ce dossier de preuves.
-                  </p>
+                  <p class="item-desc">Les quatre pages du portfolio en ligne.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Participer à l'évolution d'un site Web</span>
                     <a class="item-open" href="index.html">Ouvrir l'accueil</a>
@@ -1144,10 +1126,7 @@
                 <a class="item-icon" href="https://larkadeur.github.io/portfolio-bts-sio-hugo.dossantos/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">🚀</a>
                 <div class="item-body">
                   <h4 class="item-title">Site en ligne — hébergement GitHub Pages</h4>
-                  <p class="item-desc">
-                    Le portfolio est publié et accessible publiquement&nbsp;: mise en ligne par GitHub Pages,
-                    reconstruction automatique à chaque modification envoyée.
-                  </p>
+                  <p class="item-desc">Le portfolio publié et accessible publiquement via GitHub Pages.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Participer à l'évolution d'un site Web</span>
                     <a class="item-open" href="https://larkadeur.github.io/portfolio-bts-sio-hugo.dossantos/" target="_blank" rel="noopener">Ouvrir le site public</a>
@@ -1159,10 +1138,7 @@
                 <a class="item-icon" href="https://github.com/Larkadeur/portfolio-bts-sio-hugo.dossantos/commits/main" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">🔀</a>
                 <div class="item-body">
                   <h4 class="item-title">Suivi des versions — dépôt Git</h4>
-                  <p class="item-desc">
-                    Le code est versionné sous Git&nbsp;: l'historique des commits, daté et commenté, montre la
-                    construction progressive du site plutôt qu'un livrable surgi d'un bloc.
-                  </p>
+                  <p class="item-desc">L'historique des commits Git, daté et commenté.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Participer à l'évolution d'un site Web</span>
                     <a class="item-open" href="https://github.com/Larkadeur/portfolio-bts-sio-hugo.dossantos/commits/main" target="_blank" rel="noopener">Voir les commits</a>
@@ -1222,11 +1198,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Procédure d'arrivée — gabarit de ticket</h4>
-                  <p class="item-desc">
-                    Modèle de ticket « Nouvel arrivant » utilisé à chaque embauche&nbsp;: comptes et accès à ouvrir
-                    (Windows, Outlook, VPN, applications métier), puis check-list de mise en service du poste
-                    avec vérification de BitLocker. La procédure est normalisée, pas improvisée.
-                  </p>
+                  <p class="item-desc">Modèle de ticket utilisé à chaque arrivée d'un salarié.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Mettre en place et vérifier les niveaux d'habilitation</span>
                     <span class="path">05-01</span>
@@ -1234,15 +1206,20 @@
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/05-comptes-licences/05-07_ad-formulaire-creation.png","preuves/05-comptes-licences/05-08_ad-objet-cree.png"]'
+                  data-titles='["Console Utilisateurs et ordinateurs Active Directory : le formulaire de création, ouvert sur une unité organisationnelle du domaine.","Objet Test Création après validation : fiche ouverte sur l onglet Général, adresse de messagerie renseignée. Liste des comptes de l annuaire et nom du contrôleur de domaine masqués."]'>
+                  <img src="vignettes-mini/preuves/05-comptes-licences/05-07_ad-formulaire-creation.jpg" alt="Formulaire de création d'un objet dans Active Directory" loading="lazy" width="400" height="228">
+                  <span class="item-badge">2 captures</span>
+                </button>
                 <div class="item-body">
-                  <h4 class="item-title">Création d'un compte, pas à pas</h4>
-                  <p class="item-desc">
-                    Le formulaire de création d'un utilisateur et le résultat obtenu. Les captures ci-dessous
-                    montrent un compte existant&nbsp;; il manque le geste de création lui-même.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <h4 class="item-title">Création dans l'annuaire, pas à pas</h4>
+                  <p class="item-desc">Création d'un compte dans l'Active Directory, sur un compte de test.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Mettre en place et vérifier les niveaux d'habilitation</span>
+                    <span class="path">05-07 · 05-08</span>
+                  </div>
                 </div>
               </article>
 
@@ -1255,11 +1232,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Licences Microsoft 365 attribuées</h4>
-                  <p class="item-desc">
-                    Les cinq produits actifs sur le compte — Microsoft 365 E3, Entra ID P2, Defender for Office 365,
-                    Teams Phone et Power Automate — avec le nombre de services activés et le mode d'attribution,
-                    direct ou hérité d'un groupe.
-                  </p>
+                  <p class="item-desc">Licences et services Microsoft 365 attribués à un utilisateur.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
                     <span class="path">05-04</span>
@@ -1276,11 +1249,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Appartenances aux groupes — habilitations</h4>
-                  <p class="item-desc">
-                    Les treize groupes de sécurité et de distribution qui portent les droits d'accès du compte,
-                    avec leur type d'appartenance&nbsp;: dynamique, calculée par règle, ou affectée nominativement.
-                    Identifiants et adresses masqués.
-                  </p>
+                  <p class="item-desc">Les treize groupes de sécurité qui portent les droits du compte.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Mettre en place et vérifier les niveaux d'habilitation</span>
                     <span class="path">05-03</span>
@@ -1297,10 +1266,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Fiche utilisateur dans Entra ID</h4>
-                  <p class="item-desc">
-                    Vue d'ensemble d'un compte&nbsp;: état activé, date de création, type d'utilisateur, treize
-                    appartenances de groupe et cinq licences. Identifiants techniques masqués.
-                  </p>
+                  <p class="item-desc">Vue d'ensemble d'un compte utilisateur dans Entra ID.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
                     <span class="path">05-02</span>
@@ -1317,10 +1283,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Parc mobile Orange — 239 lignes</h4>
-                  <p class="item-desc">
-                    Espace client Orange&nbsp;: les 239 lignes mobiles de l'entreprise, leur statut — active ou
-                    résiliée — et le forfait associé. Numéros, noms et références de compte masqués.
-                  </p>
+                  <p class="item-desc">Les 239 lignes mobiles de l'entreprise et leur statut.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
                     <span class="path">05-06</span>
@@ -1337,10 +1300,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Ticket traité et clos</h4>
-                  <p class="item-desc">
-                    Un incident réseau signalé par un utilisateur d'agence&nbsp;: prise en charge, suivi renseigné
-                    puis clôture, avec les dates d'ouverture, de résolution et de fermeture. Nom de l'utilisateur masqué.
-                  </p>
+                  <p class="item-desc">Un incident réseau pris en charge, suivi puis clôturé.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Collecter, suivre et orienter des demandes</span>
                     <span class="path">05-05</span>
@@ -1383,11 +1343,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Inventaire du parc après migration</h4>
-                  <p class="item-desc">
-                    Liste Parc&nbsp;&gt;&nbsp;Ordinateurs de GLPI&nbsp;: les postes remontent désormais Windows&nbsp;11
-                    Entreprise, avec modèle, processeur, mémoire et date d'expiration de garantie. Noms de postes
-                    et numéros de série masqués.
-                  </p>
+                  <p class="item-desc">Le parc remonté sous Windows 11 dans l'inventaire GLPI.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
                     <span class="path">06-01</span>
@@ -1395,27 +1351,37 @@
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/06-migration-w11/06-03_glpi-filtre-windows10.png","preuves/06-migration-w11/06-04_glpi-postes-windows10-restants.png"]'
+                  data-titles='["Le critère de recherche dans GLPI : Système d exploitation - Nom contient Windows 10.","Résultat au 26 novembre 2026 : 2 postes encore sous Windows 10 sur la totalité du parc. Noms de machines et numéros de série masqués."]'>
+                  <img src="vignettes-mini/preuves/06-migration-w11/06-04_glpi-postes-windows10-restants.jpg" alt="Postes encore sous Windows 10 dans GLPI" loading="lazy" width="400" height="113">
+                  <span class="item-badge">2 captures</span>
+                </button>
                 <div class="item-body">
-                  <h4 class="item-title">Liste de départ sous Windows 10</h4>
-                  <p class="item-desc">
-                    L'inventaire ci-dessus montre le parc une fois migré. Une capture de la liste filtrée sur
-                    Windows&nbsp;10, antérieure au chantier, donnerait le point de départ et le volume à traiter.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <h4 class="item-title">Ce qu'il reste sous Windows 10</h4>
+                  <p class="item-desc">Les deux postes encore sous Windows 10 en novembre 2026.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">06-03 · 06-04</span>
+                  </div>
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/06-migration-w11/06-05_tickets-migration-clos.png"]'
+                  data-titles='["GLPI, module Assistance : les 37 tickets Migration Windows 10 vers Windows 11, tous au statut Clos. Demandeurs et technicien masqués."]'>
+                  <img src="vignettes-mini/preuves/06-migration-w11/06-05_tickets-migration-clos.jpg" alt="Liste des tickets de migration clos dans GLPI" loading="lazy" width="400" height="212">
+                  <span class="item-badge">1 capture</span>
+                </button>
                 <div class="item-body">
-                  <h4 class="item-title">Suivi du projet — tickets</h4>
-                  <p class="item-desc">
-                    Vue de la liste des tickets de migration (un par poste) montrant l'avancement&nbsp;:
-                    preuve de la planification et des indicateurs de suivi.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <h4 class="item-title">Suivi du projet — 37 tickets</h4>
+                  <p class="item-desc">Les 37 tickets de migration, tous clos, ouverts au nom du tuteur.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Évaluer les indicateurs de suivi et analyser les écarts</span>
+                    <span class="path">06-05</span>
+                  </div>
                 </div>
               </article>
 
@@ -1439,10 +1405,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Recette après migration — winver</h4>
-                  <p class="item-desc">
-                    <span class="path">winver</span> sur un poste du parc&nbsp;: Windows&nbsp;11 Entreprise,
-                    version 26H2, build 26300.9974. La vérification côté poste, après la bascule.
-                  </p>
+                  <p class="item-desc">winver sur un poste migré : Windows 11 Entreprise 26H2.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
                     <span class="path">06-02</span>
@@ -1539,9 +1502,7 @@
                 <a class="item-icon" href="projet-glpi.html" tabindex="-1" aria-hidden="true">📘</a>
                 <div class="item-body">
                   <h4 class="item-title">Rapport technique complet</h4>
-                  <p class="item-desc">
-                    Contexte, déroulé, incidents et conclusion — la pièce principale du dossier.
-                  </p>
+                  <p class="item-desc">Le rapport technique complet du projet.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Analyser les objectifs et modalités d'organisation d'un projet</span>
                     <a class="item-open" href="projet-glpi.html">Lire le rapport</a>
@@ -1553,9 +1514,7 @@
                 <a class="item-icon" href="documentation%20pour%20le%20tableau/Rapport_GLPI_MiseAJour_et_Agent_GLPI.docx" tabindex="-1" aria-hidden="true">📝</a>
                 <div class="item-body">
                   <h4 class="item-title">Rapport remis en entreprise (.docx)</h4>
-                  <p class="item-desc">
-                    Document de synthèse rédigé pour le service informatique, sur la mise à jour et l'agent GLPI.
-                  </p>
+                  <p class="item-desc">Document de synthèse remis au service informatique.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Évaluer les indicateurs de suivi et analyser les écarts</span>
                     <a class="item-open" href="documentation%20pour%20le%20tableau/Rapport_GLPI_MiseAJour_et_Agent_GLPI.docx" download>Télécharger</a>
@@ -1572,10 +1531,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Clone de la production et VM de test</h4>
-                  <p class="item-desc">
-                    Import du clone dans VirtualBox, démarrage, réseau et premier accès SSH&nbsp;: l'environnement
-                    de test monté avant de toucher à la production.
-                  </p>
+                  <p class="item-desc">L'environnement de test monté avant de toucher à la production.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
                     <span class="path">glpi/GLPI/01 → 05</span>
@@ -1592,10 +1548,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Localisation de la configuration</h4>
-                  <p class="item-desc">
-                    Repérage de l'installation&nbsp;: base de données, dossiers de configuration, de fichiers et
-                    de journaux redirigés hors du dossier applicatif.
-                  </p>
+                  <p class="item-desc">Repérage de la base, des dossiers de configuration et des journaux.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
                     <span class="path">glpi/GLPI/06 → 08</span>
@@ -1612,10 +1565,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Sauvegardes avant migration</h4>
-                  <p class="item-desc">
-                    Base de données (30&nbsp;Mo) et fichiers de configuration (65&nbsp;Mo) sauvegardés avant toute
-                    opération, avec vérification de la taille des archives.
-                  </p>
+                  <p class="item-desc">Base de données et fichiers sauvegardés avant toute opération.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Gérer des sauvegardes</span>
                     <span class="path">glpi/GLPI/09 → 10</span>
@@ -1632,10 +1582,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Incident : plugin OCS obsolète</h4>
-                  <p class="item-desc">
-                    Diagnostic complet d'un blocage&nbsp;: plugin en version 1.7.3 incompatible, puis preuve par
-                    les journaux Apache que la base <span class="path">ocsweb</span> était introuvable.
-                  </p>
+                  <p class="item-desc">Diagnostic d'un blocage causé par un plugin OCS incompatible.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Vérifier les conditions de la continuité d'un service</span>
                     <span class="path">glpi/GLPI/11 → 14</span>
@@ -1652,10 +1599,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Incident réseau et bascule en NAT</h4>
-                  <p class="item-desc">
-                    Débit anormalement faible mesuré depuis la VM, puis passage en NAT avec redirection de
-                    port SSH pour rétablir un accès utilisable.
-                  </p>
+                  <p class="item-desc">Débit trop faible depuis la VM, résolu par un passage en NAT.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Traiter des demandes concernant les services réseau et système</span>
                     <span class="path">glpi/GLPI/15 → 18</span>
@@ -1672,10 +1616,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Mise en place des fichiers de GLPI 11</h4>
-                  <p class="item-desc">
-                    Téléchargement, extraction, report de la configuration, arrêt d'Apache, bascule des
-                    dossiers, permissions puis redémarrage du service.
-                  </p>
+                  <p class="item-desc">Bascule des fichiers vers GLPI 11 et redémarrage du service.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Déployer un service</span>
                     <span class="path">glpi/GLPI/19 → 24</span>
@@ -1692,10 +1633,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Webroot et prérequis PHP</h4>
-                  <p class="item-desc">
-                    Correction de la racine web d'Apache imposée par GLPI 11, puis validation de tous les
-                    prérequis après ajout de l'extension <span class="path">bcmath</span>.
-                  </p>
+                  <p class="item-desc">Correction de la racine web et validation des prérequis PHP.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
                     <span class="path">glpi/GLPI/25 → 27</span>
@@ -1712,10 +1650,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Migration de la base et recette finale</h4>
-                  <p class="item-desc">
-                    Migration de la base, connexion en 11.0.8, version confirmée et tableau de bord
-                    opérationnel avec les 5&nbsp;000 tickets historiques conservés.
-                  </p>
+                  <p class="item-desc">Base migrée et tableau de bord opérationnel en version 11.0.8.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Évaluer les indicateurs de suivi et analyser les écarts</span>
                     <span class="path">glpi/GLPI/28 → 32</span>
@@ -1732,10 +1667,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Version en production après bascule</h4>
-                  <p class="item-desc">
-                    La fenêtre « À propos » du serveur de production affiche GLPI&nbsp;11.0.8&nbsp;: la montée de
-                    version validée sur le clone a bien été appliquée au serveur réel.
-                  </p>
+                  <p class="item-desc">Le serveur de production affiche GLPI 11.0.8 après la bascule.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Déployer un service</span>
                     <span class="path">08-01</span>
@@ -1800,11 +1732,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Contrôle d'application des GPO</h4>
-                  <p class="item-desc">
-                    <span class="path">gpresult /r</span> sur un poste du domaine&nbsp;: les stratégies réellement
-                    appliquées — authentification unique, politique de mot de passe, gestionnaire de mots de passe,
-                    polices, PowerShell Remoting — et l'heure de la dernière application. Contrôleur de domaine masqué.
-                  </p>
+                  <p class="item-desc">Les stratégies de groupe réellement appliquées sur un poste du domaine.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Mettre en place et vérifier les niveaux d'habilitation</span>
                     <span class="path">09-01</span>
@@ -1812,15 +1740,20 @@
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/09-deploiement-postes/09-02_ticket-nouveau-poste.png","preuves/09-deploiement-postes/09-03_ticket-nouveau-poste-suite.png"]'
+                  data-titles='["Ticket GLPI de préparation d un nouveau poste : logiciels à installer et paramétrage des accès. Identifiants et données personnelles occultés.","Suite du même ticket : reprise des données de l ancien poste, puis liste de contrôle avant remise — mise à jour Windows, activation BitLocker, applications métier."]'>
+                  <img src="vignettes-mini/preuves/09-deploiement-postes/09-02_ticket-nouveau-poste.jpg" alt="Ticket GLPI de préparation d'un nouveau poste" loading="lazy" width="400" height="406">
+                  <span class="item-badge">2 captures</span>
+                </button>
                 <div class="item-body">
-                  <h4 class="item-title">Remise à l'utilisateur</h4>
-                  <p class="item-desc">
-                    Ticket de demande de remplacement, de sa création à sa clôture, et fiche d'inventaire du
-                    nouveau poste&nbsp;: accompagnement des utilisateurs dans la mise en place.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <h4 class="item-title">Préparation et remise d'un poste</h4>
+                  <p class="item-desc">Ticket de préparation d'un nouveau poste, avec sa liste de contrôle avant remise.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Accompagner les utilisateurs dans la mise en place</span>
+                    <span class="path">09-02 · 09-03</span>
+                  </div>
                 </div>
               </article>
 
@@ -1860,9 +1793,7 @@
                 <a class="item-icon" href="projet-glpi.html#agent" tabindex="-1" aria-hidden="true">📘</a>
                 <div class="item-body">
                   <h4 class="item-title">Rapport technique — partie agent</h4>
-                  <p class="item-desc">
-                    Déroulé complet du déploiement, incidents rencontrés et résultats mesurés.
-                  </p>
+                  <p class="item-desc">Déroulé complet du déploiement, incidents rencontrés et résultats mesurés.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Analyser les objectifs et modalités d'organisation d'un projet</span>
                     <a class="item-open" href="projet-glpi.html">Lire le rapport</a>
@@ -1879,10 +1810,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Agent sur la VM de test</h4>
-                  <p class="item-desc">
-                    Installation du paquet, configuration de la directive <span class="path">server</span>,
-                    service actif et activation de l'inventaire natif côté GLPI.
-                  </p>
+                  <p class="item-desc">Installation et configuration de l'agent sur la VM de test.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
                     <span class="path">glpi/Agent GLPI/agent-01 → 05</span>
@@ -1899,10 +1827,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Premier inventaire remonté</h4>
-                  <p class="item-desc">
-                    Inventaire forcé accepté par le serveur, agent enregistré, machine créée automatiquement
-                    et 567 logiciels recensés sans intervention.
-                  </p>
+                  <p class="item-desc">Premier inventaire accepté par le serveur, machine créée automatiquement.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
                     <span class="path">glpi/Agent GLPI/agent-06 → 10</span>
@@ -1919,10 +1844,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Poste pilote Windows — installation MSI</h4>
-                  <p class="item-desc">
-                    Récupération de l'installeur officiel, saisie du serveur cible, vérification du service
-                    Windows et inventaire déclenché en ligne de commande.
-                  </p>
+                  <p class="item-desc">Installation de l'agent sur le poste pilote via le MSI.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Déployer un service</span>
                     <span class="path">glpi/Agent GLPI/agent-11 → 15</span>
@@ -1939,10 +1861,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Poste pilote remonté dans GLPI</h4>
-                  <p class="item-desc">
-                    Le poste apparaît dans l'inventaire avec constructeur, modèle, numéro de série et
-                    source « GLPI Native Inventory ».
-                  </p>
+                  <p class="item-desc">Le poste pilote apparaît dans l'inventaire GLPI.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
                     <span class="path">glpi/Agent GLPI/agent-16 → 17</span>
@@ -1959,10 +1878,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Préparation du déploiement</h4>
-                  <p class="item-desc">
-                    Vérification du point d'entrée d'inventaire de la production, puis mise à disposition de
-                    l'installeur sur le partage réseau de déploiement.
-                  </p>
+                  <p class="item-desc">L'installeur mis à disposition sur le partage réseau de déploiement.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Planifier les activités</span>
                     <span class="path">glpi/Deploy GLPI/deploy-02, 07</span>
@@ -1979,10 +1895,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Script PowerShell d'installation</h4>
-                  <p class="item-desc">
-                    Sortie complète du script&nbsp;: détection de l'agent, test du serveur, installation
-                    silencieuse, démarrage du service et envoi de l'inventaire.
-                  </p>
+                  <p class="item-desc">Sortie du script d'installation, de la détection à l'envoi de l'inventaire.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Déployer un service</span>
                     <span class="path">glpi/Deploy GLPI/deploy-03</span>
@@ -1999,11 +1912,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Incident : ancienne adresse dans le registre</h4>
-                  <p class="item-desc">
-                    Poste absent de l'inventaire, cause trouvée dans la clé de registre
-                    <span class="path">server</span>, correction appliquée et remontée confirmée&nbsp;:
-                    un diagnostic complet du symptôme à la preuve de résolution.
-                  </p>
+                  <p class="item-desc">Poste absent de l'inventaire : clé de registre corrigée, remontée confirmée.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Traiter des demandes concernant les services réseau et système</span>
                     <span class="path">glpi/Deploy GLPI/deploy-01, 04 → 06</span>
@@ -2020,10 +1929,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">GPO de déploiement et ciblage</h4>
-                  <p class="item-desc">
-                    Tâche immédiate exécutée par le compte système, relances planifiées, et ciblage par clé de
-                    registre pour n'installer l'agent que sur les postes qui ne l'ont pas.
-                  </p>
+                  <p class="item-desc">La GPO qui exécute le script et cible les postes concernés.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Déployer un service</span>
                     <span class="path">glpi/Deploy GLPI/deploy-GPO, zoom, 08</span>
@@ -2040,10 +1946,7 @@
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Résultat : 223 postes inventoriés</h4>
-                  <p class="item-desc">
-                    La preuve de fin de projet&nbsp;: 223 ordinateurs remontés les 15 et 16 octobre 2026,
-                    inventaire OCS définitivement remplacé.
-                  </p>
+                  <p class="item-desc">223 ordinateurs remontés en octobre 2026, inventaire OCS remplacé.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Évaluer les indicateurs de suivi et analyser les écarts</span>
                     <span class="path">glpi/Deploy GLPI/deploy, GPO fonctionne !.png</span>
@@ -2051,16 +1954,49 @@
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/10-agent-glpi-gpo/10-01_partage-deploiement-msi.png"]'
+                  data-titles='["Le partage de déploiement sur le serveur de fichiers : le paquet GLPI-Agent-1.21-x64.msi, source unique pour tout le parc."]'>
+                  <img src="vignettes-mini/preuves/10-agent-glpi-gpo/10-01_partage-deploiement-msi.jpg" alt="Partage de déploiement contenant le MSI de l'agent GLPI" loading="lazy" width="400" height="125">
+                  <span class="item-badge">1 capture</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Le paquet sur le partage de déploiement</h4>
+                  <p class="item-desc">Le MSI de l'agent déposé sur le partage de déploiement.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">10-01</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/10-agent-glpi-gpo/10-02_gpo-etendue-liaisons.png","preuves/10-agent-glpi-gpo/10-03_gpo-parametres-rapport.png"]'
+                  data-titles='["Onglet Étendue de la GPO GLPI Agent Install Scheduled Task : les unités organisationnelles liées et le filtrage de sécurité appliqué aux ordinateurs du domaine.","Rapport de paramètres de la même GPO : détail des liaisons, du filtrage de sécurité et des délégations. Compte de service masqué."]'>
+                  <img src="vignettes-mini/preuves/10-agent-glpi-gpo/10-02_gpo-etendue-liaisons.jpg" alt="Étendue de la GPO de déploiement de l'agent GLPI" loading="lazy" width="400" height="481">
+                  <span class="item-badge">2 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">La GPO — portée et paramètres</h4>
+                  <p class="item-desc">La GPO de déploiement, ses liaisons et son filtrage de sécurité.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Mettre en place et vérifier les niveaux d'habilitation</span>
+                    <span class="path">10-02 · 10-03</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <a class="item-icon" href="scripts/Install-GLPIAgent.ps1" download tabindex="-1" aria-hidden="true">📜</a>
                 <div class="item-body">
                   <h4 class="item-title">Script d'installation — code source</h4>
-                  <p class="item-desc">
-                    Le fichier <span class="path">.ps1</span> lui-même (ou son extrait commenté), à ajouter dans
-                    un dossier <span class="path">scripts/</span>&nbsp;: une ligne de commande vaut souvent mieux
-                    qu'une capture devant le jury.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <p class="item-desc">Le script PowerShell exécuté sur chaque poste, en fichier source.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Déployer un service</span>
+                    <a class="item-open" href="scripts/Install-GLPIAgent.ps1" download>Télécharger le script</a>
+                  </div>
                 </div>
               </article>
 
@@ -2131,10 +2067,7 @@
                 <a class="item-icon" href="tableau-synthese-E5.xlsx" download tabindex="-1" aria-hidden="true">📊</a>
                 <div class="item-body">
                   <h4 class="item-title">Tableau de synthèse E5 (.xlsx)</h4>
-                  <p class="item-desc">
-                    Le fichier source, reproduction du modèle officiel (Annexe VI-1). La version affichée sur
-                    le portfolio en est la copie synchronisée.
-                  </p>
+                  <p class="item-desc">Le fichier source du tableau officiel, au format Excel.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Document d'épreuve</span>
                     <a class="item-open" href="tableau-synthese-E5.xlsx" download>Télécharger</a>
@@ -2146,9 +2079,7 @@
                 <a class="item-icon" href="index.html#e5" tabindex="-1" aria-hidden="true">📋</a>
                 <div class="item-body">
                   <h4 class="item-title">Tableau de synthèse en ligne</h4>
-                  <p class="item-desc">
-                    La version consultable du tableau, avec liens vers les rapports et ce dossier de preuves.
-                  </p>
+                  <p class="item-desc">La version consultable du tableau, reliée aux rapports et aux preuves.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Document d'épreuve</span>
                     <a class="item-open" href="index.html#e5">Ouvrir le tableau</a>
@@ -2161,7 +2092,7 @@
         </details>
 
         <div class="no-result" id="no-result" hidden>
-          Aucune pièce ne correspond à cette recherche.
+          Aucune pièce ne correspond à ce filtre.
         </div>
 
       </main>
@@ -2180,6 +2111,29 @@
         <span id="lb-counter"></span>
         <a id="lb-file" href="#" target="_blank" rel="noopener">Ouvrir le fichier d'origine ↗</a>
       </p>
+    </div>
+  </div>
+
+  <!-- ==================== ARCHIVES PDF DE LA VEILLE ==================== -->
+  <div class="lightbox" id="pdf-modal" role="dialog" aria-modal="true" aria-labelledby="pdf-modal-title">
+    <button class="lightbox-close" id="pdf-close" aria-label="Fermer">&times;</button>
+    <div class="pdf-panel">
+      <h3 class="pdf-panel-title" id="pdf-modal-title">Articles de veille archivés en PDF</h3>
+      <p class="pdf-panel-sub">veille-archives/ · 12 PDF · un article par mois</p>
+      <ol class="pdf-list">
+        <li><a href="veille-archives/2025-06_Commission-europeenne_transition-post-quantique.pdf" target="_blank" rel="noopener"><span class="pdf-date">23 juin 2025</span><span class="pdf-name">L'UE impose la transition vers la cryptographie post-quantique</span><span class="pdf-src">Commission européenne</span></a></li>
+        <li><a href="veille-archives/2025-10_ANSSI_premiers-visas-post-quantique.pdf" target="_blank" rel="noopener"><span class="pdf-date">Octobre 2025</span><span class="pdf-name">Premiers visas de sécurité ANSSI incluant de la cryptographie post-quantique</span><span class="pdf-src">ANSSI</span></a></li>
+        <li><a href="veille-archives/2026-03_Agence-Science-Presse_prix-turing.pdf" target="_blank" rel="noopener"><span class="pdf-date">Mars 2026</span><span class="pdf-name">Bennett &amp; Brassard récompensés, pionniers de la cryptographie quantique</span><span class="pdf-src">Agence Science-Presse</span></a></li>
+        <li><a href="veille-archives/2026-03_Euronews_google-menace-quantique.pdf" target="_blank" rel="noopener"><span class="pdf-date">27 mars 2026</span><span class="pdf-name">Google avertit : l'informatique quantique menace les normes cryptographiques</span><span class="pdf-src">Euronews</span></a></li>
+        <li><a href="veille-archives/2026-04_ESPCI-CNRS_cryptographie-adn.pdf" target="_blank" rel="noopener"><span class="pdf-date">1er avril 2026</span><span class="pdf-name">Cryptographie sur ADN : une approche franco-japonaise fait ses preuves</span><span class="pdf-src">ESPCI Paris – CNRS</span></a></li>
+        <li><a href="veille-archives/2026-04_Currency-Analytics_bitcoin-menace-quantique.pdf" target="_blank" rel="noopener"><span class="pdf-date">13 avril 2026</span><span class="pdf-name">Bitcoin menacé par l'informatique quantique</span><span class="pdf-src">The Currency Analytics</span></a></li>
+        <li><a href="veille-archives/2026-06_Korben_faille-zcash-ia.pdf" target="_blank" rel="noopener"><span class="pdf-date">5 juin 2026</span><span class="pdf-name">Une IA découvre en 24 h une faille vieille de 4 ans dans Zcash</span><span class="pdf-src">Korben.info</span></a></li>
+        <li><a href="veille-archives/2026-06_Tech-Insider_anssi-certification-post-quantique.pdf" target="_blank" rel="noopener"><span class="pdf-date">16 juin 2026</span><span class="pdf-name">L'ANSSI ne certifiera plus de produits sans post-quantique dès 2027</span><span class="pdf-src">Tech Insider · copie Web Archive</span></a></li>
+        <li><a href="veille-archives/2026-08_Dark-Reading_passkeys-black-hat.pdf" target="_blank" rel="noopener"><span class="pdf-date">5 août 2026</span><span class="pdf-name">« Pass-the-Passkey » : les clés d'accès mises à l'épreuve à Black Hat</span><span class="pdf-src">Dark Reading</span></a></li>
+        <li><a href="veille-archives/2026-09_G7-ANSSI_appel-action-post-quantique.pdf" target="_blank" rel="noopener"><span class="pdf-date">3 septembre 2026</span><span class="pdf-name">Le G7 et l'ANSSI reclassent la menace quantique en risque à court terme</span><span class="pdf-src">ANSSI · G7</span></a></li>
+        <li><a href="veille-archives/2026-10_eMudhra_cles-TLS-faibles.pdf" target="_blank" rel="noopener"><span class="pdf-date">22 octobre 2026</span><span class="pdf-name">Clés privées devinables : eMudhra quitte le marché TLS</span><span class="pdf-src">IT-Connect · Mozilla</span></a></li>
+        <li><a href="veille-archives/2026-11_Assemblee-nationale_portes-derobees-chiffrement.pdf" target="_blank" rel="noopener"><span class="pdf-date">10 novembre 2026</span><span class="pdf-name">Les députés suppriment l'article interdisant les portes dérobées</span><span class="pdf-src">Assemblée nationale</span></a></li>
+      </ol>
     </div>
   </div>
 
@@ -2235,12 +2189,11 @@
       document.getElementById('stat-missing').textContent = totalMissing;
     })();
 
-    /* ===== FILTRES : COMPÉTENCE, RECHERCHE, PIÈCES À FOURNIR ===== */
+    /* ===== FILTRES : COMPÉTENCE, PIÈCES À FOURNIR ===== */
     (function () {
       const folders    = Array.from(document.querySelectorAll('.folder'));
       const blocks     = Array.from(document.querySelectorAll('.block-title'));
       const chips      = Array.from(document.querySelectorAll('.chip[data-comp]'));
-      const search     = document.getElementById('search');
       const btnMissing = document.getElementById('toggle-missing');
       const btnAll     = document.getElementById('toggle-all');
       const noResult   = document.getElementById('no-result');
@@ -2249,7 +2202,6 @@
       let hideMissing = false;
 
       function apply() {
-        const q = search.value.trim().toLowerCase();
         let visibleFolders = 0;
 
         folders.forEach(folder => {
@@ -2259,19 +2211,14 @@
           let visibleItems = 0;
           folder.querySelectorAll('.item').forEach(item => {
             const isMissing = item.classList.contains('missing');
-            const text = item.textContent.toLowerCase();
-            const show = (!q || text.includes(q) || folder.querySelector('.f-title').textContent.toLowerCase().includes(q))
-                      && !(hideMissing && isMissing);
+            const show = !(hideMissing && isMissing);
             item.hidden = !show;
             if (show) visibleItems++;
           });
 
           const show = compOk && visibleItems > 0;
           folder.hidden = !show;
-          if (show) {
-            visibleFolders++;
-            if (q) folder.open = true;
-          }
+          if (show) visibleFolders++;
         });
 
         // Un titre de bloc ne s'affiche que s'il reste un dossier visible en dessous
@@ -2296,8 +2243,6 @@
           apply();
         });
       });
-
-      search.addEventListener('input', apply);
 
       btnMissing.addEventListener('click', () => {
         hideMissing = !hideMissing;
@@ -2396,6 +2341,33 @@
         if (e.key === 'Escape')    close();
         if (e.key === 'ArrowLeft')  step(-1);
         if (e.key === 'ArrowRight') step(1);
+      });
+    })();
+
+    /* ===== LISTE DES PDF DE VEILLE ===== */
+    (function () {
+      const modal = document.getElementById('pdf-modal');
+      const btnClose = document.getElementById('pdf-close');
+      let lastFocused = null;
+
+      function open() {
+        lastFocused = document.activeElement;
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        btnClose.focus();
+      }
+
+      function close() {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+        if (lastFocused) lastFocused.focus();
+      }
+
+      document.querySelectorAll('.pdf-trigger').forEach(btn => btn.addEventListener('click', open));
+      btnClose.addEventListener('click', close);
+      modal.addEventListener('click', e => { if (e.target === modal) close(); });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.classList.contains('open')) close();
       });
     })();
   </script>

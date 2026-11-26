@@ -1,0 +1,1 @@
+msiexec /i "$PWD\GLPI-Agent-1.19-x64.msi" /quiet SERVER=http://172.17.8.60/glpi/front/inventory.php EXECMODE=1 RUNNOW=1 ADD_FIREWALL_EXCEPTION=1
