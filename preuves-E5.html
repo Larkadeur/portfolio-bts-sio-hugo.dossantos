@@ -1146,18 +1146,6 @@
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
-                <div class="item-body">
-                  <h4 class="item-title">Mesure de la visibilité</h4>
-                  <p class="item-desc">
-                    Capture d'un outil de mesure (statistiques de visite, test de performance ou d'accessibilité)
-                    pour la compétence « référencer les services en ligne et mesurer leur visibilité ».
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
-                </div>
-              </article>
-
             </div>
           </div>
         </details>
@@ -1208,14 +1196,14 @@
 
               <article class="item">
                 <button class="item-thumb"
-                  data-gallery='["preuves/05-comptes-licences/05-07_ad-formulaire-creation.png","preuves/05-comptes-licences/05-08_ad-objet-cree.png"]'
-                  data-titles='["Console Utilisateurs et ordinateurs Active Directory : le formulaire de création, ouvert sur une unité organisationnelle du domaine.","Objet Test Création après validation : fiche ouverte sur l onglet Général, adresse de messagerie renseignée. Liste des comptes de l annuaire et nom du contrôleur de domaine masqués."]'>
-                  <img src="vignettes-mini/preuves/05-comptes-licences/05-07_ad-formulaire-creation.jpg" alt="Formulaire de création d'un objet dans Active Directory" loading="lazy" width="400" height="228">
+                  data-gallery='["preuves/05-comptes-licences/05-07_ad-formulaire-creation.png","preuves/05-comptes-licences/05-08_ad-membre-de-groupes.png"]'
+                  data-titles='["Console Utilisateurs et ordinateurs Active Directory : formulaire « Nouvel objet – Utilisateur », créé dans l’unité d’organisation MLV/Test OU, avec le nom d’ouverture de session et son suffixe de domaine.","Onglet « Membre de » du compte créé : deux groupes de sécurité de l’unité GRP s’ajoutent au groupe Utilisateurs du domaine. Les comptes de service visibles dans l’annuaire sont masqués."]'>
+                  <img src="vignettes-mini/preuves/05-comptes-licences/05-07_ad-formulaire-creation.jpg" alt="Formulaire de création d'un compte utilisateur dans Active Directory" loading="lazy" width="400" height="346">
                   <span class="item-badge">2 captures</span>
                 </button>
                 <div class="item-body">
                   <h4 class="item-title">Création dans l'annuaire, pas à pas</h4>
-                  <p class="item-desc">Création d'un compte dans l'Active Directory, sur un compte de test.</p>
+                  <p class="item-desc">Création d'un compte dans l'annuaire et ajout à ses groupes, sur un compte de test.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Mettre en place et vérifier les niveaux d'habilitation</span>
                     <span class="path">05-07 · 05-08</span>
@@ -1385,17 +1373,6 @@
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
-                <div class="item-body">
-                  <h4 class="item-title">Média d'installation</h4>
-                  <p class="item-desc">
-                    Capture de la préparation de la clé USB (Media Creation Tool ou Rufus) et de la version déployée.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
-                </div>
-              </article>
-
               <article class="item">
                 <button class="item-thumb"
                   data-gallery='["preuves/06-migration-w11/06-02_winver-poste-migre.png"]'
@@ -1418,7 +1395,7 @@
         </details>
 
         <!-- ===== 07 — SWITCHS ===== -->
-        <details class="folder pending" id="d07" data-comp="c1 c5">
+        <details class="folder" id="d07" data-comp="c1 c5">
           <summary>
             <span class="f-num">07</span>
             <span class="f-head-main">
@@ -1437,36 +1414,71 @@
             </p>
             <div class="items">
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/07-switchs/07-01_switch-modele-version.png","preuves/07-switchs/07-02_switch-chassis-series.png"]'
+                  data-titles='["show switch : un empilement de cinq châssis X460G2-48p-10G4 sous ExtremeXOS 31.1.1.3, en service depuis 85 jours. Le slot 1 est maître, le slot 2 en secours synchronisé.","show version : les cinq châssis de la pile et leur version de microcode. Numéros de série masqués."]'>
+                  <img src="vignettes-mini/preuves/07-switchs/07-01_switch-modele-version.jpg" alt="Modèle et version du commutateur Extreme Networks" loading="lazy" width="400" height="467">
+                  <span class="item-badge">2 captures</span>
+                </button>
                 <div class="item-body">
-                  <h4 class="item-title">Photo de la baie avant / après</h4>
-                  <p class="item-desc">Installation physique et câblage des nouveaux commutateurs.</p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <h4 class="item-title">Matériel et version</h4>
+                  <p class="item-desc">Une pile de cinq châssis Extreme Networks, en service depuis 85 jours.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">07-01 · 07-02</span>
+                  </div>
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/07-switchs/07-03_vlan-configures.png","preuves/07-switchs/07-04_adresses-interfaces.png"]'
+                  data-titles='["show vlan : les dix VLAN du site avec leur identifiant, leur réseau IP et leur nombre de ports actifs — ADMIN, LAN, TOIP, VOIP, VHMC, WIFI_HOBART, WIFI_GUEST.","show ipconfig : les deux interfaces IP du commutateur, sur les VLAN ADMIN (172.17.28.1/22) et LAN (172.17.9.1/22)."]'>
+                  <img src="vignettes-mini/preuves/07-switchs/07-03_vlan-configures.jpg" alt="Liste des VLAN configurés sur le commutateur" loading="lazy" width="400" height="272">
+                  <span class="item-badge">2 captures</span>
+                </button>
                 <div class="item-body">
-                  <h4 class="item-title">Configuration — lignes de commande</h4>
-                  <p class="item-desc">
-                    Extrait de la configuration (VLAN, ports, adresse de gestion) ou copie de la
-                    <span class="path">running-config</span> anonymisée&nbsp;: la preuve technique la plus forte pour ce projet.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <h4 class="item-title">VLAN et plan d'adressage</h4>
+                  <p class="item-desc">Les dix VLAN du site et les deux interfaces de gestion du commutateur.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Déployer un service</span>
+                    <span class="path">07-03 · 07-04</span>
+                  </div>
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/07-switchs/07-05_etat-des-ports.png","preuves/07-switchs/07-06_voisins-lldp.png"]'
+                  data-titles='["show ports information : état des ports du premier châssis, lien actif ou en attente, et nombre de VLAN rattachés à chaque port. Les noms donnés aux ports (serveurs et équipements de sécurité) sont masqués.","show lldp neighbors : les équipements que le commutateur voit port par port — bornes Wi-Fi, téléphones IP, second commutateur. Les noms des postes des collègues sont masqués ; seul mon propre poste reste visible."]'>
+                  <img src="vignettes-mini/preuves/07-switchs/07-05_etat-des-ports.jpg" alt="État des ports du commutateur" loading="lazy" width="400" height="431">
+                  <span class="item-badge">2 captures</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Ports et équipements raccordés</h4>
+                  <p class="item-desc">L'état des ports et les équipements vus sur chacun d'eux.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Recenser et identifier les ressources numériques</span>
+                    <span class="path">07-05 · 07-06</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/07-switchs/07-07_table-arp-ping-poste.png","preuves/07-switchs/07-08_ping-saut-suivant.png"]'
+                  data-titles='["Table ARP du commutateur, puis ping vers un poste du réseau local : quatre paquets, aucune perte. Les annotations rouges sont de moi.","ping du saut suivant 172.17.9.85, la passerelle vers le réseau 172.17.12.0/22 : quatre paquets, aucune perte."]'>
+                  <img src="vignettes-mini/preuves/07-switchs/07-07_table-arp-ping-poste.jpg" alt="Table ARP et test de connectivité depuis le commutateur" loading="lazy" width="400" height="349">
+                  <span class="item-badge">2 captures</span>
+                </button>
                 <div class="item-body">
                   <h4 class="item-title">Validation du service</h4>
-                  <p class="item-desc">
-                    Test de connectivité après bascule (ping, table d'adresses MAC, état des ports) et
-                    inscription du matériel à l'inventaire.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <p class="item-desc">Deux tests de connectivité depuis le commutateur, sans aucune perte.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
+                    <span class="path">07-07 · 07-08</span>
+                  </div>
                 </div>
               </article>
 
@@ -1701,25 +1713,54 @@
             </p>
             <div class="items">
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/09-deploiement-postes/09-04_pxe-demarrage-reseau.jpg","preuves/09-deploiement-postes/09-05_choix-image-deploiement.jpg"]'
+                  data-titles='["Démarrage PXE du poste de test : le client obtient son adresse par DHCP (172.17.10.4) et contacte le serveur de déploiement sur 172.17.8.70.","Le serveur propose deux images selon le profil du poste : Windows11_Tablet_New_2026 et Windows11_Administratifs_New_2026."]'>
+                  <img src="vignettes-mini/preuves/09-deploiement-postes/09-04_pxe-demarrage-reseau.jpg" alt="Démarrage PXE d'un poste sur le réseau" loading="lazy" width="400" height="300">
+                  <span class="item-badge">2 photos</span>
+                </button>
                 <div class="item-body">
-                  <h4 class="item-title">Déploiement de l'image par le réseau</h4>
-                  <p class="item-desc">
-                    Capture du démarrage PXE ou de la console de déploiement pendant l'installation d'un poste.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <h4 class="item-title">Démarrage PXE sur le réseau</h4>
+                  <p class="item-desc">Le poste démarre sur le réseau et reçoit le menu de déploiement du serveur.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Déployer un service</span>
+                    <span class="path">09-04 · 09-05</span>
+                  </div>
                 </div>
               </article>
 
-              <article class="item missing">
-                <div class="item-icon" aria-hidden="true">＋</div>
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/09-deploiement-postes/09-06_mdt-installation-en-cours.jpg","preuves/09-deploiement-postes/09-07_winver-installation-applications.jpg"]'
+                  data-titles='["La séquence Lite Touch de Microsoft Deployment Toolkit en cours, à l’étape Configure.","Fin du déploiement : winver confirme Windows 11 Entreprise 22H2 (build 22621.1702) pendant que la séquence installe encore les applications, ici Dell Command Update."]'>
+                  <img src="vignettes-mini/preuves/09-deploiement-postes/09-06_mdt-installation-en-cours.jpg" alt="Séquence de déploiement MDT en cours d'exécution" loading="lazy" width="400" height="312">
+                  <span class="item-badge">2 photos</span>
+                </button>
                 <div class="item-body">
-                  <h4 class="item-title">GPO d'applications et de restrictions</h4>
-                  <p class="item-desc">
-                    Console de gestion des stratégies de groupe&nbsp;: les GPO appliquées aux postes déployés.
-                  </p>
-                  <div class="item-foot"><span class="todo-tag">À fournir</span></div>
+                  <h4 class="item-title">Déploiement de l'image par MDT</h4>
+                  <p class="item-desc">La séquence de tâches installe Windows 11 puis les applications métier.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Déployer un service</span>
+                    <span class="path">09-06 · 09-07</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="item">
+                <button class="item-thumb"
+                  data-gallery='["preuves/09-deploiement-postes/09-09_objet-ordinateur-ad.jpg","preuves/09-deploiement-postes/09-08_gpresult-gpo-appliquees.jpg"]'
+                  data-titles='["L’objet ordinateur PC-TEST-HUGO créé dans l’annuaire après la jonction automatique au domaine. Les noms des autres postes sont masqués.","gpresult /r sur le poste fraîchement déployé : dix stratégies de groupe appliquées. Nom du contrôleur de domaine et noms des produits de sécurité masqués."]'>
+                  <img src="vignettes-mini/preuves/09-deploiement-postes/09-09_objet-ordinateur-ad.jpg" alt="Objet ordinateur créé dans l'annuaire après déploiement" loading="lazy" width="400" height="300">
+                  <span class="item-badge">2 photos</span>
+                </button>
+                <div class="item-body">
+                  <h4 class="item-title">Recette du poste déployé</h4>
+                  <p class="item-desc">Le poste est joint au domaine et reçoit ses stratégies de groupe.</p>
+                  <div class="item-foot">
+                    <span class="skill-tag">▸Réaliser les tests d'intégration et d'acceptation</span>
+                    <span class="path">09-09 · 09-08</span>
+                  </div>
                 </div>
               </article>
 
@@ -1992,7 +2033,7 @@
                 <a class="item-icon" href="scripts/Install-GLPIAgent.ps1" download tabindex="-1" aria-hidden="true">📜</a>
                 <div class="item-body">
                   <h4 class="item-title">Script d'installation — code source</h4>
-                  <p class="item-desc">Le script PowerShell exécuté sur chaque poste, en fichier source.</p>
+                  <p class="item-desc">Le script PowerShell d’installation de l’agent, testé sur un poste, en fichier source.</p>
                   <div class="item-foot">
                     <span class="skill-tag">▸Déployer un service</span>
                     <a class="item-open" href="scripts/Install-GLPIAgent.ps1" download>Télécharger le script</a>
